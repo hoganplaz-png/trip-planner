@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Family Trip Planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f2ea;--card:#fffdf8;--ink:#1c1b19;--mute:#7b7468;--line:#ebe3d4;--brand:#1f3a34;--brand2:#2d5a4f;--gold:#c09553;--good:#2f7a55;--bad:#c0473a;
+--serif:Fraunces,Georgia,serif;--sans:'Plus Jakarta Sans',system-ui,sans-serif;--r:22px;--shadow:0 1px 2px #0000000a,0 14px 34px -14px #1f3a3430}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font:15px/1.55 var(--sans);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+button{font:inherit;cursor:pointer}
+a{color:inherit}
+.hero{position:relative;color:#fbf6ec;padding:28px 20px 96px;overflow:hidden;background:linear-gradient(160deg,#16302a 0%,#1f3a34 45%,#3d5a4a 100%)}
+.hero svg.bgart{position:absolute;inset:auto 0 0 0;width:100%;height:150px;opacity:.9}
+.top{display:flex;align-items:center;gap:10px;max-width:1040px;margin:0 auto;position:relative}
+.brand{font:700 14px var(--sans);letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+.sync{font-size:12px;padding:5px 10px;border-radius:999px;background:#ffffff1a;display:flex;gap:6px;align-items:center}
+.dot{width:8px;height:8px;border-radius:50%;background:#7fd6a4;box-shadow:0 0 0 3px #7fd6a433}
+.dot.off{background:#e0b25c;box-shadow:0 0 0 3px #e0b25c33}
+.herobody{max-width:1040px;margin:26px auto 0;position:relative;display:flex;gap:24px;align-items:flex-end;flex-wrap:wrap}
+.herobody h1{font:600 clamp(38px,6.4vw,66px)/1 var(--serif);margin:0;letter-spacing:-.02em}
+.herobody .meta{opacity:.85;margin-top:10px;display:flex;gap:14px;flex-wrap:wrap;font-size:14px}
+.count{margin-left:auto;text-align:center;background:#ffffff14;border:1px solid #ffffff26;border-radius:20px;padding:14px 22px;backdrop-filter:blur(6px)}
+.count b{display:block;font:600 44px/1 var(--serif);color:#f3d9a8}
+.count span{font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.8}
+.avs{display:flex;margin-top:14px;align-items:center;gap:10px}
+.av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:700 12px var(--sans);color:#fff;border:2px solid #1f3a34;margin-left:-8px}
+.av:first-child{margin-left:0}
+.av.sm{width:22px;height:22px;font-size:10px;border-width:1.5px;border-color:#fff;margin:0}
+main{max-width:1040px;margin:-62px auto 0;padding:0 14px 120px;position:relative}
+nav{display:flex;gap:4px;overflow-x:auto;position:sticky;top:10px;z-index:20;background:#fffdf8ee;backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:999px;padding:6px;box-shadow:var(--shadow);scrollbar-width:none}
+nav button{flex:1;min-width:86px;border:0;background:none;border-radius:999px;padding:9px 10px;font:600 13px var(--sans);color:var(--mute);white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:1px;transition:.2s}
+nav button i{font-style:normal;font-size:19px;line-height:1.1}
+nav button.on{background:var(--brand);color:#fbf6ec}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:24px;margin:18px 0;box-shadow:var(--shadow);animation:up .35s ease both}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+h2{margin:0 0 4px;font:600 26px/1.15 var(--serif);letter-spacing:-.01em}
+h3{margin:0;font:600 19px/1.25 var(--serif)}
+.note{color:var(--mute);font-size:13px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.sp{flex:1}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+label{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin:0 0 6px;font-weight:700}
+input,select,textarea{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:14px;font:inherit;background:#fff;color:var(--ink);transition:.2s}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--gold);box-shadow:0 0 0 4px #c0955322}
+.btn{background:var(--brand);color:#fbf6ec;border:0;border-radius:999px;padding:12px 20px;font-weight:600;transition:.2s;display:inline-flex;gap:8px;align-items:center;text-decoration:none;font-size:14px}
+.btn:hover{transform:translateY(-1px);box-shadow:0 10px 20px -10px #1f3a34aa}
+.btn.alt{background:#fff;color:var(--brand);border:1.5px solid var(--line)}
+.btn.gold{background:linear-gradient(135deg,#c09553,#a87a3a);color:#fff}
+.btn.ai{background:linear-gradient(135deg,#6d5bd0,#c45a9a);color:#fff}
+.btn.sm{padding:7px 13px;font-size:13px}
+.btn:disabled{opacity:.5;transform:none}
+.ib{border:0;background:none;color:#b8ad9a;font-size:18px;padding:4px 6px;border-radius:8px}
+.ib:hover{background:#f3ece0;color:var(--ink)}
+.fab{position:fixed;right:20px;bottom:22px;z-index:30;width:62px;height:62px;border-radius:50%;border:0;font-size:30px;color:#fff;background:linear-gradient(135deg,#c09553,#a87a3a);box-shadow:0 14px 30px -8px #a87a3aaa;transition:.2s}
+.fab:hover{transform:scale(1.06) rotate(90deg)}
+.tag{display:inline-flex;gap:4px;align-items:center;font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px;background:#f3ece0;color:var(--mute)}
+.tag.g{background:#e5f2ea;color:var(--good)}.tag.y{background:#f8ecd6;color:#8a6424}.tag.p{background:#ece8fb;color:#5b49b8}
+.empty{text-align:center;padding:34px 16px}.empty .big{font-size:52px}
+/* stats */
+.stats{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.stat{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;position:relative;overflow:hidden}
+.stat .e{font-size:24px}.stat b{display:block;font:600 28px/1.1 var(--serif);margin-top:6px}.stat .note{font-size:12px}
+/* week strip */
+.week{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(92px,1fr);gap:10px;overflow-x:auto;padding:4px 2px 8px}
+.wd{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:12px;cursor:pointer;transition:.2s;text-align:left}
+.wd:hover,.wd.on{border-color:var(--gold);transform:translateY(-2px)}
+.wd .n{font:600 22px var(--serif)}.wd .d{font-size:12px;color:var(--mute)}
+.bars{display:flex;height:8px;border-radius:99px;overflow:hidden;background:#f1ebdf;margin-top:10px}
+.bars span{display:block;height:100%}
+.emo{font-size:15px;margin-top:6px;min-height:20px;letter-spacing:2px}
+/* timeline */
+.tl{position:relative;margin-top:16px}
+.stop{display:grid;grid-template-columns:62px 48px 1fr;gap:12px;align-items:start;position:relative}
+.stop .time{font:700 14px var(--sans);text-align:right;padding-top:12px;color:var(--ink)}
+.stop .time small{display:block;font-weight:500;color:var(--mute);font-size:11px}
+.bub{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;font-size:24px;position:relative;z-index:1;box-shadow:0 6px 14px -8px #0006}
+.sbody{background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px 14px;margin-bottom:4px;transition:.2s}
+.sbody:hover{border-color:#d9cdb6}
+.sbody .t{font:600 17px var(--serif)}
+.leg{display:grid;grid-template-columns:62px 48px 1fr;gap:12px;min-height:44px}
+.leg .line{justify-self:center;width:3px;background:repeating-linear-gradient(to bottom,#cbbd9f 0 6px,transparent 6px 12px)}
+.leg .info{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--mute);padding:8px 0}
+.pill{background:#f3ece0;border-radius:999px;padding:4px 10px;font-weight:600;color:var(--ink);font-size:12px}
+.mlink{font-size:12px;font-weight:700;text-decoration:none;border-radius:999px;padding:4px 10px;border:1px solid var(--line);background:#fff}
+.mlink.g{color:#1a73e8}.mlink.a{color:#111}
+.dayhead{border-radius:var(--r);padding:20px 22px;color:#fff;display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:-24px -24px 6px;background:linear-gradient(135deg,var(--brand),var(--brand2))}
+.dayhead .big{font:600 34px/1 var(--serif)}
+.daytabs{display:flex;gap:8px;overflow-x:auto;padding:4px 0 2px;scrollbar-width:none}
+.daytabs button{border:1.5px solid var(--line);background:#fff;border-radius:14px;padding:8px 14px;font-weight:600;font-size:13px;white-space:nowrap}
+.daytabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.hours{display:flex;height:12px;border-radius:99px;overflow:hidden;background:#ffffff33;flex:1;min-width:140px}
+/* hotels */
+.hotel{border:1.5px solid var(--line);border-radius:var(--r);padding:20px;margin:14px 0;background:var(--card);box-shadow:var(--shadow);animation:up .35s both}
+.hotel.chosen{border-color:var(--gold);background:linear-gradient(#fffdf8,#fffaf0)}
+.cmp{display:grid;gap:10px;margin-top:14px}
+.cmpr{display:grid;grid-template-columns:100px 1fr 120px;gap:10px;align-items:center}
+.cmpr .bar{height:30px;border-radius:10px;background:#f1ebdf;overflow:hidden;position:relative}
+.cmpr .bar span{position:absolute;inset:0 auto 0 0;border-radius:10px;display:flex;align-items:center;padding-left:10px;color:#fff;font-weight:700;font-size:13px;transition:width .5s}
+.cmpr input{padding:8px 10px;text-align:right;font-weight:700}
+.logo{font-weight:800;font-size:14px}
+/* food */
+.fd{display:grid;grid-template-columns:76px 1fr auto;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
+.ring{width:72px;height:72px}
+.meter{height:8px;border-radius:99px;background:#f1ebdf;overflow:hidden;margin-top:8px;max-width:260px}
+.meter span{display:block;height:100%;background:linear-gradient(90deg,#e8c27a,#c0473a)}
+/* chips */
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1.5px solid var(--line);background:#fff;border-radius:16px;padding:10px 14px;font-weight:600;font-size:14px;transition:.2s;display:flex;gap:8px;align-items:center}
+.chip:hover,.chip.on{border-color:var(--gold);background:#fbf3e4;transform:translateY(-1px)}
+.idea{border:1px solid var(--line);border-radius:18px;padding:16px;background:#fff;display:flex;flex-direction:column;gap:8px;animation:up .4s both}
+.ideas{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));margin-top:16px}
+/* pack */
+.chk{display:flex;gap:12px;align-items:center;padding:10px 4px;border-bottom:1px solid var(--line)}
+.chk input{width:22px;height:22px;accent-color:var(--good)}
+.chk.done span{text-decoration:line-through;color:var(--mute)}
+.prog{height:12px;border-radius:99px;background:#f1ebdf;overflow:hidden}.prog span{display:block;height:100%;background:linear-gradient(90deg,#5aa77d,#2f7a55);transition:width .5s}
+/* modal */
+.scrim{position:fixed;inset:0;background:#1c1b1966;backdrop-filter:blur(3px);z-index:50;display:grid;place-items:center;padding:14px;animation:fade .2s}
+@keyframes fade{from{opacity:0}}
+.modal{background:var(--card);border-radius:26px;width:min(560px,100%);max-height:92vh;overflow:auto;padding:24px;box-shadow:0 30px 80px -20px #0008;animation:up .25s}
+.cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.cat{border:1.5px solid var(--line);background:#fff;border-radius:16px;padding:10px 4px;text-align:center;font-size:12px;font-weight:600}
+.cat i{display:block;font-style:normal;font-size:26px}
+.cat.on{border-color:var(--ink);background:#f6f0e4}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 20px;border-radius:999px;z-index:60;font-weight:600;font-size:14px;animation:up .25s;box-shadow:0 10px 30px #0004}
+.who{display:inline-flex;gap:6px;align-items:center;font-size:12px;color:var(--mute)}
+.banner{background:#fff6e2;border:1px solid #efd9a8;color:#7a5a1c;border-radius:16px;padding:12px 16px;font-size:13px;margin:14px 0}
+.donut{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.legend div{display:flex;gap:8px;align-items:center;margin:6px 0;font-size:14px}.legend i{width:12px;height:12px;border-radius:4px;display:inline-block}
+@media(max-width:640px){.card{padding:18px}.dayhead{margin:-18px -18px 6px}.stop,.leg{grid-template-columns:46px 40px 1fr;gap:8px}.bub{width:40px;height:40px;font-size:20px;border-radius:13px}.cmpr{grid-template-columns:76px 1fr 96px}.count{margin-left:0}.fd{grid-template-columns:60px 1fr}.fd>:last-child{grid-column:1/-1}.ring{width:58px;height:58px}}
+/* required styles */
+
+.leaflet-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-container,
+.leaflet-pane > svg,
+.leaflet-pane > canvas,
+.leaflet-zoom-box,
+.leaflet-image-layer,
+.leaflet-layer {
+	position: absolute;
+	left: 0;
+	top: 0;
+	}
+.leaflet-container {
+	overflow: hidden;
+	}
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	        user-select: none;
+	  -webkit-user-drag: none;
+	}
+/* Prevents IE11 from highlighting tiles in blue */
+.leaflet-tile::selection {
+	background: transparent;
+}
+/* Safari renders non-retina tile on retina better with this, but Chrome is worse */
+.leaflet-safari .leaflet-tile {
+	image-rendering: -webkit-optimize-contrast;
+	}
+/* hack that prevents hw layers "stretching" when loading new tiles */
+.leaflet-safari .leaflet-tile-container {
+	width: 1600px;
+	height: 1600px;
+	-webkit-transform-origin: 0 0;
+	}
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	display: block;
+	}
+/* .leaflet-container svg: reset svg max-width decleration shipped in Joomla! (joomla.org) 3.x */
+/* .leaflet-container img: map is broken in FF if you have max-width: 100% on tiles */
+.leaflet-container .leaflet-overlay-pane svg {
+	max-width: none !important;
+	max-height: none !important;
+	}
+.leaflet-container .leaflet-marker-pane img,
+.leaflet-container .leaflet-shadow-pane img,
+.leaflet-container .leaflet-tile-pane img,
+.leaflet-container img.leaflet-image-layer,
+.leaflet-container .leaflet-tile {
+	max-width: none !important;
+	max-height: none !important;
+	width: auto;
+	padding: 0;
+	}
+
+.leaflet-container img.leaflet-tile {
+	/* See: https://bugs.chromium.org/p/chromium/issues/detail?id=600120 */
+	mix-blend-mode: plus-lighter;
+}
+
+.leaflet-container.leaflet-touch-zoom {
+	-ms-touch-action: pan-x pan-y;
+	touch-action: pan-x pan-y;
+	}
+.leaflet-container.leaflet-touch-drag {
+	-ms-touch-action: pinch-zoom;
+	/* Fallback for FF which doesn't support pinch-zoom */
+	touch-action: none;
+	touch-action: pinch-zoom;
+}
+.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.leaflet-container {
+	-webkit-tap-highlight-color: transparent;
+}
+.leaflet-container a {
+	-webkit-tap-highlight-color: rgba(51, 181, 229, 0.4);
+}
+.leaflet-tile {
+	filter: inherit;
+	visibility: hidden;
+	}
+.leaflet-tile-loaded {
+	visibility: inherit;
+	}
+.leaflet-zoom-box {
+	width: 0;
+	height: 0;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	z-index: 800;
+	}
+/* workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=888319 */
+.leaflet-overlay-pane svg {
+	-moz-user-select: none;
+	}
+
+.leaflet-pane         { z-index: 400; }
+
+.leaflet-tile-pane    { z-index: 200; }
+.leaflet-overlay-pane { z-index: 400; }
+.leaflet-shadow-pane  { z-index: 500; }
+.leaflet-marker-pane  { z-index: 600; }
+.leaflet-tooltip-pane   { z-index: 650; }
+.leaflet-popup-pane   { z-index: 700; }
+
+.leaflet-map-pane canvas { z-index: 100; }
+.leaflet-map-pane svg    { z-index: 200; }
+
+.leaflet-vml-shape {
+	width: 1px;
+	height: 1px;
+	}
+.lvml {
+	behavior: url(#default#VML);
+	display: inline-block;
+	position: absolute;
+	}
+
+
+/* control positioning */
+
+.leaflet-control {
+	position: relative;
+	z-index: 800;
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+.leaflet-top,
+.leaflet-bottom {
+	position: absolute;
+	z-index: 1000;
+	pointer-events: none;
+	}
+.leaflet-top {
+	top: 0;
+	}
+.leaflet-right {
+	right: 0;
+	}
+.leaflet-bottom {
+	bottom: 0;
+	}
+.leaflet-left {
+	left: 0;
+	}
+.leaflet-control {
+	float: left;
+	clear: both;
+	}
+.leaflet-right .leaflet-control {
+	float: right;
+	}
+.leaflet-top .leaflet-control {
+	margin-top: 10px;
+	}
+.leaflet-bottom .leaflet-control {
+	margin-bottom: 10px;
+	}
+.leaflet-left .leaflet-control {
+	margin-left: 10px;
+	}
+.leaflet-right .leaflet-control {
+	margin-right: 10px;
+	}
+
+
+/* zoom and fade animations */
+
+.leaflet-fade-anim .leaflet-popup {
+	opacity: 0;
+	-webkit-transition: opacity 0.2s linear;
+	   -moz-transition: opacity 0.2s linear;
+	        transition: opacity 0.2s linear;
+	}
+.leaflet-fade-anim .leaflet-map-pane .leaflet-popup {
+	opacity: 1;
+	}
+.leaflet-zoom-animated {
+	-webkit-transform-origin: 0 0;
+	    -ms-transform-origin: 0 0;
+	        transform-origin: 0 0;
+	}
+svg.leaflet-zoom-animated {
+	will-change: transform;
+}
+
+.leaflet-zoom-anim .leaflet-zoom-animated {
+	-webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1);
+	   -moz-transition:    -moz-transform 0.25s cubic-bezier(0,0,0.25,1);
+	        transition:         transform 0.25s cubic-bezier(0,0,0.25,1);
+	}
+.leaflet-zoom-anim .leaflet-tile,
+.leaflet-pan-anim .leaflet-tile {
+	-webkit-transition: none;
+	   -moz-transition: none;
+	        transition: none;
+	}
+
+.leaflet-zoom-anim .leaflet-zoom-hide {
+	visibility: hidden;
+	}
+
+
+/* cursors */
+
+.leaflet-interactive {
+	cursor: pointer;
+	}
+.leaflet-grab {
+	cursor: -webkit-grab;
+	cursor:    -moz-grab;
+	cursor:         grab;
+	}
+.leaflet-crosshair,
+.leaflet-crosshair .leaflet-interactive {
+	cursor: crosshair;
+	}
+.leaflet-popup-pane,
+.leaflet-control {
+	cursor: auto;
+	}
+.leaflet-dragging .leaflet-grab,
+.leaflet-dragging .leaflet-grab .leaflet-interactive,
+.leaflet-dragging .leaflet-marker-draggable {
+	cursor: move;
+	cursor: -webkit-grabbing;
+	cursor:    -moz-grabbing;
+	cursor:         grabbing;
+	}
+
+/* marker & overlays interactivity */
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-image-layer,
+.leaflet-pane > svg path,
+.leaflet-tile-container {
+	pointer-events: none;
+	}
+
+.leaflet-marker-icon.leaflet-interactive,
+.leaflet-image-layer.leaflet-interactive,
+.leaflet-pane > svg path.leaflet-interactive,
+svg.leaflet-image-layer.leaflet-interactive path {
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+
+/* visual tweaks */
+
+.leaflet-container {
+	background: #ddd;
+	outline-offset: 1px;
+	}
+.leaflet-container a {
+	color: #0078A8;
+	}
+.leaflet-zoom-box {
+	border: 2px dotted #38f;
+	background: rgba(255,255,255,0.5);
+	}
+
+
+/* general typography */
+.leaflet-container {
+	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-size: 0.75rem;
+	line-height: 1.5;
+	}
+
+
+/* general toolbar styles */
+
+.leaflet-bar {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+	border-radius: 4px;
+	}
+.leaflet-bar a {
+	background-color: #fff;
+	border-bottom: 1px solid #ccc;
+	width: 26px;
+	height: 26px;
+	line-height: 26px;
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	color: black;
+	}
+.leaflet-bar a,
+.leaflet-control-layers-toggle {
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	display: block;
+	}
+.leaflet-bar a:hover,
+.leaflet-bar a:focus {
+	background-color: #f4f4f4;
+	}
+.leaflet-bar a:first-child {
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	}
+.leaflet-bar a:last-child {
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	border-bottom: none;
+	}
+.leaflet-bar a.leaflet-disabled {
+	cursor: default;
+	background-color: #f4f4f4;
+	color: #bbb;
+	}
+
+.leaflet-touch .leaflet-bar a {
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	}
+.leaflet-touch .leaflet-bar a:first-child {
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+	}
+.leaflet-touch .leaflet-bar a:last-child {
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	}
+
+/* zoom control */
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+	font: bold 18px 'Lucida Console', Monaco, monospace;
+	text-indent: 1px;
+	}
+
+.leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {
+	font-size: 22px;
+	}
+
+
+/* layers control */
+
+.leaflet-control-layers {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+	background: #fff;
+	border-radius: 5px;
+	}
+.leaflet-control-layers-toggle {
+	background-image: url(images/layers.png);
+	width: 36px;
+	height: 36px;
+	}
+.leaflet-retina .leaflet-control-layers-toggle {
+	background-image: url(images/layers-2x.png);
+	background-size: 26px 26px;
+	}
+.leaflet-touch .leaflet-control-layers-toggle {
+	width: 44px;
+	height: 44px;
+	}
+.leaflet-control-layers .leaflet-control-layers-list,
+.leaflet-control-layers-expanded .leaflet-control-layers-toggle {
+	display: none;
+	}
+.leaflet-control-layers-expanded .leaflet-control-layers-list {
+	display: block;
+	position: relative;
+	}
+.leaflet-control-layers-expanded {
+	padding: 6px 10px 6px 6px;
+	color: #333;
+	background: #fff;
+	}
+.leaflet-control-layers-scrollbar {
+	overflow-y: scroll;
+	overflow-x: hidden;
+	padding-right: 5px;
+	}
+.leaflet-control-layers-selector {
+	margin-top: 2px;
+	position: relative;
+	top: 1px;
+	}
+.leaflet-control-layers label {
+	display: block;
+	font-size: 13px;
+	font-size: 1.08333em;
+	}
+.leaflet-control-layers-separator {
+	height: 0;
+	border-top: 1px solid #ddd;
+	margin: 5px -10px 5px -6px;
+	}
+
+/* Default icon URLs */
+.leaflet-default-icon-path { /* used only in path-guessing heuristic, see L.Icon.Default */
+	background-image: url(images/marker-icon.png);
+	}
+
+
+/* attribution and scale controls */
+
+.leaflet-container .leaflet-control-attribution {
+	background: #fff;
+	background: rgba(255, 255, 255, 0.8);
+	margin: 0;
+	}
+.leaflet-control-attribution,
+.leaflet-control-scale-line {
+	padding: 0 5px;
+	color: #333;
+	line-height: 1.4;
+	}
+.leaflet-control-attribution a {
+	text-decoration: none;
+	}
+.leaflet-control-attribution a:hover,
+.leaflet-control-attribution a:focus {
+	text-decoration: underline;
+	}
+.leaflet-attribution-flag {
+	display: inline !important;
+	vertical-align: baseline !important;
+	width: 1em;
+	height: 0.6669em;
+	}
+.leaflet-left .leaflet-control-scale {
+	margin-left: 5px;
+	}
+.leaflet-bottom .leaflet-control-scale {
+	margin-bottom: 5px;
+	}
+.leaflet-control-scale-line {
+	border: 2px solid #777;
+	border-top: none;
+	line-height: 1.1;
+	padding: 2px 5px 1px;
+	white-space: nowrap;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	background: rgba(255, 255, 255, 0.8);
+	text-shadow: 1px 1px #fff;
+	}
+.leaflet-control-scale-line:not(:first-child) {
+	border-top: 2px solid #777;
+	border-bottom: none;
+	margin-top: -2px;
+	}
+.leaflet-control-scale-line:not(:first-child):not(:last-child) {
+	border-bottom: 2px solid #777;
+	}
+
+.leaflet-touch .leaflet-control-attribution,
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	box-shadow: none;
+	}
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	border: 2px solid rgba(0,0,0,0.2);
+	background-clip: padding-box;
+	}
+
+
+/* popup */
+
+.leaflet-popup {
+	position: absolute;
+	text-align: center;
+	margin-bottom: 20px;
+	}
+.leaflet-popup-content-wrapper {
+	padding: 1px;
+	text-align: left;
+	border-radius: 12px;
+	}
+.leaflet-popup-content {
+	margin: 13px 24px 13px 20px;
+	line-height: 1.3;
+	font-size: 13px;
+	font-size: 1.08333em;
+	min-height: 1px;
+	}
+.leaflet-popup-content p {
+	margin: 17px 0;
+	margin: 1.3em 0;
+	}
+.leaflet-popup-tip-container {
+	width: 40px;
+	height: 20px;
+	position: absolute;
+	left: 50%;
+	margin-top: -1px;
+	margin-left: -20px;
+	overflow: hidden;
+	pointer-events: none;
+	}
+.leaflet-popup-tip {
+	width: 17px;
+	height: 17px;
+	padding: 1px;
+
+	margin: -10px auto 0;
+	pointer-events: auto;
+
+	-webkit-transform: rotate(45deg);
+	   -moz-transform: rotate(45deg);
+	    -ms-transform: rotate(45deg);
+	        transform: rotate(45deg);
+	}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+	background: white;
+	color: #333;
+	box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+	}
+.leaflet-container a.leaflet-popup-close-button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	border: none;
+	text-align: center;
+	width: 24px;
+	height: 24px;
+	font: 16px/24px Tahoma, Verdana, sans-serif;
+	color: #757575;
+	text-decoration: none;
+	background: transparent;
+	}
+.leaflet-container a.leaflet-popup-close-button:hover,
+.leaflet-container a.leaflet-popup-close-button:focus {
+	color: #585858;
+	}
+.leaflet-popup-scrolled {
+	overflow: auto;
+	}
+
+.leaflet-oldie .leaflet-popup-content-wrapper {
+	-ms-zoom: 1;
+	}
+.leaflet-oldie .leaflet-popup-tip {
+	width: 24px;
+	margin: 0 auto;
+
+	-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)";
+	filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678);
+	}
+
+.leaflet-oldie .leaflet-control-zoom,
+.leaflet-oldie .leaflet-control-layers,
+.leaflet-oldie .leaflet-popup-content-wrapper,
+.leaflet-oldie .leaflet-popup-tip {
+	border: 1px solid #999;
+	}
+
+
+/* div icon */
+
+.leaflet-div-icon {
+	background: #fff;
+	border: 1px solid #666;
+	}
+
+
+/* Tooltip */
+/* Base styles for the element that has a tooltip */
+.leaflet-tooltip {
+	position: absolute;
+	padding: 6px;
+	background-color: #fff;
+	border: 1px solid #fff;
+	border-radius: 3px;
+	color: #222;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	pointer-events: none;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+	}
+.leaflet-tooltip.leaflet-interactive {
+	cursor: pointer;
+	pointer-events: auto;
+	}
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	position: absolute;
+	pointer-events: none;
+	border: 6px solid transparent;
+	background: transparent;
+	content: "";
+	}
+
+/* Directions */
+
+.leaflet-tooltip-bottom {
+	margin-top: 6px;
+}
+.leaflet-tooltip-top {
+	margin-top: -6px;
+}
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-top:before {
+	left: 50%;
+	margin-left: -6px;
+	}
+.leaflet-tooltip-top:before {
+	bottom: 0;
+	margin-bottom: -12px;
+	border-top-color: #fff;
+	}
+.leaflet-tooltip-bottom:before {
+	top: 0;
+	margin-top: -12px;
+	margin-left: -6px;
+	border-bottom-color: #fff;
+	}
+.leaflet-tooltip-left {
+	margin-left: -6px;
+}
+.leaflet-tooltip-right {
+	margin-left: 6px;
+}
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	top: 50%;
+	margin-top: -6px;
+	}
+.leaflet-tooltip-left:before {
+	right: 0;
+	margin-right: -12px;
+	border-left-color: #fff;
+	}
+.leaflet-tooltip-right:before {
+	left: 0;
+	margin-left: -12px;
+	border-right-color: #fff;
+	}
+
+/* Printing */
+
+@media print {
+	/* Prevent printers from removing background-images of controls. */
+	.leaflet-control {
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+		}
+	}
+
+.lmap{height:360px;border-radius:18px;border:1px solid var(--line);z-index:0}
+.lmap.leaflet-container{background:#bfdde8;font-family:var(--sans)}
+.pin{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;color:#fff;font:700 12px var(--sans);border:2.5px solid #fff;box-shadow:0 3px 8px #0005}
+.pin.s{border-radius:9px;color:#fff}
+.opt{display:inline-flex;gap:4px;align-items:center;border:1.5px solid var(--line);border-radius:999px;padding:4px 10px;background:#fff;font-size:12px;color:var(--ink)}
+.opt b{font-weight:700}
+.opt.best{border-color:var(--good);background:#eaf5ee;color:var(--good)}
+.how{border:1px solid var(--line);border-radius:18px;padding:16px;background:#fff}
+.how h3{font-size:18px;margin-bottom:6px}
+.how ol{margin:6px 0 10px;padding-left:18px;font-size:13px;color:var(--mute)}
+.daylbl{margin-top:8px;border:1px dashed #ffffff66;background:#ffffff14;color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;font-weight:600}
+.daylbl:hover{background:#ffffff26}
+.wl{font-size:11px;font-weight:700;color:#5b49b8;background:#ece8fb;border-radius:8px;padding:2px 6px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tonight{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#f6f0e4;border-radius:14px;padding:10px 14px;margin-top:12px;font-size:14px}
+.maybe{margin-top:18px;border:2px dashed #d9cdb6;border-radius:18px;padding:14px;background:#fffaf0}
+.mrow{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.mrow:last-child{border-bottom:0}
+.bub.sm{width:36px;height:36px;font-size:18px;border-radius:12px;box-shadow:none}
+.night{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.nl{min-width:130px;display:flex;flex-direction:column}
+.langbtn{display:inline-flex;gap:2px;border:1px solid #ffffff33;background:#ffffff14;border-radius:999px;padding:3px;margin-right:8px;color:#fbf6ec;font:600 12px var(--sans)}
+.langbtn span,.sync,.usr,.brand{white-space:nowrap}
+@media(max-width:480px){.top{gap:6px}.brand{font-size:11px;letter-spacing:.12em}.langbtn{margin-right:0}.langbtn span{padding:3px 7px}.sync{font-size:11px;padding:4px 8px;max-width:118px;overflow:hidden;text-overflow:ellipsis}}
+.langbtn span{padding:3px 9px;border-radius:999px;opacity:.75}.langbtn span.on{background:#fbf6ec;color:#1f3a34;opacity:1}
+</style>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+img.av{object-fit:cover;background:#ddd}
+.gate{max-width:520px;margin:0 auto;text-align:center;padding:40px 28px}
+.gate .big{font-size:64px}
+.gbtn{display:inline-flex;gap:10px;align-items:center;background:#fff;color:#1f1f1f;border:1.5px solid #dadce0;border-radius:999px;padding:13px 24px;font-weight:600;font-size:15px;margin-top:18px}
+.gbtn:hover{box-shadow:0 6px 18px -8px #0004}
+.res{display:flex;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:#fff;margin-top:8px;cursor:pointer;text-align:left;width:100%}
+.res:hover{border-color:var(--gold)}
+.gprev{width:100%;height:240px;border:0;border-radius:14px;margin-top:8px;display:block}
+.opt.est{border-style:dashed}
+a.opt{text-decoration:none}
+.usr{display:flex;align-items:center;gap:6px;background:#ffffff1a;border:0;border-radius:999px;padding:3px 10px 3px 3px;color:#fbf6ec;font-size:12px}
+@media print{nav,.fab,.ro,.btn,.mlink,.usr,.sync,#banner{display:none!important}.hero{padding-bottom:30px}main{margin-top:0}.card{box-shadow:none;break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="hero">
+  <svg class="bgart" viewBox="0 0 1200 150" preserveAspectRatio="none" aria-hidden="true">
+    <circle cx="960" cy="40" r="26" fill="#f3d9a8" opacity=".55"/>
+    <path d="M0 120 L120 70 L220 105 L360 40 L470 100 L600 55 L720 110 L860 60 L990 105 L1100 70 L1200 95 L1200 150 L0 150Z" fill="#ffffff10"/>
+    <path d="M0 135 L160 95 L300 125 L450 85 L620 130 L780 92 L930 128 L1080 98 L1200 120 L1200 150 L0 150Z" fill="#ffffff14"/>
+    <g fill="#ffffff22"><rect x="250" y="88" width="8" height="40"/><path d="M236 92h36l-18-14z"/><path d="M240 104h28l-14-10z"/><rect x="820" y="80" width="10" height="48"/><path d="M804 84h42l-21-16z"/><path d="M808 98h34l-17-12z"/></g>
+  </svg>
+  <div class="top"><span class="brand">✦ Family Journeys</span><span class="sp"></span><button class="langbtn notr" id="langbtn" onclick="setLang(LANG==='zh'?'en':'zh')" aria-label="Language / 語言"></button><span class="sync" id="sync"><span class="dot off"></span>Connecting…</span><span id="usr"></span></div>
+  <div class="herobody" id="herobody"></div>
+</div>
+<main>
+  <nav id="nav"></nav>
+  <div id="banner"></div>
+  <div id="view"></div>
+</main>
+<button class="fab" onclick="openAdd()" title="Add something" aria-label="Add">＋</button>
+<div id="modal"></div><div id="toast"></div>
+<script>
+// ================= helpers =================
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const enc=encodeURIComponent;
+const CATS={sight:['🏯','Sightseeing','#c8553d'],fun:['🎢','Theme park','#e09f3e'],animals:['🐬','Zoo & aquarium','#3a7ca5'],museum:['🧪','Museum','#7b5ea7'],
+ nature:['🌳','Park & nature','#4f8a5a'],food:['🍽','Meal','#b08d57'],shop:['🛍','Shopping','#d16ba5'],relax:['♨️','Relax','#5c8d89'],move:['🚆','Getting there','#6b7488'],other:['📍','Other','#8a8172']};
+const MODES={driving:['🚗','Rental car','d'],transit:['🚌','Bus & monorail','r'],walking:['🚶','Walk','w']};
+const DAYC=['#c8553d','#3a7ca5','#7b5ea7','#4f8a5a','#d16ba5','#e09f3e','#2d5a4f','#8a6424'];
+const PALETTE=['#c8553d','#3a7ca5','#7b5ea7','#4f8a5a','#d16ba5','#e09f3e','#2d5a4f'];
+
+// ================= state =================
+const DEF_TRIP={dest:'Okinawa',start:'2026-12-20',end:'2026-12-26',adults:2,kids:2,ages:'6,9',rooms:1,cur:'¥',mode:'driving'};
+const D={trip:{...DEF_TRIP},hotels:{},food:{},items:{},packing:{},saved:{},members:{}};
+let me=null,online=false,readOnly=false,demo=false,gate='loading',FBU=null,owner=null,isOwner=false,profiles={},unsubs=[],gerr='';
+let tab=(location.hash||'#home').slice(1),selDay=0,ideas=[],ideaCat=null,aiBusy='',pendingRender=false;const SEARCH=true;const previews=new Set();
+const COLLS=['hotels','food','items','packing','saved'];
+const T=()=>D.trip;
+const kidAges=()=>{const a=String(T().ages||'').split(',').filter(x=>x!=='');return [...Array(+T().kids||0).keys()].map(k=>+(a[k]??6))};
+const kidsTxt=()=>`${T().kids} kids${+T().kids?' (ages '+kidAges().join(', ')+')':''}`;
+const hav=(a,b)=>{const R=6371,r=x=>x*Math.PI/180,dl=r(b.lat-a.lat),dg=r(b.lng-a.lng);return 2*R*Math.asin(Math.sqrt(Math.sin(dl/2)**2+Math.cos(r(a.lat))*Math.cos(r(b.lat))*Math.sin(dg/2)**2))};
+const nights=()=>Math.max(1,Math.round((new Date(T().end)-new Date(T().start))/864e5)||1);
+const nDays=()=>nights()+1;
+const people=()=>(+T().adults||0)+(+T().kids||0);
+const money=n=>T().cur+Math.round(+n||0).toLocaleString();
+const dayD=i=>{const d=new Date(T().start+'T00:00');d.setDate(d.getDate()+i);return d};
+const dayLabel=(i,o={weekday:'short',month:'short',day:'numeric'})=>dayD(i).toLocaleDateString(LANG==='zh'?'zh-TW':'en',o);
+const list=c=>Object.entries(D[c]).map(([id,v])=>({id,...v}));
+const allDay=i=>list('items').filter(x=>+x.day===i).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+const dayItems=i=>allDay(i).filter(x=>!x.maybe);
+const maybeItems=i=>allDay(i).filter(x=>x.maybe);
+const realItems=()=>list('items').filter(x=>!x.maybe);
+const chosenHotel=()=>nightHotel(0)||list('hotels').find(h=>h.chosen);
+const stays=()=>D.trip.stays||{};
+const nightHotel=n=>{const id=stays()[n]?.main;return (id&&D.hotels[id])?{id,...D.hotels[id]}:(list('hotels').find(h=>h.chosen)||null)};
+const nightBackups=n=>(stays()[n]?.backups||[]).filter(id=>D.hotels[id]).map(id=>({id,...D.hotels[id]}));
+const hotelCost=()=>[...Array(nights()).keys()].reduce((a,n)=>{const h=nightHotel(n),p=h?best(h):[];return a+(p.length?p[0][1]:0)},0);
+const hNights=id=>{const m=[],b=[];for(let n=0;n<nights();n++){if(nightHotel(n)?.id===id)m.push(n+1);if((stays()[n]?.backups||[]).includes(id))b.push(n+1)}return {m,b}};
+const nightsTxt=a=>a.length===0?'':a.length===1?'Night '+a[0]:(a[a.length-1]-a[0]===a.length-1?`Nights ${a[0]}–${a[a.length-1]}`:'Nights '+a.join(', '));
+const dayNote=i=>(D.trip.dayNotes||{})[i]||'';
+function saveStays(st){write('trip','main',{...D.trip,stays:st})}
+const best=h=>{const p=[['Agoda',+h.agoda],['Trip.com',+h.trip],['Direct',+h.other]].filter(x=>x[1]>0).sort((a,b)=>a[1]-b[1]);return p};
+const toMin=t=>{const[h,m]=(t||'0:0').split(':').map(Number);return h*60+(m||0)};
+const fromMin=m=>`${String(Math.floor(m/60)%24).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`;
+const fmtDur=m=>LANG==='zh'?(m>=60?`${Math.floor(m/60)}小時${m%60?m%60+'分':''}`:`${m}分鐘`):(m>=60?`${Math.floor(m/60)}h${m%60?' '+m%60+'m':''}`:`${m} min`);
+// ================= i18n =================
+let LANG=(()=>{try{const v=localStorage.getItem('ftp.lang');if(v==='zh'||v==='en')return v}catch(e){}return /^zh/i.test(navigator.language||'')?'zh':'en'})();
+const I18N={en:{},zh:{
+"(your Google Maps lists) and":"（你的 Google 地圖清單）和",", choose":"，選擇",
+". Ask the trip owner to add this email under 👨‍👩‍👧 Family, then reload this page.":"。請行程擁有者在「👨‍👩‍👧 家人」加入這個 email，然後重新整理這個頁面。",
+"Add":"新增","Add an item and press Enter":"輸入物品後按 Enter","Add something":"新增項目","Booking number, what to bring, stroller OK?":"預約編號、要帶什麼、可以推嬰兒車嗎？",
+"Edit the hotel to set its location":"編輯酒店以設定位置","Name used for Google & Apple Maps":"在 Google／Apple 地圖使用的名稱","Near station? Pool? Cancellation policy?":"近車站嗎？有泳池嗎？取消政策？",
+"Or type your own":"或自行輸入","Paste a Google Maps or Apple Maps link":"貼上 Google 地圖或 Apple 地圖連結","Paste links or place names, one per line":"貼上連結或地點名稱，每行一個","Place name":"地點名稱",
+"Remove":"移除","Reservation needed? Must-order dish?":"需要訂位嗎？必點菜式？","Save for later":"收藏起來","Search any place, e.g. Churaumi, Kouri Island, Naha airport":"搜尋任何地點，例如：美麗海、古宇利島、那霸機場",
+"Shinjuku":"例如：北谷","Type your own travel time":"自行輸入交通時間","Zoom in":"放大","Zoom out":"縮小","e.g. Route 58 north, parking at the beach":"例如：58號公路北上，海灘旁停車",
+"e.g. Tokyo DisneySea":"例如：美麗海水族館","family member's Google email":"家人的 Google email","sushi, ramen, tempura…":"壽司、拉麵、天婦羅…",
+"Activities":"活動","Add a hotel":"新增酒店","Add a place or activity":"新增地點或活動","Add a restaurant":"新增餐廳","Add to plan":"加入行程","Add to saved places":"加入收藏地點","Adults":"大人",
+"Agoda / night":"Agoda／每晚","Agoda and Trip.com need these for correct prices":"Agoda 和 Trip.com 需要年齡才能顯示正確價錢","All":"全部","Almost there":"差一點就好","Area":"地區",
+"Best price":"最便宜","Breakfast":"含早餐","Cancel":"取消",
+"Car, taxi and walking times marked ✓ are real road routes (openrouteservice, no live traffic). Bus times are rough estimates: tap Google Maps for live traffic and exact bus routes.":"標示 ✓ 的開車、計程車和步行時間是真實道路路線（openrouteservice，不含即時路況）。公車時間只是粗略估計：按 Google Maps 查看即時路況和公車路線。",
+"Change":"更改","Check-in":"入住","Check-out":"退房","Checked it in Google or Apple Maps? Type the time here. Leave empty to use the calculated route.":"在 Google 或 Apple 地圖查過了嗎？在這裡輸入時間。留空就使用計算出的路線。",
+"Close":"關閉","Compare hotels":"比較酒店","Copied: paste it into WhatsApp or LINE":"已複製：可以貼到 WhatsApp 或 LINE","Copy":"複製","Cost / person":"每人費用","Cuisine":"菜式","Currency":"貨幣",
+"Create our family trip":"建立我們的家庭行程","Day":"日期","Delete":"刪除","Delete this stop?":"刪除這個景點？","Delete this hotel?":"刪除這間酒店？","Delete this restaurant?":"刪除這間餐廳？",
+"Demo mode":"示範模式","Demo user":"示範用戶","Destination":"目的地","Direct / night":"官網／每晚","Direct / other":"官網／其他","Direct":"官網","Eats":"美食",
+"Edit hotel":"編輯酒店","Edit restaurant":"編輯餐廳","Edit stop":"編輯景點","End":"終點","Estimated cost":"預計費用","Everyone on the trip sees it right away.":"所有一起規劃的家人會立即看到。","Everything":"全部",
+"Excellent":"優秀","Explore":"探索","Export to KML":"匯出 KML","Family":"家人","Family room":"家庭房","Family trip":"家庭旅行","Find places":"搜尋地點","Flights and local transport fares not included.":"不包括機票和當地交通費。",
+"Food":"餐飲","Free day":"自由日","Getting around":"交通方式","Getting there":"交通","Good":"不錯","Google and Apple don't let other websites read your saved lists directly, so use one of these quick ways.":"Google 和 Apple 不允許其他網站直接讀取你的收藏清單，所以請用以下其中一個快速方法。",
+"Home":"首頁","Hotel":"酒店","Hotel name":"酒店名稱","Hotel option":"酒店選擇","Hotels":"酒店","Hotels total:":"酒店合計：","How long (hours)":"停留多久（小時）","Import from Google Maps":"從 Google 地圖匯入",
+"In Google Maps or Apple Maps, open a place":"在 Google 地圖或 Apple 地圖打開一個地點","Kid-friendly (high chairs, kids menu, relaxed)":"適合小朋友（有兒童椅、兒童餐、氣氛輕鬆）","Kids":"小朋友","Kids' ages":"小朋友年齡",
+"Latest from the family":"家人最新動態","Location on the map":"地圖上的位置","Look it up on the big sites":"到大型網站查詢","Map":"地圖","Map name (optional)":"地圖名稱（選填）","Maps (your places)":"地圖（你的地點）",
+"Meal":"用餐","Minutes":"分鐘","Museum":"博物館","Name":"名稱","No trip has been created yet. Create it and you become the owner: you choose which family members can join.":"還沒有建立行程。建立後你就是擁有者，可以決定哪些家人加入。",
+"Not on the map yet":"還沒放上地圖","Notes":"備註","Notes, tickets, tips":"備註、門票、小貼士","Open":"打開","Opening your trip…":"正在打開你的行程…","Opens each site with your trip already filled in.":"打開各網站時，會自動填好你的行程資料。",
+"Or pick one of your saved places":"或從收藏地點選擇","Other":"其他","Our shortlist":"我們的清單","Owner":"擁有者","Pack":"行李","Packed":"已收拾","Packing item":"行李物品","Packing list":"行李清單","Park & nature":"公園與自然",
+"Passports":"護照","Paste here. You can paste many at once":"貼到這裡，可以一次貼很多個","Per person":"每人","Pick a category or search any place. Results come from OpenStreetMap; tap ＋ Add to put one in your plan.":"選擇分類或搜尋任何地點。結果來自 OpenStreetMap，按「＋ 新增」加入行程。",
+"Pick the main hotel for each night and add backup hotels (後備) in case it's full or plans change.":"為每晚選擇主要酒店，並加入後備酒店，以防客滿或計劃改變。","Place or activity":"地點或活動","Plan":"行程",
+"Plan our family trip together":"一起規劃我們的家庭旅行","Plan together":"一起規劃","Relax":"放鬆","Reload":"重新載入","Restaurant":"餐廳","Restaurants":"餐廳","Restaurants by Tabelog score":"按 Tabelog 評分排列的餐廳",
+"Rooms":"房間","Route note":"路線備註","Save":"儲存","Saved":"收藏","Search Agoda ↗":"搜尋 Agoda ↗","Search Tabelog ↗":"搜尋 Tabelog ↗","Search Trip.com ↗":"搜尋 Trip.com ↗",
+"Search both sites (dates and guests filled in), then add each hotel's nightly price. We highlight the cheapest.":"在兩個網站搜尋（已填好日期和人數），再輸入每間酒店的每晚價錢。我們會標示最便宜的。",
+"Search © OpenStreetMap contributors. Check opening hours and prices before you go.":"搜尋 © OpenStreetMap 貢獻者。出發前請確認營業時間和價錢。","Share":"分享","Shopping":"購物","Sightseeing":"觀光",
+"Sign in with Google":"使用 Google 登入","Sign in with your Google account to see and edit the trip live with your family.":"用 Google 帳號登入，就能和家人即時查看和編輯行程。","Sign out":"登出","Something went wrong":"出了點問題",
+"Stars":"星級","Start":"出發","Start time":"開始時間","Start your family trip":"開始你的家庭行程","Status":"狀態","Stays":"住宿","Stops":"景點","Stops planned":"已安排景點","Summary":"總結",
+"Tabelog is strict: 3.0 is good, 3.5+ excellent, 3.75+ top-tier, 4.0+ legendary.":"Tabelog 評分很嚴格：3.0 已經不錯，3.5+ 優秀，3.75+ 頂級，4.0+ 傳奇。","Tabelog score":"Tabelog 評分",
+"Tap":"按","Tap a day to open it":"按一下打開那一天","Tap the map to drop a pin, paste a link, or find by name.":"按地圖放置標記、貼上連結，或用名稱搜尋。","Theme park":"主題樂園",
+"They open this website, tap \"Sign in with Google\" with that email, and see the same trip live.":"他們打開這個網站，用那個 email 按「使用 Google 登入」，就能即時看到同一個行程。",
+"This removes it for the whole family.":"這會為全家人刪除。","Time travelling":"交通時間","Total":"合計","Travel time":"交通時間","Trip at a glance":"行程總覽","Trip details":"行程資料",
+"Trip.com / night":"Trip.com／每晚","Try again":"再試一次","Type":"類型","Type a place, e.g. \"Churaumi Aquarium\"":"輸入地點，例如「美麗海水族館」","Unzip, then upload the":"解壓縮後上傳",
+"Use Night 1's choices for every night":"每晚都使用第1晚的選擇","Use another account":"使用其他帳號","Use for all nights":"所有晚上都住這間","We find it on the map (OpenStreetMap)":"我們會在地圖上找到它（OpenStreetMap）",
+"What":"名稱","What would you like to add?":"你想新增什麼？","Where the money goes":"費用分布","Whole day in Google Maps ↗":"在 Google Maps 看全日路線 ↗","You":"你","You're signed in as":"你目前登入的帳號是",
+"Your days":"每日行程","Zoo & aquarium":"動物園與水族館","between stops":"景點之間","days to go":"天後出發","drag any pin to fix its spot":"拖曳標記即可修正位置","files here":"檔案到這裡","free":"自由",
+"just now":"剛剛","live for the whole family":"全家即時同步","not on map yet":"還沒放上地圖","not signed in yet":"還沒登入","numbered pins = plan stops, one colour per day":"數字標記 = 行程景點，每天一種顏色",
+"or":"或","total":"合計","works too":"也可以","— Choose main hotel —":"— 選擇主要酒店 —","★ saved places":"★ 收藏地點","☔ Rainy-day plan":"☔ 雨天方案","♨️ Onsen & spa":"♨️ 溫泉與水療",
+"✅ Confirmed":"✅ 已確定","✈️ Travel day":"✈️ 交通日","✍️ Type names":"✍️ 輸入名稱","✏️ Edit trip":"✏️ 編輯行程","✦ Family Journeys":"✦ 家庭旅程","⭐ Saved places…":"⭐ 收藏地點…",
+"🌅 Viewpoints":"🌅 觀景點","🌙 Tonight:":"🌙 今晚：","🌙 Where we sleep each night":"🌙 每晚住宿","🌳 Parks":"🌳 公園","🍣 Tabelog top-rated":"🍣 Tabelog 高分餐廳","🍣 Top restaurants":"🍣 精選餐廳",
+"🍱 Restaurants":"🍱 餐廳","🍳 breakfast":"🍳 含早餐","🎢 Theme parks":"🎢 主題樂園","🏖 Beach day":"🏖 海灘日","🏖 Beaches":"🏖 海灘","🏨 Where we stay":"🏨 住宿","🏨 hotel":"🏨 酒店","🏯 Castles":"🏯 城跡",
+"🏷 Add a label for this day":"🏷 為這天加標籤","🐠 Diving & snorkel":"🐠 潛水與浮潛","🐬 Aquarium day":"🐬 水族館日","🐬 Aquariums":"🐬 水族館","👀 Google preview":"👀 Google 預覽","👀 Hide preview":"👀 隱藏預覽",
+"👨‍👩‍👧 Family":"👨‍👩‍👧 家人","👨‍👩‍👧 family room":"👨‍👩‍👧 家庭房","👶 Kid-friendly":"👶 適合小朋友","👶 Kids OK":"👶 適合小朋友","💴 Budget":"💴 預算","📁 Import a whole list":"📁 匯入整個清單",
+"📋 Copy to share":"📋 複製分享","📋 Full summary":"📋 完整總結","📍 Google Maps":"📍 Google Maps","📍 Location set. Tap the map or drag the pin to change it.":"📍 已設定位置。按地圖或拖曳標記可以更改。","📍 Map":"📍 地圖",
+"📍 add locations to see travel times":"📍 加入位置即可看到交通時間","📥 Bring in places from Google Maps & Apple Maps":"📥 從 Google 地圖和 Apple 地圖匯入地點","🔎 Find by name":"🔎 用名稱搜尋","🔎 Search":"🔎 搜尋",
+"🔗 Share a place":"🔗 分享一個地點","🖨 Print / PDF":"🖨 列印／PDF","🗓 Day by day":"🗓 每日行程","🗺 Google Maps: kids activities":"🗺 Google Maps：親子活動","😴 Rest day":"😴 休息日","🚌 Bus & monorail":"🚌 公車與單軌電車",
+"🚗 Rental car":"🚗 租車","🚗 Road trip north":"🚗 北部自駕","🚶 Walk":"🚶 步行","🛍 Shopping":"🛍 購物","🛍 Shopping day":"🛍 購物日","🤔 Still considering":"🤔 考慮中","🤔 Still deciding":"🤔 仍在決定",
+"🦁 Zoos":"🦁 動物園","🧪 Museums":"🧪 博物館","＋ Add":"＋ 新增","＋ Add backup":"＋ 新增後備","＋ Add hotel":"＋ 新增酒店","＋ Add restaurant":"＋ 新增餐廳","＋ Add stop":"＋ 新增景點","＋ Add to day":"＋ 加到某天",
+"Cash":"現金","Child car seats booked":"已預約兒童安全座椅","Driving licence + International Driving Permit":"駕駛執照＋國際駕駛許可證","Kids medicine":"小朋友藥物","Phone chargers":"手機充電器","Power adapter":"轉換插頭",
+"Rain jackets":"雨衣","Snacks for the plane":"飛機上的零食","Stroller":"嬰兒車","Sunscreen":"防曬","Swimwear & reef shoes":"泳衣和溯溪鞋","Tablet + headphones":"平板＋耳機","Travel insurance":"旅遊保險","Wet wipes":"濕紙巾",
+"Add the hotel name":"請輸入酒店名稱","Add the restaurant name":"請輸入餐廳名稱","Already added":"已經加入了","Check-out must be after check-in":"退房日期必須在入住之後","Copied to all nights ✓":"已套用到每晚 ✓",
+"Could not add: only the owner can add family":"無法加入：只有擁有者可以加入家人","Could not create the trip: someone may have created it already":"無法建立行程：可能已經有人建立了","Could not delete":"無法刪除","Could not remove":"無法移除",
+"Enter a valid email":"請輸入有效的 email","Give it a name":"請輸入名稱","No places found in that":"找不到任何地點","Nothing found, try another word":"找不到，試試其他字詞","Please fill destination and dates":"請填寫目的地和日期",
+"Saved ✓":"已儲存 ✓","Search is busy, try again in a moment":"搜尋繁忙，請稍後再試","Trip updated ✓":"行程已更新 ✓","Type the place name first":"請先輸入地點名稱","✅ Confirmed":"✅ 已確定","🎉 Your family trip is ready":"🎉 你的家庭行程已建立",
+"🏨 Set as your hotel":"🏨 已設為你的酒店","🏨 Set for every night":"🏨 已設為每晚的酒店","📍 Location found from the link":"📍 已從連結找到位置","📍 Location updated":"📍 位置已更新","🔁 Backup hotel added":"🔁 已新增後備酒店",
+"Connecting…":"連線中…","Live · shared with family":"即時同步 · 與家人共享","Offline":"離線","Not signed in":"未登入","Signed in":"已登入","Family member":"家人","Me":"我","Demo":"示範",
+"No hotels yet":"還沒有酒店","Add two or three you like and compare prices side by side.":"加入兩三間喜歡的酒店，並排比較價錢。","No restaurants yet":"還沒有餐廳","Nothing matches the filter":"沒有符合篩選條件的項目",
+"Find favourites on Tabelog, then add them with their score.":"在 Tabelog 找到喜歡的餐廳，再連同評分加入。","A free day":"自由的一天","Add a stop, or pick from Explore or your saved places.":"新增景點，或從「探索」或收藏地點選擇。",
+"No saved places yet":"還沒有收藏地點","Share places from Google Maps or Apple Maps and they appear here and on the map.":"從 Google 地圖或 Apple 地圖分享地點，就會出現在這裡和地圖上。","Nothing yet: tap a suggestion above.":"還沒有物品：按上面的建議加入。",
+"Add hotel prices and costs to see the budget.":"加入酒店價錢和費用就能看到預算。","No hotel chosen yet.":"還沒選擇酒店。","not chosen":"未選擇","no hotel yet":"還沒有酒店","Not chosen":"未選擇","Compare in Stays":"到「住宿」比較",
+"Add locations in Plan":"在「行程」加入位置","Searching…":"搜尋中…","Approximate spot: drag the pin to fine-tune":"大約位置：拖曳標記微調","Not counted in routes or budget yet":"尚未計入路線和預算","✅ Confirm":"✅ 確定",
+"Everyone sees this label.":"全家都會看到這個標籤。","Shopping day":"購物日","Kid":"小朋友","under 1":"未滿1歲","enjoy the trip!":"旅途愉快！","trip complete":"旅程完成","Family Journeys":"家庭旅程",
+"🏖 Beach day":"🏖 海灘日","🐬 Aquarium day":"🐬 水族館日","Choose your hotel in":"在","🏨 Choose your hotel in":"🏨 在","Start a list in Pack":"到「行李」開始清單","and each day starts and ends there, with travel times.":"選擇酒店，每天就會以那裡為起點和終點，並計算交通時間。",
+"🚸 Kids under 6 must ride in a child seat in Japan. Book seats with your rental car.":"🚸 在日本，6歲以下小朋友必須坐兒童安全座椅。租車時請一併預約。",
+"Considering":"考慮中","Confirmed":"已確定","Backup":"後備","Backup:":"後備：","Backups:":"後備：","Tonight:":"今晚：","Edit":"編輯","Done":"完成","Copy this text":"複製以下文字","Delete":"刪除",
+"Rental car":"租車","Taxi":"計程車","Bus / monorail":"公車／單軌電車","Walk":"步行","real route":"真實路線","estimate":"估計","Google":"Google","Apple":"Apple",
+"Casual":"普通","Top-tier":"頂級","Legendary":"傳奇","Not rated":"未評分","Family room ":"家庭房",
+"Couldn't read that file":"無法讀取這個檔案","That doesn't look like a map link":"這看起來不像地圖連結","You don't have permission to change this":"你沒有權限更改這項內容","Could not save, please try again":"無法儲存，請再試一次",
+"Short links hide the location: find by name or tap the map":"短連結不包含位置：請用名稱搜尋或按地圖","No location in that link: tap the map":"連結裡沒有位置：請按地圖","🤔 Saved as considering":"🤔 已存為考慮中",
+"Finding your places on the map…":"正在把你的地點放上地圖…","Putting your stops on the map…":"正在把景點放上地圖…","Not found. Try a shorter name, or tap the map to place it.":"找不到。試試較短的名稱，或按地圖放置。",
+"Pick the right place below.":"在下面選擇正確的地點。","Search is busy. Try again or tap the map.":"搜尋繁忙。請再試一次或按地圖。",
+}};
+const RULES=[
+[/^· (.+)$/,m=>'· '+trText(m[1])],
+[/^Day (\d+)$/,m=>`第${m[1]}天`],[/^Night (\d+)$/,m=>`第${m[1]}晚`],[/^🌙 Night (\d+)$/,m=>`🌙 第${m[1]}晚`],
+[/^🌙 Night (\d+): (.+?)(?: \(backup: (.+)\))?$/,m=>`🌙 第${m[1]}晚：${m[2]}${m[3]?`（後備：${m[3]}）`:''}`],
+[/^(🌙 |🔁 Backup )?[Nn]ights? ([\d,–\s]+)$/,m=>`${m[1]?(m[1].startsWith('🔁')?'🔁 後備 ':'🌙 '):''}第${m[2].replace(/\s/g,'')}晚`],
+[/^(\d+) stops?$/,m=>`${m[1]}個景點`],[/^(.+) planned$/,m=>`已安排 ${trText(m[1])}`],[/^(.+) on the road$/,m=>`路上 ${m[1]}`],
+[/^(\d+) planning together$/,m=>`${m[1]}人一起規劃`],[/^(\d+) adults?, (.+)$/,m=>`${m[1]}位大人、${trText(m[2])}`],[/^(?:👨‍👩‍👧 )?(\d+) adults?$/,m=>(m[0].startsWith('👨')?'👨‍👩‍👧 ':'')+`${m[1]}位大人`],
+[/^(\d+) kids? \(ages? (.+)\)$/,m=>`${m[1]}位小朋友（${m[2].replace(/, /g,'、')}歲）`],[/^(\d+) kids?$/,m=>`${m[1]}位小朋友`],
+[/^(\d+) hotels$/,m=>`${m[1]}間酒店`],[/^(\d+) people can plan this trip$/,m=>`${m[1]}人可以一起規劃`],[/^(\d+)% ready$/,m=>`已完成 ${m[1]}%`],
+[/^(🌙 )?(\d+) nights?$/,m=>`${m[1]||''}${m[2]}晚`],[/^Kid (\d+): (\d+) yrs$/,m=>`小朋友${m[1]}：${m[2]}歲`],[/^Kid (\d+): under 1$/,m=>`小朋友${m[1]}：未滿1歲`],
+[/^(.+)\. Everyone sees this label\.$/,m=>`${m[1]}。全家都會看到這個標籤。`],[/^Back to (.+)$/,m=>`返回 ${m[1]}`],[/^Check in: (.+)$/,m=>`入住：${m[1]}`],
+[/^Save (.+) with the cheapest$/,m=>`選最便宜可省 ${m[1]}`],[/^Label for Day (\d+)$/,m=>`第${m[1]}天的標籤`],[/^across (\d+) days$/,m=>`共 ${m[1]} 天`],
+[/^(.+) total$/,m=>`合計 ${m[1]}`],[/^Total (.+)$/,m=>`合計 ${m[1]}`],[/^(.+) per person$/,m=>`每人 ${m[1]}`],[/^💴 (.+) for (\d+) nights$/,m=>`💴 ${m[2]}晚共 ${m[1]}`],
+[/^for (\d+) nights \(cheapest site for each\)\.$/,m=>`，共 ${m[1]} 晚（每晚以最便宜的網站計算）。`],[/^(.+) to get there$/,m=>`前往需 ${m[1]}`],
+[/^(🚗|🚌|🚶) (.+) travel$/,m=>`${m[1]} 交通 ${m[2]}`],[/^(.*) \((.+) travel\)$/,m=>`${m[1]}（交通 ${m[2]}）`],
+[/^🧳 (.+) family trip$/,m=>`🧳 ${m[1]} 家庭旅行`],[/^(.+) family trip$/,m=>`${m[1]} 家庭旅行`],[/^Our (.+) map$/,m=>`我們的 ${m[1]} 地圖`],[/^Find places in (.+)$/,m=>`搜尋 ${m[1]} 的地點`],[/^＋ (.+)$/,m=>'＋ '+trText(m[1])],[/^Cost for the family \((.+)\)$/,m=>`全家費用（${m[1]}）`],[/^(.+) \/ night$/,m=>`${m[1]}／每晚`],
+[/^🤔 (\d+) considering$/,m=>`🤔 ${m[1]} 個考慮中`],[/^🤔 Considering: (.+)$/,m=>`🤔 考慮中：${m[1]}`],[/^🤔 Still considering \((\d+)\)$/,m=>`🤔 考慮中（${m[1]}）`],
+[/^📍 Put (\d+) (?:stops? )?on the map$/,m=>`📍 把 ${m[1]} 個地點放上地圖`],[/^⭐ Saved places \((\d+)\)$/,m=>`⭐ 收藏地點（${m[1]}）`],
+[/^🔁 Backup: (.+)$/,m=>`🔁 後備：${m[1]}`],[/^updated (\S+) (.+)$/,m=>`更新了 ${m[1]} ${m[2]}`],
+[/^(\d+)m ago$/,m=>`${m[1]}分鐘前`],[/^(\d+)h ago$/,m=>`${m[1]}小時前`],[/^(\d+)d ago$/,m=>`${m[1]}天前`],
+[/^Could not open the trip \((.*)\)\. Check your connection and try again\.$/,m=>`無法開啟行程（${m[1]}）。請檢查網路後再試一次。`],
+[/^Added to Day (\d+) ✓$/,m=>`已加入第${m[1]}天 ✓`],[/^👋 Added (.+)$/,m=>`👋 已加入 ${m[1]}`],[/^Tonight: (.+)$/,m=>`今晚：${m[1]}`],
+[/^(.+) ▾$/,m=>`${trText(m[1])} ▾`],[/^Sign-in did not finish: (.*)$/,m=>`登入未完成：${m[1]}`],
+[/^⭐ Added (\d+) places?$/,m=>`⭐ 已加入 ${m[1]} 個地點`],[/^(\d+) need a location$/,m=>`${m[1]} 個需要設定位置`],
+[/^📍 (\d+) of (\d+) placed(\. Edit the others to set them by hand)?$/,m=>`📍 已放置 ${m[1]}／${m[2]} 個${m[3]?'。其餘請手動設定':''}`],
+[/^📍 Found (\d+) of (\d+)(\. Add the rest to a day and set them by hand)?$/,m=>`📍 找到 ${m[1]}／${m[2]} 個${m[3]?'。其餘請加到某天後手動設定':''}`],
+[/^🔎 Looking for (.+)…$/,m=>`🔎 正在搜尋 ${m[1]}…`],
+];
+function t(k,v={}){const s=(LANG==='zh'&&I18N.zh[k])||k;return s.replace(/\{(\w+)\}/g,(_,n)=>v[n]??'')}
+function trSeg(s){const lead=s.match(/^\s*/)[0],trail=s.match(/\s*$/)[0],x=s.trim();if(!x)return null;
+  if(I18N.zh[x]!=null)return lead+I18N.zh[x]+trail;
+  for(const [re,f] of RULES){const m=x.match(re);if(m)return lead+f(m)+trail}return null}
+function trText(s){if(LANG!=='zh'||!s||!/[A-Za-z]/.test(s))return s;const x=s.trim();
+  if(I18N.zh[x]!=null)return s.replace(x,I18N.zh[x]);
+  if(x.includes(' · ')){let ch=false;const o=s.split(' · ').map(p=>{const r=trSeg(p);if(r!=null){ch=true;return r}return p});return ch?o.join(' · '):s}
+  const w=trSeg(s);return w!=null?w:s}
+const trLines=s=>LANG==='zh'?String(s).split('\n').map(trText).join('\n'):s;
+const ORIG=new WeakMap(),SKIP='.leaflet-control-attribution,script,style,textarea,.notr',TA=['placeholder','title','aria-label'];
+function trNode(root){if(LANG!=='zh'||!root)return;
+  if(root.nodeType===3){root=root.parentNode;if(!root)return}
+  const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),l=[];let n;while(n=w.nextNode())l.push(n);
+  for(const n of l){const p=n.parentElement;if(!p||p.closest(SKIP))continue;const o=ORIG.has(n)?ORIG.get(n):n.data;const r=trText(o);if(r!==n.data){ORIG.set(n,o);n.data=r}}
+  const els=root.querySelectorAll?[root,...root.querySelectorAll('[placeholder],[title],[aria-label]')]:[];
+  for(const el of els){if(!el.getAttribute||el.closest?.(SKIP))continue;for(const a of TA){const v=el.getAttribute(a);if(!v)continue;const k='i18n'+a.replace('-','');const o=el.dataset[k]??v;const r=trText(o);if(r!==v){el.dataset[k]=o;el.setAttribute(a,r)}}}}
+function restoreAll(){const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode())if(ORIG.has(n)){n.data=ORIG.get(n);ORIG.delete(n)}
+  document.querySelectorAll('[data-i18nplaceholder],[data-i18ntitle],[data-i18narialabel]').forEach(el=>{for(const a of TA){const k='i18n'+a.replace('-','');if(el.dataset[k]!=null){el.setAttribute(a,el.dataset[k]);delete el.dataset[k]}}})}
+new MutationObserver(ms=>{if(LANG!=='zh')return;for(const m of ms)for(const n of m.addedNodes)trNode(n)}).observe(document.body,{childList:true,subtree:true});
+function langUI(){document.documentElement.lang=LANG==='zh'?'zh-Hant':'en';document.title=LANG==='zh'?'家庭旅行規劃':'Family Trip Planner';
+  const b=$('#langbtn');if(b)b.innerHTML=`<span class="${LANG==='zh'?'on':''}">中文</span><span class="${LANG==='en'?'on':''}">EN</span>`}
+function setLang(l){if(l===LANG)return;LANG=l;try{localStorage.setItem('ftp.lang',l)}catch(e){}if($('#modal').innerHTML)modal();if(l==='en')restoreAll();else trNode(document.body);langUI();render()}
+function toast(t){$('#toast').innerHTML=`<div class="toast">${esc(t)}</div>`;clearTimeout(toast.t);toast.t=setTimeout(()=>$('#toast').innerHTML='',2600)}
+
+// ================= data layer (Firebase) =================
+const fb=()=>window.FB;
+const dref=(c,id)=>fb().doc(fb().db,c,id);
+async function write(coll,id,data,keep){
+  const body=keep?{...data}:{...data,by:me||data.by||null,at:Date.now()};
+  if(coll==='trip'){D.trip={...D.trip,...body}}else D[coll][id]=body;
+  render();
+  if(demo)return;
+  try{await fb().setDoc(coll==='trip'?dref('trip','main'):dref(coll,id),coll==='trip'?D.trip:body)}
+  catch(e){toast(e.code==='permission-denied'?"You don't have permission to change this":'Could not save, please try again')}
+}
+async function remove(coll,id){
+  delete D[coll][id];render();
+  if(demo)return;
+  try{await fb().deleteDoc(dref(coll,id))}catch(e){toast('Could not delete')}
+}
+function applyRemote(fn){fn();const a=document.activeElement;if(a&&a.closest&&a.closest('#view,#modal')&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)){pendingRender=true;return}render()}
+document.addEventListener('focusout',()=>setTimeout(()=>{if(pendingRender&&!document.activeElement?.closest?.('#view,#modal')){pendingRender=false;render()}},50));
+const myEmail=()=>(FBU?.email||'').toLowerCase();
+window.onAuth=async u=>{
+  if(demo)return;unsubs.forEach(f=>f());unsubs=[];FBU=u;owner=null;isOwner=false;
+  if(!u){gate='signin';setSync(false);render();return}
+  me=u.uid;gate='loading';render();
+  fb().setDoc(dref('profiles',u.uid),{name:u.displayName||'',photo:u.photoURL||'',email:myEmail()}).catch(()=>{});
+  profiles[u.uid]={name:u.displayName||'',photo:u.photoURL||'',email:myEmail()};
+  try{
+    const o=await fb().getDoc(dref('config','owner'));
+    if(!o.exists()){gate='create';render();return}
+    owner=o.data();isOwner=owner.uid===u.uid;
+    if(!isOwner){const m=await fb().getDoc(dref('members',myEmail()));if(!m.exists()){gate='denied';render();return}}
+    gate='ok';listen();render();
+  }catch(e){gerr=e.code||e.message||'';gate=e.code==='permission-denied'?'denied':'error';render()}
+};
+async function signIn(){try{await fb().signIn()}catch(e){toast('Sign-in did not finish: '+(e.code||'try again'))}}
+async function createTrip(){try{await fb().setDoc(dref('config','owner'),{uid:me,email:myEmail()});toast('🎉 Your family trip is ready');window.onAuth(FBU)}catch(e){toast('Could not create the trip: someone may have created it already');window.onAuth(FBU)}}
+function listen(){
+  const F=fb();let timer=setTimeout(()=>{if(!online)$('#banner').innerHTML='<div class="banner">⏳ Still connecting to the shared trip. What you see may be out of date.</div>'},10000);
+  const seen=m=>{if(!m.fromCache){clearTimeout(timer);$('#banner').innerHTML='';setSync(true)}else if(!online)setSync(false)};
+  const err=e=>{clearTimeout(timer);setSync(false);if(e.code==='permission-denied'){gate='denied';render()}};
+  unsubs.push(F.onSnapshot(dref('trip','main'),s=>{seen(s.metadata);applyRemote(()=>{D.trip={...DEF_TRIP,...(s.exists()?s.data():{})}})},err));
+  for(const c of [...COLLS,'members'])unsubs.push(F.onSnapshot(F.collection(F.db,c),s=>{seen(s.metadata);applyRemote(()=>{D[c]=Object.fromEntries(s.docs.map(x=>[x.id,{...x.data()}]))})},err));
+  unsubs.push(F.onSnapshot(F.collection(F.db,'profiles'),s=>{s.docs.forEach(x=>profiles[x.id]=x.data());render()},()=>{}));
+}
+function setSync(on){online=on;$('#sync').innerHTML=demo?'<span class="dot off"></span>Demo mode':on?`<span class="dot"></span>Live · shared with family`:`<span class="dot off"></span>${gate==='ok'?'Offline · will sync':'Not signed in'}`}
+const nameOf=id=>id===me?'You':(profiles[id]?.name||'Family member');
+const colorOf=id=>PALETTE[[...String(id||'x')].reduce((a,c)=>a+c.charCodeAt(0),0)%PALETTE.length];
+const avatar=(id,cls='')=>{const p=profiles[id]||{},n=nameOf(id),ph=/^https:\/\//.test(p.photo||'')?p.photo:'';
+  return ph?`<img class="av ${cls}" src="${esc(ph)}" alt="" title="${esc(n)}" referrerpolicy="no-referrer">`:`<span class="av ${cls}" style="background:${colorOf(id)}" title="${esc(n)}">${esc(((p.name||n)||'?').slice(0,1).toUpperCase())}</span>`};
+const who=x=>x.by?`<span class="who">${avatar(x.by,'sm')} ${esc(nameOf(x.by))}${x.at?' · '+ago(x.at):''}</span>`:'';
+function ago(t){const s=(Date.now()-t)/1e3;return s<60?'just now':s<3600?Math.floor(s/60)+'m ago':s<86400?Math.floor(s/3600)+'h ago':Math.floor(s/86400)+'d ago'}
+const profByEmail=e=>Object.entries(profiles).find(([k,p])=>(p.email||'').toLowerCase()===String(e).toLowerCase());
+let memList=[];
+function vFamily(){memList=list('members').sort((a,b)=>(a.at||0)-(b.at||0));
+  const op=owner?profByEmail(owner.email):null;
+  const row=(email,pid,tag,k)=>`<div class="chk">${pid?avatar(pid):`<span class="av" style="background:#b8ad9a">${esc(String(email||'?').slice(0,1).toUpperCase())}</span>`}<span class="sp"><b>${esc(pid?profiles[pid].name||email:email)}</b><br><span class="note">${esc(email)}${pid?'':' · not signed in yet'}</span></span>${tag}${k!=null&&isOwner?`<button class="ib" title="Remove" onclick="removeMember(${k})">×</button>`:''}</div>`;
+  return `<div class="card"><div class="row"><h2>👨‍👩‍👧 Family</h2><span class="sp"></span><span class="note">${memList.length+1} people can plan this trip</span></div>
+   ${owner?row(owner.email,op?.[0],'<span class="tag y">Owner</span>'):''}
+   ${memList.map((m,k)=>{const p=profByEmail(m.email);return row(m.email,p?.[0],'<span class="tag">Family</span>',k)}).join('')}
+   ${isOwner||demo?`<div class="row" style="margin-top:14px"><input id="memail" type="email" placeholder="family member's Google email" style="flex:1;min-width:200px" onkeydown="if(event.key==='Enter')addMember()"><button class="btn" onclick="addMember()">＋ Add</button></div>
+   <p class="note">They open this website, tap "Sign in with Google" with that email, and see the same trip live.</p>`:'<p class="note">Only the owner can add or remove family members.</p>'}</div>`}
+async function addMember(){const e=($('#memail')?.value||'').trim().toLowerCase();if(!/^[^\s@'"<>]+@[^\s@'"<>]+\.[^\s@'"<>]+$/.test(e))return toast('Enter a valid email');
+  if(D.members[e])return toast('Already added');D.members[e]={email:e,name:'',addedBy:me,at:Date.now()};render();
+  if(!demo)try{await fb().setDoc(dref('members',e),D.members[e])}catch(x){delete D.members[e];render();return toast('Could not add: only the owner can add family')}
+  toast('👋 Added '+e)}
+async function removeMember(k){const m=memList[k];if(!m)return;ask(`Remove ${m.email}?`,async()=>{delete D.members[m.id];render();if(!demo)try{await fb().deleteDoc(dref('members',m.id))}catch(x){toast('Could not remove')}})}
+function userMenu(){modal(`<div class="row">${avatar(me)}<div class="sp"><h3>${esc(profiles[me]?.name||'Signed in')}</h3><span class="note">${esc(FBU?.email||'')}</span></div></div>
+  <div class="row" style="margin-top:20px"><span class="sp"></span><button class="btn alt" onclick="modal()">Close</button><button class="btn" onclick="modal();fb()?.signOut()">Sign out</button></div>`)}
+function vGate(){const g={
+  loading:['⏳','Opening your trip…','',''],
+  signin:['🌺','Plan our family trip together','Sign in with your Google account to see and edit the trip live with your family.',`<button class="gbtn" onclick="signIn()"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>Sign in with Google</button>`],
+  create:['🏝','Start your family trip','No trip has been created yet. Create it and you become the owner: you choose which family members can join.',`<button class="btn gold" style="margin-top:18px" onclick="createTrip()">Create our family trip</button>`],
+  denied:['🔒','Almost there',`You're signed in as <b>${esc(FBU?.email||'')}</b>. Ask the trip owner to add this email under 👨‍👩‍👧 Family, then reload this page.`,`<div class="row" style="justify-content:center;margin-top:18px"><button class="btn" onclick="location.reload()">Reload</button><button class="btn alt" onclick="fb().signOut()">Use another account</button></div>`],
+  error:['⚠️','Something went wrong',`Could not open the trip (${esc(gerr)}). Check your connection and try again.`,`<button class="btn" style="margin-top:18px" onclick="window.onAuth(FBU)">Try again</button>`]}[gate]||['⏳','Loading…','',''];
+  return `<div class="card gate"><div class="big">${g[0]}</div><h2>${g[1]}</h2><p class="note" style="font-size:15px">${g[2]}</p>${g[3]}</div>`}
+function startDemo(){demo=true;me='demo';profiles.demo={name:'Demo user',email:'demo@example.com'};owner={uid:'demo',email:'demo@example.com'};isOwner=true;gate='ok';setSync(false);render()}
+window.startDemo=startDemo;
+
+// ================= links =================
+const LK={
+  agoda:()=>`https://www.agoda.com/search?textToSearch=${enc(T().dest)}&checkIn=${T().start}&checkOut=${T().end}&rooms=${T().rooms}&adults=${T().adults}&children=${T().kids}${+T().kids?'&childages='+kidAges().join(','):''}`,
+  trip:()=>`https://www.trip.com/hotels/list?cityName=${enc(T().dest)}&checkin=${T().start.replaceAll('-','/')}&checkout=${T().end.replaceAll('-','/')}&adult=${T().adults}&children=${T().kids}${+T().kids?'&ages='+kidAges().join(','):''}&crn=${T().rooms}`,
+  tabelog:q=>`https://tabelog.com/en/rstLst/?sw=${enc(q||'')}&sa=${enc(T().dest)}&SrtT=rt`,
+  gplace:q=>`https://www.google.com/maps/search/?api=1&query=${enc(q+', '+T().dest)}`,
+  gleg:(a,b,m)=>`https://www.google.com/maps/dir/?api=1&origin=${enc(locQ(a))}&destination=${enc(locQ(b))}&travelmode=${gm(m)}`,
+  aleg:(a,b,m)=>`https://maps.apple.com/?saddr=${enc(locQ(a))}&daddr=${enc(locQ(b))}&dirflg=${(MODES[m]||MODES.driving)[2]}`,
+  gday:st=>'https://www.google.com/maps/dir/'+st.map(p=>enc(locQ(p))).join('/')
+};
+const placeOf=x=>x.place||x.title;
+const locQ=p=>p.lat!=null?`${p.lat},${p.lng}`:placeOf(p)+', '+T().dest;
+const gm=m=>m==='taxi'?'driving':(m||T().mode);
+
+// ================= shell =================
+const TABS=[['home','🏡','Home'],['explore','✨','Explore'],['map','🗺','Map'],['plan','🗓','Plan'],['stays','🏨','Stays'],['eats','🍣','Eats'],['pack','🎒','Pack'],['summary','📋','Summary']];
+function go(t){tab=t;try{history.replaceState(null,'','#'+t)}catch(e){}render();scrollTo({top:0})}
+addEventListener('hashchange',()=>{const t=location.hash.slice(1);if(TABS.some(x=>x[0]===t)&&t!==tab){tab=t;render()}});
+function render(){
+  if(!demo&&gate!=='ok'){$('#nav').style.display='none';$('.fab').style.display='none';$('#usr').innerHTML=FBU?`<button class="usr" onclick="fb().signOut()">Sign out</button>`:'';
+    $('#herobody').innerHTML='<div><h1>Family trip</h1><div class="meta"><span>Plan together · live for the whole family</span></div></div>';$('#view').innerHTML=vGate();return}
+  $('#nav').style.display='';
+  if(!TABS.some(x=>x[0]===tab))tab='home';
+  selDay=Math.min(selDay,nDays()-1);
+  $('#nav').innerHTML=TABS.map(([k,e,n])=>`<button class="${k===tab?'on':''}" onclick="go('${k}')"><i>${e}</i>${n}</button>`).join('');
+  hero();
+  $('#view').innerHTML=({home:vHome,explore:vExplore,map:vMap,plan:vPlan,stays:vStays,eats:vEats,pack:vPack,summary:vSummary})[tab]();
+  document.querySelectorAll('.ro').forEach(e=>{if(readOnly)e.style.display='none'});
+  $('.fab').style.display=readOnly?'none':'';
+  drawMaps();
+}
+function hero(){
+  $('#usr').innerHTML=FBU||demo?`<button class="usr" onclick="userMenu()">${avatar(me,'sm')}${esc((profiles[me]?.name||'Me').split(' ')[0])} ▾</button>`:'';
+  const days=Math.ceil((dayD(0)-new Date())/864e5);
+  const ppl=[...new Set([owner?.uid,...Object.values(D.members).map(m=>profByEmail(m.email)?.[0]),...COLLS.flatMap(c=>Object.values(D[c]).map(x=>x.by)),me].filter(Boolean))];
+  $('#herobody').innerHTML=`<div><h1>${esc(T().dest)}</h1>
+   <div class="meta"><span>📅 ${dayLabel(0,{month:'short',day:'numeric'})} – ${dayLabel(nights(),{month:'short',day:'numeric',year:'numeric'})}</span><span>🌙 ${nights()} nights</span><span>👨‍👩‍👧 ${T().adults} adults · ${kidsTxt()}</span>
+   <button class="btn sm alt ro" style="padding:4px 12px" onclick="editTrip()">✏️ Edit trip</button></div>
+   ${ppl.length?`<div class="avs">${ppl.slice(0,8).map(i=>avatar(i)).join('')}<span class="note" style="color:#fbf6ecbb">${ppl.length} planning together</span></div>`:''}</div>
+   <div class="count">${days>0?`<b>${days}</b><span>days to go</span>`:days>-nights()-1?`<b>Day ${1-days}</b><span>enjoy the trip!</span>`:`<b>✓</b><span>trip complete</span>`}</div>`;
+}
+
+// ================= modal =================
+function modal(html){if(PICK){PICK.remove();PICK=null}$('#modal').innerHTML=html?`<div class="scrim" onclick="if(event.target===this)modal()"><div class="modal">${html}</div></div>`:'';if(html&&$('#pickmap'))setTimeout(initPicker,40)}
+function ask(text,yes){modal(`<h2>${esc(text)}</h2><p class="note">This removes it for the whole family.</p><div class="row" style="margin-top:18px"><span class="sp"></span><button class="btn alt" onclick="modal()">Cancel</button><button class="btn" style="background:var(--bad)" id="yes">Delete</button></div>`);$('#yes').onclick=()=>{modal();yes()}}
+function openAdd(){modal(`<h2>What would you like to add?</h2><p class="note">Everyone on the trip sees it right away.</p>
+ <div class="cats" style="margin-top:16px">
+ ${[['📍','Place or activity',`editItem(null,{day:${selDay}})`],['🍽','Restaurant','editFood()'],['🏨','Hotel option','editHotel()'],['🎒','Packing item',"modal();go('pack');setTimeout(()=>$('#pk')?.focus(),50)"],['🔎','Find places',"modal();go('explore')"],['⭐','Import from Google Maps',"modal();go('map')"],['✏️','Trip details','editTrip()']]
+ .map(([e,n,f])=>`<button class="cat" style="padding:16px 6px" onclick="${f}"><i>${e}</i>${n}</button>`).join('')}</div>`)}
+function editTrip(){const t=T();modal(`<h2>Trip details</h2>
+ <div class="grid" style="margin-top:14px"><div style="grid-column:1/-1"><label>Destination</label><input id="m_dest" value="${esc(t.dest)}"></div>
+ <div><label>Check-in</label><input type="date" id="m_start" value="${t.start}"></div><div><label>Check-out</label><input type="date" id="m_end" value="${t.end}"></div>
+ <div><label>Adults</label><input type="number" min="1" id="m_adults" value="${t.adults}"></div><div><label>Kids</label><input type="number" min="0" max="8" id="m_kids" value="${t.kids}" oninput="$('#agesBox').innerHTML=agesHtml(Math.min(8,+this.value||0),[...document.querySelectorAll('.age')].map(s=>s.value).join(','))"></div>
+ <div style="grid-column:1/-1" id="agesBox">${agesHtml(t.kids,t.ages)}</div>
+ <div><label>Rooms</label><input type="number" min="1" id="m_rooms" value="${t.rooms}"></div><div><label>Currency</label><input id="m_cur" value="${esc(t.cur)}"></div>
+ <div style="grid-column:1/-1"><label>Getting around</label><div class="chips">${Object.entries(MODES).map(([k,[e,n]])=>`<button class="chip ${t.mode===k?'on':''}" onclick="document.querySelectorAll('#mm .chip').forEach(c=>c.classList.remove('on'));this.classList.add('on');window._mode='${k}'">${e} ${n}</button>`).join('')}</div></div></div>
+ <div class="row" style="margin-top:20px"><span class="sp"></span><button class="btn alt" onclick="modal()">Cancel</button><button class="btn" onclick="saveTrip()">Save</button></div>`);
+ $('#modal .chips').id='mm';window._mode=t.mode}
+function agesHtml(n,ages){const a=String(ages||'').split(',');return +n>0?`<label>Kids' ages · Agoda and Trip.com need these for correct prices</label><div class="row">${[...Array(+n).keys()].map(k=>`<select class="age" style="width:auto">${[...Array(18).keys()].map(v=>`<option value="${v}" ${+(a[k]||6)===v&&!(a[k]==='0'&&v!==0)||(a[k]==='0'&&v===0)?'selected':''}>Kid ${k+1}: ${v<1?'under 1':v+' yrs'}</option>`).join('')}</select>`).join('')}</div>`:''}
+function saveTrip(){const v=k=>$('#m_'+k).value.trim();if(!v('dest')||!v('start')||!v('end'))return toast('Please fill destination and dates');
+ if(v('end')<=v('start'))return toast('Check-out must be after check-in');
+ write('trip','main',{dest:v('dest'),start:v('start'),end:v('end'),adults:+v('adults')||1,kids:+v('kids')||0,rooms:+v('rooms')||1,cur:v('cur')||'$',mode:window._mode||'driving',ages:[...document.querySelectorAll('.age')].map(s=>s.value).join(',')});modal();toast('Trip updated ✓')}
+
+function editItem(id,pre={}){
+  const x=id?{...D.items[id]}:{day:selDay,time:nextTime(pre.day??selDay),cat:'sight',dur:2,cost:0,...pre};window._cat=x.cat||'other';window._maybe=!!x.maybe;window._loc=x.lat!=null?{lat:x.lat,lng:x.lng}:null;
+  modal(`<h2>${id?'Edit':'Add a'} ${id?'stop':'place or activity'}</h2>
+  <div style="margin-top:14px"><label>What</label><input id="i_title" value="${esc(x.title||'')}" placeholder="e.g. Tokyo DisneySea"></div>
+  <div style="margin-top:14px"><label>Type</label><div class="cats" id="icats">${Object.entries(CATS).map(([k,[e,n]])=>`<button class="cat ${x.cat===k?'on':''}" onclick="window._cat='${k}';document.querySelectorAll('#icats .cat').forEach(c=>c.classList.remove('on'));this.classList.add('on')"><i>${e}</i>${n}</button>`).join('')}</div></div>
+  <div class="grid" style="margin-top:14px"><div><label>Day</label><select id="i_day">${[...Array(nDays()).keys()].map(i=>`<option value="${i}" ${+x.day===i?'selected':''}>Day ${i+1} · ${dayLabel(i)}</option>`).join('')}</select></div>
+  <div><label>Start time</label><input type="time" id="i_time" value="${x.time||'10:00'}"></div><div><label>How long (hours)</label><input type="number" step="0.5" min="0" id="i_dur" value="${x.dur??2}"></div>
+  <div><label>Cost for the family (${esc(T().cur)})</label><input type="number" min="0" id="i_cost" value="${x.cost||''}"></div></div>
+  ${list('saved').length&&!id?`<div style="margin-top:14px"><label>Or pick one of your saved places</label><select onchange="pickSaved(this.value)"><option value="">⭐ Saved places…</option>${list('saved').map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select></div>`:''}
+  <div style="margin-top:14px"><label>Map name (optional)</label><input id="i_place" value="${esc(x.place||'')}" placeholder="Name used for Google & Apple Maps"></div>
+  ${locBlock()}
+  <div style="margin-top:14px"><label>Status</label><div class="chips" id="istat"><button class="chip ${x.maybe?'':'on'}" onclick="window._maybe=false;document.querySelectorAll('#istat .chip').forEach(c=>c.classList.toggle('on',c===this))">✅ Confirmed</button><button class="chip ${x.maybe?'on':''}" onclick="window._maybe=true;document.querySelectorAll('#istat .chip').forEach(c=>c.classList.toggle('on',c===this))">🤔 Still considering</button></div></div>
+  <div style="margin-top:14px"><label>Notes, tickets, tips</label><textarea id="i_note\" rows="3" placeholder="Booking number, what to bring, stroller OK?">${esc(x.note||'')}</textarea></div>
+  <div class="row" style="margin-top:20px">${id?`<button class="btn alt" style="color:var(--bad)" onclick="ask('Delete this stop?',()=>remove('items','${id}'))">Delete</button>`:''}<span class="sp"></span><button class="btn alt" onclick="modal()">Cancel</button><button class="btn" onclick="saveItem('${id||''}')">${id?'Save':'Add to plan'}</button></div>`);
+  setTimeout(()=>$('#i_title')?.focus(),60);
+}
+function saveItem(id){const t=$('#i_title').value.trim();if(!t)return toast('Give it a name');
+  const old=id?D.items[id]:{};const day=+$('#i_day').value;
+  write('items',id||uid(),{...old,title:t,cat:window._cat,day,time:$('#i_time').value||'10:00',dur:+$('#i_dur').value||0,cost:+$('#i_cost').value||0,place:$('#i_place').value.trim(),note:$('#i_note').value.trim(),lat:window._loc?.lat??null,lng:window._loc?.lng??null,maybe:!!window._maybe});
+  modal();selDay=day;toast(window._maybe?'🤔 Saved as considering':id?'Saved ✓':`Added to Day ${day+1} ✓`)}
+function nextTime(d){const it=allDay(d);if(!it.length)return '09:30';const l=it[it.length-1];return fromMin(Math.min(toMin(l.time)+Math.round((+l.dur||1.5)*60)+30,21*60))}
+
+function editDayNote(i){modal(`<h2>Label for Day ${i+1}</h2><p class="note">${dayLabel(i,{weekday:'long',month:'long',day:'numeric'})}. Everyone sees this label.</p>
+  <div class="chips" style="margin-top:14px">${['🏖 Beach day','🐬 Aquarium day','🛍 Shopping day','☔ Rainy-day plan','😴 Rest day','🚗 Road trip north','✈️ Travel day','🤔 Still deciding'].map(t=>`<button class="chip" onclick="$('#dn').value=this.textContent">${t}</button>`).join('')}</div>
+  <div style="margin-top:14px"><input id="dn" value="${esc(dayNote(i))}" placeholder="Or type your own" maxlength="60"></div>
+  <div class="row" style="margin-top:20px"><button class="btn alt" onclick="saveDayNote(${i},'')">Remove</button><span class="sp"></span><button class="btn alt" onclick="modal()">Cancel</button><button class="btn" onclick="saveDayNote(${i},$('#dn').value.trim())">Save</button></div>`)}
+function saveDayNote(i,t){const d={...(D.trip.dayNotes||{})};if(t)d[i]=t;else delete d[i];write('trip','main',{...D.trip,dayNotes:d});modal()}
+
+// ================= HOME =================
+function vHome(){
+  const it=realItems(),h=chosenHotel(),hp=h?best(h):[];
+  const hotel=hotelCost(),act=it.filter(x=>x.cat!=='food').reduce((a,x)=>a+(+x.cost||0),0),food=it.filter(x=>x.cat==='food').reduce((a,x)=>a+(+x.cost||0),0);
+  const total=hotel+act+food,pk=list('packing'),pd=pk.filter(x=>x.done).length;
+  const travel=[...Array(nDays()).keys()].reduce((a,i)=>a+dayTravel(i),0);
+  return `<div class="card"><div class="row"><h2>Trip at a glance</h2><span class="sp"></span><button class="btn sm alt" onclick="go('summary')">📋 Full summary</button></div>
+   <div class="stats" style="margin-top:14px">
+    ${stat('🗓','Stops planned',it.length,`across ${nDays()} days`)}${(()=>{const u=new Set([...Array(nights()).keys()].map(n=>nightHotel(n)?.id).filter(Boolean));return u.size>1?stat('🏨','Hotels',u.size+' hotels',money(hotel)+' total'):stat('🏨','Hotel',h?esc(h.name):'Not chosen',h&&hp.length?`${hp[0][0]} · ${money(hp[0][1])}/night`:'Compare in Stays','',h?18:20)})()}
+    ${stat('💴','Estimated cost',money(total),`${money(total/Math.max(1,people()))} per person`)}${stat('🚇','Time travelling',travel?fmtDur(travel):'–',travel?'between stops':'Add locations in Plan')}
+    ${stat('🎒','Packed',pk.length?`${pd}/${pk.length}`:'–',pk.length?Math.round(pd/pk.length*100)+'% ready':'Start a list in Pack')}</div></div>
+  <div class="card"><div class="row"><h2>Your days</h2><span class="sp"></span><span class="note">Tap a day to open it</span></div>${week()}</div>
+  <div class="card"><h2>Where the money goes</h2>${total?donut([['Hotel',hotel,'#1f3a34'],['Activities',act,'#c09553'],['Food',food,'#c8553d']]):'<p class="note">Add hotel prices and costs to see the budget.</p>'}</div>
+  ${vFamily()}${recent()}`;
+}
+const stat=(e,l,v,s,c='',fs=28)=>`<div class="stat"><span class="e">${e}</span><b style="font-size:${fs}px">${v}</b><div class="note">${l}${s?' · '+s:''}</div></div>`;
+function week(){return `<div class="week" style="margin-top:12px">${[...Array(nDays()).keys()].map(i=>{const it=dayItems(i);const used=it.reduce((a,x)=>a+(+x.dur||0)*60,0)+dayTravel(i);
+  return `<button class="wd ${tab==='plan'&&selDay===i?'on':''}" onclick="selDay=${i};go('plan')"><div class="d">${dayLabel(i,{weekday:'short'})}</div><div class="n">${dayD(i).getDate()}</div><div class="d">Day ${i+1}</div>${dayNote(i)?`<div class="wl">${esc(dayNote(i))}</div>`:''}
+  <div class="bars">${it.map(x=>`<span style="width:${(+x.dur||1)*60/Math.max(used,600)*100}%;background:${(CATS[x.cat]||CATS.other)[2]}"></span>`).join('')}</div><div class="emo">${it.map(x=>(CATS[x.cat]||CATS.other)[0]).join('')||'<span class="note">free</span>'}</div>${maybeItems(i).length?`<div class="note">🤔 ${maybeItems(i).length} considering</div>`:''}</button>`}).join('')}</div>`}
+function donut(parts){const tot=parts.reduce((a,p)=>a+p[1],0);let off=0;const C=2*Math.PI*52;
+  return `<div class="donut" style="margin-top:12px"><svg width="170" height="170" viewBox="0 0 140 140"><circle cx="70" cy="70" r="52" fill="none" stroke="#f1ebdf" stroke-width="18"/>
+  ${parts.filter(p=>p[1]>0).map(p=>{const l=p[1]/tot*C;const s=`<circle cx="70" cy="70" r="52" fill="none" stroke="${p[2]}" stroke-width="18" stroke-dasharray="${l} ${C-l}" stroke-dashoffset="${-off}" transform="rotate(-90 70 70)"/>`;off+=l;return s}).join('')}
+  <text x="70" y="66" text-anchor="middle" font-family="Fraunces,serif" font-size="14" font-weight="600">${esc(money(tot))}</text><text x="70" y="84" text-anchor="middle" font-size="9" fill="#7b7468">total</text></svg>
+  <div class="legend">${parts.map(p=>`<div><i style="background:${p[2]}"></i><b>${p[0]}</b><span class="note">${money(p[1])} · ${tot?Math.round(p[1]/tot*100):0}%</span></div>`).join('')}</div></div>`}
+function recent(){const all=COLLS.flatMap(c=>list(c).map(x=>({...x,c}))).filter(x=>x.at).sort((a,b)=>b.at-a.at).slice(0,6);if(!all.length)return '';
+  const lbl={items:'📍',hotels:'🏨',food:'🍽',packing:'🎒',saved:'⭐'};
+  return `<div class="card"><h2>Latest from the family</h2>${all.map(x=>`<div class="chk">${avatar(x.by)}<span class="sp"><b>${esc(nameOf(x.by))}</b> updated ${lbl[x.c]} ${esc(x.title||x.name||x.text)}</span><span class="note">${ago(x.at)}</span></div>`).join('')}</div>`}
+
+// ================= EXPLORE =================
+const IDEA_CATS=[['fun','🎢','Theme parks','theme park'],['animals','🐬','Aquariums','aquarium'],['animals','🦁','Zoos','zoo'],['nature','🏖','Beaches','beach'],['nature','🌳','Parks','park'],['museum','🧪','Museums','museum'],
+ ['sight','🏯','Castles','castle'],['sight','🌅','Viewpoints','viewpoint'],['shop','🛍','Shopping','shopping mall'],['relax','♨️','Onsen & spa','onsen'],['food','🍱','Restaurants','restaurant'],['animals','🐠','Diving & snorkel','diving']];
+function vExplore(){
+  return `<div class="card"><h2>Find places in ${esc(T().dest)}</h2><p class="note">Pick a category or search any place. Results come from OpenStreetMap; tap ＋ Add to put one in your plan.</p>
+  <div class="row" style="margin-top:14px"><input id="xq" placeholder="Search any place, e.g. Churaumi, Kouri Island, Naha airport" style="flex:1;min-width:200px" onkeydown="if(event.key==='Enter')exploreQ(this.value)"><button class="btn" onclick="exploreQ($('#xq').value)">🔎 Search</button></div>
+  <div class="chips" style="margin-top:14px">${IDEA_CATS.map(([k,e,n],i)=>`<button class="chip ${ideaCat===i?'on':''}" onclick="explore(${i})" ${aiBusy?'disabled':''}>${e} ${n}</button>`).join('')}</div>
+  ${aiBusy?`<p class="note" style="margin-top:16px">🔎 ${esc(aiBusy)}</p>`:''}
+  ${ideas.length?`<div class="ideas">${ideas.map((p,k)=>{const c=CATS[p.cat]||CATS.other;return `<div class="idea"><div class="row"><span class="bub" style="background:${c[2]}22;width:42px;height:42px;font-size:22px;box-shadow:none">${c[0]}</span><div class="sp"><h3>${esc(p.name)}</h3><span class="note">${esc(p.type||'')}</span></div></div>
+   <div class="note">${esc(p.addr||'')}</div>
+   ${previews.has('x'+k)?`<iframe class="gprev" loading="lazy" src="${gEmbed(p)}"></iframe>`:''}
+   <div class="row" style="margin-top:auto"><button class="mlink" onclick="togglePrev('x${k}')">👀 Google preview</button><a class="mlink g" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}">Google ↗</a>
+   ${p.cat==='food'?`<a class="mlink" target="_blank" rel="noopener" href="${LK.tabelog(p.name)}">Tabelog ↗</a>`:''}<span class="sp"></span><button class="btn sm ro" onclick="useIdea(${k},'save')" title="Save for later">⭐</button><button class="btn sm ro" onclick="useIdea(${k})">＋ Add</button></div></div>`}).join('')}</div>
+   <p class="note" style="margin-top:14px">Search © OpenStreetMap contributors. Check opening hours and prices before you go.</p>`:''}</div>
+  <div class="card"><h2>Look it up on the big sites</h2><p class="note">Opens each site with your trip already filled in.</p>
+   <div class="row" style="margin-top:12px"><a class="btn alt" target="_blank" rel="noopener" href="${LK.gplace('things to do with kids')}">🗺 Google Maps: kids activities</a>
+   <a class="btn alt" target="_blank" rel="noopener" href="${LK.tabelog('')}">🍣 Tabelog top-rated</a><a class="btn alt" target="_blank" rel="noopener" href="${LK.agoda()}">🏨 Agoda</a><a class="btn alt" target="_blank" rel="noopener" href="${LK.trip()}">✈️ Trip.com</a></div></div>`}
+async function runSearch(q,cat,label){aiBusy=`Searching ${label}…`;ideas=[];render();
+  try{ideas=(await nom(q,12)).map(p=>({...p,cat}));if(!ideas.length)toast('Nothing found, try another word')}catch(e){toast('Search is busy, try again in a moment')}
+  aiBusy='';render()}
+function explore(i){ideaCat=i;const[k,e,n,q]=IDEA_CATS[i];runSearch(q,k,n.toLowerCase())}
+function exploreQ(q){q=(q||'').trim();if(!q)return;ideaCat=null;runSearch(q,'sight','"'+q+'"')}
+function useIdea(k,mode){const p=ideas[k];if(mode==='save')return addSaved([{name:p.name,lat:p.lat,lng:p.lng,note:p.addr}],'search');
+  editItem(null,{title:p.name,place:p.name,cat:CATS[p.cat]?p.cat:'other',lat:p.lat,lng:p.lng,dur:2,day:selDay})}
+function gEmbed(p){return esc(p.lat!=null?`https://maps.google.com/maps?q=${p.lat},${p.lng}&z=15&output=embed`:`https://maps.google.com/maps?q=${enc((p.place||p.name||p.title||'')+', '+T().dest)}&z=14&output=embed`)}
+function togglePrev(k){previews.has(k)?previews.delete(k):previews.add(k);render()}
+
+// ================= PLAN =================
+const hStop=h=>h?{title:h.name,place:h.name,lat:h.lat,lng:h.lng,hotel:true,cat:'relax',id:null,hid:h.id}:null;
+function stopsOf(i){const n=nights(),s=i===0?nightHotel(0):nightHotel(Math.min(i-1,n-1)),e=i<n?nightHotel(i):null;
+  return {H:hStop(s),E:hStop(e),it:dayItems(i)}}
+const ORS='eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6Ijg3ZmUyNWQwOWYzNDRmNGE5MzU2NDRjYTFmNjQwOGIwIiwiaCI6Im11cm11cjY0In0=';
+const rkey=(a,b)=>`${(+a.lat).toFixed(5)},${(+a.lng).toFixed(5)}>${(+b.lat).toFixed(5)},${(+b.lng).toFixed(5)}`;
+const rq=[],rqKeys=new Set(),rFail=new Set();let rBusy=false,lastReq=0;
+function needRoute(a,b,x,f){if(!x?.id||readOnly)return;const k=rkey(a,b)+'|'+x.id+'|'+f;if(rqKeys.has(k)||rFail.has(k))return;rqKeys.add(k);rq.push({a:{lat:a.lat,lng:a.lng},b:{lat:b.lat,lng:b.lng},id:x.id,f,k});setTimeout(pump,0)}
+async function ors(p,a,b){const w=Math.max(0,lastReq+2100-Date.now());lastReq=Date.now()+w;if(w)await new Promise(r=>setTimeout(r,w));
+  const r=await fetch(`https://api.openrouteservice.org/v2/directions/${p}?api_key=${ORS}&start=${a.lng},${a.lat}&end=${b.lng},${b.lat}`);if(!r.ok)throw new Error('ors '+r.status);
+  const ft=(await r.json()).features[0],sm=ft.properties.summary||{};return {min:Math.max(1,Math.round((sm.duration||0)/60)),km:+((sm.distance||0)/1000).toFixed(1),coords:ft.geometry.coordinates}}
+function packGeom(c){const st=Math.max(1,Math.ceil(c.length/300)),o=[];for(let i=0;i<c.length;i+=st)o.push(`${(+c[i][1]).toFixed(5)},${(+c[i][0]).toFixed(5)}`);const l=c[c.length-1];o.push(`${(+l[1]).toFixed(5)},${(+l[0]).toFixed(5)}`);return o.join(';')}
+const unpackGeom=g=>String(g||'').split(';').map(p=>p.split(',').map(Number)).filter(p=>p.length===2&&isFinite(p[0])&&isFinite(p[1]));
+async function pump(){if(rBusy)return;rBusy=true;
+  while(rq.length){const j=rq.shift();
+    try{const car=await ors('driving-car',j.a,j.b);const route={key:rkey(j.a,j.b),car:{min:car.min,km:car.km,geom:packGeom(car.coords)}};
+      if(hav(j.a,j.b)<3){try{const w=await ors('foot-walking',j.a,j.b);route.walk={min:w.min,km:w.km}}catch(e){}}
+      const cur=D.items[j.id];if(cur)await write('items',j.id,{...cur,[j.f==='back'?'routeBack':'route']:route},true)}
+    catch(e){rFail.add(j.k)}
+    rqKeys.delete(j.k)}
+  rBusy=false}
+function legOpts(a,b,x,f){if(a?.lat==null||b?.lat==null)return null;
+  const r=x?.[f==='back'?'routeBack':'route'],real=!!(r&&r.car&&r.key===rkey(a,b));
+  if(!real&&x?.id)needRoute(a,b,x,f);
+  const est=hav(a,b)*1.35,km=real?r.car.km:est,carMin=real?r.car.min:Math.round((est<8?est/24:est/40)*60)+3,list=[];
+  if(real&&r.walk&&r.walk.min<=60)list.push({k:'walking',e:'🚶',n:'Walk',min:r.walk.min,real:true});
+  else if(!real&&est<3.5)list.push({k:'walking',e:'🚶',n:'Walk',min:Math.max(1,Math.round(est/4*60))});
+  list.push({k:'driving',e:'🚗',n:'Rental car (incl. parking)',min:carMin+5,real});
+  list.push({k:'taxi',e:'🚕',n:'Taxi, approx fare',min:carMin,real,fare:Math.round((600+Math.max(0,Math.ceil((km-1.6)/0.35))*100)/10)*10});
+  if(km>1.5)list.push({k:'transit',e:'🚌',n:'Bus / monorail (estimate)',min:Math.round(carMin*1.8+12),bus:true});
+  const w=list.find(v=>v.k==='walking');
+  const best=w&&w.min<=15?w:list.find(v=>v.k===T().mode)||list.find(v=>v.k==='driving');
+  return {list,best,km,real,geom:real?r.car.geom:null}}
+function legTimes(i){const {H,E,it}=stopsOf(i),t={};let prev=H;
+  for(const x of it){t[x.id]=+x.travel||(prev?legOpts(prev,x,x,'travel')?.best.min:0)||0;prev=x}
+  if(E&&it.length){const l=it[it.length-1];t._back=+l.back||legOpts(l,E,l,'back')?.best.min||0}return t}
+const dayTravel=i=>Object.values(legTimes(i)).reduce((a,b)=>a+b,0);
+function vPlan(){
+  const i=selDay,{H,E,it}=stopsOf(i),tr=dayTravel(i),mb=maybeItems(i),tn=i<nights()?nightHotel(i):null,bk=i<nights()?nightBackups(i):[];
+  const used=it.reduce((a,x)=>a+(+x.dur||0)*60,0)+tr;
+  const all=[H,...it].filter(Boolean);
+  let prev=H,html='';
+  if(H)html+=stopRow({time:'Start',title:H.title,cat:'relax',hotel:true});
+  it.forEach(x=>{if(prev)html+=legRow(prev,x,x,'travel');html+=stopRow(x);prev=x});
+  if(E&&it.length){const l=it[it.length-1];html+=legRow(l,E,l,'back')+stopRow({time:'End',title:(E.hid===H?.hid?'Back to ':'Check in: ')+E.title,cat:'relax',hotel:true})}
+  const miss=all.filter(x=>x.lat==null).length,hasLoc=all.some(x=>x.lat!=null);
+  const young=kidAges().some(a=>a<6)&&T().mode==='driving';
+  return `<div class="card" style="padding-bottom:12px"><div class="daytabs">${[...Array(nDays()).keys()].map(d=>`<button class="${d===i?'on':''}" onclick="selDay=${d};render()">Day ${d+1} · ${dayLabel(d,{weekday:'short',day:'numeric'})}</button>`).join('')}</div></div>
+  <div class="card"><div class="dayhead"><div><div class="note" style="color:#fff9">Day ${i+1}</div><div class="big">${dayLabel(i,{weekday:'long',month:'long',day:'numeric'})}</div>
+   <button class="daylbl ro" onclick="editDayNote(${i})">${dayNote(i)?'🏷 '+esc(dayNote(i)):'🏷 Add a label for this day'}</button></div><span class="sp"></span>
+   <div style="min-width:180px;flex:1;max-width:320px"><div class="note" style="color:#fffc;margin-bottom:6px">${it.length} stops · ${fmtDur(Math.round(used))} planned${tr?` · ${fmtDur(tr)} on the road`:''}</div>
+   <div class="hours">${it.map(x=>`<span title="${esc(x.title)}" style="width:${(+x.dur||1)*60/Math.max(used,720)*100}%;background:${(CATS[x.cat]||CATS.other)[2]}"></span>`).join('')}</div></div></div>
+   <div class="row" style="margin-top:14px"><button class="btn ro" onclick="editItem(null,{day:${i}})">＋ Add stop</button>
+    ${miss&&it.length?`<button class="btn alt ro" onclick="locateDay(${i})" ${aiBusy?'disabled':''}>📍 Put ${miss} stop${miss>1?'s':''} on the map</button>`:''}
+    <span class="sp"></span>${all.length>1?`<a class="mlink g" target="_blank" rel="noopener" href="${LK.gday(E&&it.length?[...all,E]:all)}">Whole day in Google Maps ↗</a>`:''}</div>
+   ${aiBusy?`<p class="note">🔎 ${esc(aiBusy)}</p>`:''}
+   ${hasLoc?`<div class="lmap" id="daymap" style="margin-top:14px"></div>`:''}
+   ${i<nights()?`<div class="tonight"><b>🌙 Tonight:</b> ${tn?`<span>${esc(tn.name)}</span>`:'<span class="note">no hotel yet</span>'}${bk.length?` <span class="note">· Backup${bk.length>1?'s':''}:</span> ${bk.map(h=>`<span class="tag">🔁 ${esc(h.name)}</span>`).join(' ')}`:''}<span class="sp"></span><a class="mlink" href="#stays" onclick="go('stays');return false">Change</a></div>`:''}
+   ${!H?`<div class="banner">🏨 Choose your hotel in <a href="#stays" onclick="go('stays');return false">Stays</a> and each day starts and ends there, with travel times.</div>`:''}
+   ${young?`<div class="banner">🚸 Kids under 6 must ride in a child seat in Japan. Book seats with your rental car.</div>`:''}
+   ${it.length?`<div class="tl">${html}</div>`:`<div class="empty"><div class="big">🗺</div><h3>A free day</h3><p class="note">Add a stop, or pick from Explore or your saved places.</p></div>`}
+   ${mb.length?`<div class="maybe"><div class="row"><h3>🤔 Still considering (${mb.length})</h3><span class="sp"></span><span class="note">Not counted in routes or budget yet</span></div>
+     ${mb.map(x=>`<div class="mrow"><span class="bub sm" style="background:${(CATS[x.cat]||CATS.other)[2]}">${(CATS[x.cat]||CATS.other)[0]}</span><span class="sp"><b>${esc(x.title)}</b><br><span class="note">${esc(x.time||'')}${x.dur?' · '+fmtDur(Math.round(x.dur*60)):''}${x.cost?' · '+money(x.cost):''}${x.note?' · '+esc(x.note.split('\n')[0].slice(0,80)):''}</span></span>
+     <span class="ro">${who(x)}</span><button class="btn sm ro" onclick="write('items','${x.id}',{...D.items['${x.id}'],maybe:false});toast('✅ Confirmed')">✅ Confirm</button><button class="ib ro" onclick="editItem('${x.id}')">✏️</button></div>`).join('')}</div>`:''}
+   ${it.length?`<p class="note" style="margin-top:12px">Car, taxi and walking times marked ✓ are real road routes (openrouteservice, no live traffic). Bus times are rough estimates: tap Google Maps for live traffic and exact bus routes.</p>`:''}</div>`;
+}
+function stopRow(x){const c=CATS[x.cat]||CATS.other;const end=x.time&&x.dur&&!x.hotel?fromMin(toMin(x.time)+Math.round(x.dur*60)):'';
+  return `<div class="stop"><div class="time">${esc(x.time||'')}${end?`<small>→ ${end}</small>`:''}</div><div class="bub" style="background:${x.hotel?'#1f3a34':c[2]}">${x.hotel?'🏨':c[0]}</div>
+  <div class="sbody" ${x.id&&!readOnly?`onclick="editItem('${x.id}')" style="cursor:pointer"`:''}><div class="row"><span class="t">${esc(x.title)}</span><span class="sp"></span>${x.cost?`<span class="tag y">${money(x.cost)}</span>`:''}${x.dur&&!x.hotel?`<span class="tag">⏱ ${fmtDur(Math.round(x.dur*60))}</span>`:''}</div>
+  ${x.note?`<div class="note" style="white-space:pre-line;margin-top:4px">${esc(x.note)}</div>`:''}
+  ${x.id&&previews.has(x.id)?`<iframe class="gprev" loading="lazy" src="${gEmbed(x)}" onclick="event.stopPropagation()"></iframe>`:''}
+  ${x.id?`<div class="row" style="margin-top:6px"><button class="mlink" onclick="event.stopPropagation();togglePrev('${x.id}')">👀 ${previews.has(x.id)?'Hide':'Google'} preview</button><a class="mlink g" onclick="event.stopPropagation()" target="_blank" rel="noopener" href="${x.lat!=null?`https://www.google.com/maps/search/?api=1&query=${x.lat},${x.lng}`:LK.gplace(placeOf(x))}">📍 Google Maps</a><a class="mlink a" onclick="event.stopPropagation()" target="_blank" rel="noopener" href="https://maps.apple.com/?q=${enc(placeOf(x))}${x.lat!=null?`&ll=${x.lat},${x.lng}`:''}"> Apple</a>${x.cat==='food'?`<a class="mlink" onclick="event.stopPropagation()" target="_blank" rel="noopener" href="${LK.tabelog(x.title)}">Tabelog</a>`:''}<span class="sp"></span>${who(x)}</div>`:''}</div></div>`}
+function legRow(a,b,x,f){const o=legOpts(a,b,x,f),man=+x[f];
+  const opts=o?o.list.map(v=>{const on=v.k===o.best.k&&!man,inner=`${v.e} <b>${fmtDur(v.min)}</b>${v.fare?` · ~${money(v.fare)}`:''}${v.real?' ✓':''}`;
+    return v.bus?`<a class="opt est ${on?'best':''}" title="${v.n}: open Google Maps transit" target="_blank" rel="noopener" href="${LK.gleg(a,b,'transit')}">${inner}</a>`:`<span class="opt ${on?'best':''} ${v.real?'':'est'}" title="${v.n}${v.real?' · real road route':' · estimate'}">${inner}</span>`}).join('')
+    +(o.real?'<span class="note">✓ real route</span>':`<span class="note">${rqKeys.size?'finding route…':'estimate'}</span>`)
+    :`<span class="pill">${man?'':'📍 add locations to see travel times'}</span>`;
+  const m=o?(man?T().mode:o.best.k):T().mode;
+  return `<div class="leg"><div></div><div class="line"></div><div class="info">${opts}${man?`<span class="opt best">✏️ <b>${fmtDur(man)}</b></span>`:''}${x.how&&f==='travel'?`<span>${esc(x.how)}</span>`:''}
+  <a class="mlink g" target="_blank" rel="noopener" href="${LK.gleg(a,b,m)}">Google Maps</a><a class="mlink a" target="_blank" rel="noopener" href="${LK.aleg(a,b,m==='taxi'?'driving':m)}"> Apple Maps</a>
+  ${x.id&&!readOnly?`<button class="ib" title="Type your own travel time" onclick="setTravel('${x.id}','${f}')">✏️</button>`:''}</div></div>`}
+function setTravel(id,f){const x=D.items[id];modal(`<h2>Travel time</h2><p class="note">Checked it in Google or Apple Maps? Type the time here. Leave empty to use the calculated route.</p>
+ <div class="grid" style="margin-top:14px"><div><label>Minutes</label><input type="number" min="0" id="t_min" value="${x[f]||''}"></div></div>
+ ${f==='travel'?`<div style="margin-top:14px"><label>Route note</label><input id="t_how" value="${esc(x.how||'')}" placeholder="e.g. Route 58 north, parking at the beach"></div>`:''}
+ <div class="row" style="margin-top:20px"><span class="sp"></span><button class="btn alt" onclick="modal()">Cancel</button><button class="btn" onclick="saveTravel('${id}','${f}')">Save</button></div>`)}
+function saveTravel(id,f){const u={...D.items[id],[f]:+$('#t_min').value||0};if($('#t_how'))u.how=$('#t_how').value.trim();write('items',id,u);modal()}
+
+// ================= MAPS & LOCATIONS =================
+let PICK=null,mapDay=-1;const MAPS=[];
+const OKI=()=>/okinawa|沖繩|沖縄|naha|ishigaki|miyako|kerama|那霸|石垣|宮古/i.test(T().dest);
+let nomLast=0;
+async function nom(q,limit=8){const w=Math.max(0,nomLast+1100-Date.now());nomLast=Date.now()+w;if(w)await new Promise(r=>setTimeout(r,w));
+  const box=OKI()?'&viewbox=122.8,27.3,131.4,23.9&bounded=1':'';const qq=OKI()?q:q+', '+T().dest;
+  const r=await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=${limit}&accept-language=${LANG==='zh'?'zh-TW,zh,en':'en'}${box}&q=${enc(qq)}`);if(!r.ok)throw new Error('search '+r.status);
+  return (await r.json()).filter(p=>isFinite(+p.lat)).map(p=>({name:String(p.name||String(p.display_name||'').split(',')[0]||'Place').slice(0,120),addr:String(p.display_name||'').split(',').slice(1,4).join(',').trim(),lat:+(+p.lat).toFixed(6),lng:+(+p.lon).toFixed(6),type:String(p.type||'').replace(/_/g,' ')}))}
+function baseMap(el){const m=L.map(el,{zoomSnap:.5}).setView([26.45,127.85],9);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors · routes © openrouteservice'}).addTo(m);return m}
+const pinIcon=(t,c,cls='')=>L.divIcon({className:'',html:`<div class="pin ${cls}" style="background:${c}">${t}</div>`,iconSize:[28,28],iconAnchor:[14,14]});
+function fit(m,pts){if(pts.length>1)m.fitBounds(pts,{padding:[40,40],maxZoom:15,animate:false});else if(pts.length)m.setView(pts[0],14,{animate:false})}
+function drawLeg(m,a,b,x,f,color){const o=legOpts(a,b,x,f);if(!o)return;const g=o.geom?unpackGeom(o.geom):null;
+  if(g&&g.length>1)L.polyline(g,{color,weight:5,opacity:.85}).addTo(m);else L.polyline([[a.lat,a.lng],[b.lat,b.lng]],{color,weight:3,dashArray:'6 8',opacity:.7}).addTo(m)}
+function drawMaps(){if(!window.L)return;while(MAPS.length)MAPS.pop().remove();
+  const dm=$('#daymap');if(dm){const m=baseMap(dm);MAPS.push(m);const {H,E,it}=stopsOf(selDay),pts=[],c=DAYC[selDay%DAYC.length];
+    if(E?.lat!=null&&E.hid!==H?.hid){L.marker([E.lat,E.lng],{icon:pinIcon('🛏','#8a6424')}).bindTooltip('Tonight: '+esc(E.title)).addTo(m);pts.push([E.lat,E.lng])}
+    if(H?.lat!=null){L.marker([H.lat,H.lng],{icon:pinIcon('🏨','#1f3a34')}).bindTooltip(esc(H.title)).addTo(m);pts.push([H.lat,H.lng])}
+    let prev=H?.lat!=null?H:null;
+    it.forEach((x,k)=>{if(x.lat==null)return;if(prev)drawLeg(m,prev,x,x,'travel',c);L.marker([x.lat,x.lng],{icon:pinIcon(k+1,(CATS[x.cat]||CATS.other)[2])}).bindTooltip(`${k+1}. ${esc(x.title)}`).addTo(m);pts.push([x.lat,x.lng]);prev=x});
+    const l=it[it.length-1];if(E?.lat!=null&&l?.lat!=null)drawLeg(m,l,E,l,'back','#6b7488');fit(m,pts)}
+  const am=$('#allmap');if(am){const m=baseMap(am);MAPS.push(m);const pts=[],h=chosenHotel();
+    const opt=()=>readOnly?{}:{draggable:true};
+    const drop=(c,id)=>e=>{const p=e.target.getLatLng();write(c,id,{...D[c][id],lat:+p.lat.toFixed(6),lng:+p.lng.toFixed(6),approx:false});toast('📍 Location updated')};
+    const hs=new Map();for(let n=0;n<nights();n++){const x=nightHotel(n);if(x)hs.set(x.id,x)}if(!hs.size&&h)hs.set(h.id,h);
+    hs.forEach(h=>{if(h.lat==null)return;L.marker([h.lat,h.lng],{icon:pinIcon('🏨','#1f3a34'),...opt()}).bindTooltip(esc(h.name)+(nightsTxt(hNights(h.id).m)?' · '+nightsTxt(hNights(h.id).m):'')).on('dragend',drop('hotels',h.id)).addTo(m);pts.push([h.lat,h.lng])});
+    for(let d=0;d<nDays();d++){if(mapDay>=0&&d!==mapDay)continue;const c=DAYC[d%DAYC.length];const {H,it}=stopsOf(d);let prev=H?.lat!=null?H:null;
+      it.forEach((x,k)=>{if(x.lat==null)return;if(prev)drawLeg(m,prev,x,x,'travel',c);L.marker([x.lat,x.lng],{icon:pinIcon(k+1,c),...opt()}).bindTooltip(`Day ${d+1} · ${esc(x.title)}`).on('dragend',drop('items',x.id)).addTo(m);pts.push([x.lat,x.lng]);prev=x})}
+    if(mapDay<0)list('saved').forEach(x=>{if(x.lat==null)return;L.marker([x.lat,x.lng],{icon:pinIcon('★','#c09553','s'),...opt()}).bindTooltip('⭐ '+esc(x.name)).on('dragend',drop('saved',x.id)).addTo(m);pts.push([x.lat,x.lng])});
+    fit(m,pts)}}
+function locBlock(){return `<div style="margin-top:14px"><label>Location on the map</label>
+  <div class="row"><input id="l_link" placeholder="Paste a Google Maps or Apple Maps link" onchange="locFromLink(this.value)" style="flex:1;min-width:180px"><button class="btn sm alt" onclick="locFind()">🔎 Find by name</button></div>
+  <div id="locres"></div>
+  <div class="lmap" id="pickmap" style="height:230px;margin-top:8px"></div><div class="note" id="locnote">${window._loc?'📍 Location set. Tap the map or drag the pin to change it.':'Tap the map to drop a pin, paste a link, or find by name.'}</div>
+  <button class="mlink" style="margin-top:6px" onclick="const f=$('#locprev');f.innerHTML=f.innerHTML?'':'<iframe class=gprev src='+JSON.stringify(gEmbed(window._loc?{...window._loc}:{name:($('#i_place')?.value||$('#i_title')?.value||$('#h_name')?.value||'')}))+'></iframe>'">👀 Google preview</button><div id="locprev"></div></div>`}
+function initPicker(){const el=$('#pickmap');if(!el||!window.L)return;if(PICK)PICK.remove();const m=PICK=baseMap(el);let mk=null;
+  const set=(ll,fly)=>{window._loc={lat:+(+ll.lat).toFixed(6),lng:+(+ll.lng).toFixed(6)};
+    if(mk)mk.setLatLng(ll);else mk=L.marker(ll,{icon:pinIcon('📍','#c8553d'),draggable:true}).addTo(m).on('dragend',e=>set(e.target.getLatLng()));
+    if(fly)m.setView(ll,15);const n=$('#locnote');if(n)n.textContent='📍 Location set. Tap the map or drag the pin to change it.'};
+  window._setLoc=set;if(window._loc)set(window._loc,true);m.on('click',e=>set(e.latlng))}
+function pickSaved(id){const p=D.saved[id];if(!p)return;$('#i_title').value=p.name;$('#i_place').value=p.name;if(p.note&&!$('#i_note').value)$('#i_note').value=p.note;if(p.lat!=null)window._setLoc?.({lat:p.lat,lng:p.lng},true)}
+function locFromLink(v){const r=parseLinks(v)[0];if(!r)return toast("That doesn't look like a map link");
+  const t=$('#i_title')||$('#h_name');if(r.name&&t&&!t.value)t.value=r.name;
+  if(r.lat!=null){window._setLoc?.(r,true);toast('📍 Location found from the link')}
+  else if(r.name)locFind(r.name);else toast(r.short?'Short links hide the location: find by name or tap the map':'No location in that link: tap the map')}
+let locResults=[];
+async function locFind(name){name=name||($('#i_place')?.value||$('#i_title')?.value||$('#h_name')?.value||'').trim();if(!name)return toast('Type the place name first');
+  const n=$('#locnote'),box=$('#locres');if(n)n.textContent='🔎 Looking for '+name+'…';
+  try{locResults=await nom(name,5);
+    if(!locResults.length){if(n)n.textContent='Not found. Try a shorter name, or tap the map to place it.';if(box)box.innerHTML='';return}
+    if(box)box.innerHTML=locResults.map((p,k)=>`<button class="res" onclick="pickRes(${k})"><span>📍</span><span class="sp"><b>${esc(p.name)}</b><br><span class="note">${esc(p.addr)}</span></span></button>`).join('');
+    if(n)n.textContent='Pick the right place below.'}catch(e){if(n)n.textContent='Search is busy. Try again or tap the map.'}}
+function pickRes(k){const p=locResults[k];if(!p)return;window._setLoc?.(p,true);const t=$('#i_title')||$('#h_name');if(t&&!t.value)t.value=p.name;const b=$('#locres');if(b)b.innerHTML=''}
+async function locate(names){const out=[];for(let i=0;i<names.length;i++){try{const r=await nom(names[i],1);if(r[0])out[i]={lat:r[0].lat,lng:r[0].lng}}catch(e){}}return out}
+async function locateDay(i){const {it}=stopsOf(i);const miss=it.filter(x=>x.lat==null);if(!miss.length)return;aiBusy='Putting your stops on the map…';render();
+  const r=await locate(miss.map(placeOf));let n=0;for(let k=0;k<miss.length;k++)if(r[k]){n++;await write('items',miss[k].id,{...D.items[miss[k].id],lat:r[k].lat,lng:r[k].lng,approx:true},true)}
+  toast(`📍 ${n} of ${miss.length} placed${n<miss.length?'. Edit the others to set them by hand':''}`);aiBusy='';render()}
+async function locateMissing(){const miss=list('saved').filter(x=>x.lat==null).slice(0,30);if(!miss.length)return;aiBusy='Finding your places on the map…';render();
+  const r=await locate(miss.map(x=>x.name));let n=0;for(let k=0;k<miss.length;k++)if(r[k]){n++;await write('saved',miss[k].id,{...D.saved[miss[k].id],lat:r[k].lat,lng:r[k].lng,approx:true},true)}
+  toast(`📍 Found ${n} of ${miss.length}${n<miss.length?'. Add the rest to a day and set them by hand':''}`);aiBusy='';render()}
+function parseLink(u){u=(u||'').trim();let lat=null,lng=null,name=null,url=null;try{url=new URL(u)}catch(e){}
+  const m=u.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/)||u.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);if(m){lat=+m[1];lng=+m[2]}
+  if(url){const p=url.searchParams;
+    for(const k of ['ll','q','query','destination','daddr','coordinate','sll','center']){const v=p.get(k);if(!v)continue;const c=v.match(/^\s*(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/);
+      if(c){if(lat==null){lat=+c[1];lng=+c[2]}}else if(!name&&['q','query','destination','daddr'].includes(k))name=v}
+    const pm=url.pathname.match(/\/(?:place|search)\/([^/]+)/);if(pm&&!/^-?\d+\.\d+,/.test(decodeURIComponent(pm[1])))name=decodeURIComponent(pm[1].replace(/\+/g,' '));
+    else if(pm&&lat==null){const c=decodeURIComponent(pm[1]).match(/^(-?\d+\.\d+),\s*(-?\d+\.\d+)/);if(c){lat=+c[1];lng=+c[2]}}
+    if(!name)name=p.get('name')||p.get('address')||null}
+  if(lat!=null&&(Math.abs(lat)>90||Math.abs(lng)>180)){lat=lng=null}
+  return {lat,lng,name,short:!!url&&/(^|\.)(goo\.gl|g\.co|apple\.co)$/.test(url.host)}}
+function parseLinks(text){const out=[];let pend=null;
+  for(let line of String(text||'').split(/\n+/)){line=line.trim();if(!line)continue;const um=line.match(/https?:\/\/\S+/);
+    if(!um){pend=line.replace(/^[-•*\s]+/,'').slice(0,120);continue}
+    const before=line.slice(0,um.index).trim().replace(/[:\-–]+$/,'').trim();const r=parseLink(um[0]);r.name=r.name||before||pend;pend=null;if(r.lat!=null||r.name)out.push(r)}
+  if(pend)out.push({name:pend,lat:null,lng:null});return out}
+async function addSaved(arr,src){arr=arr.filter(x=>x&&(x.name||x.lat!=null)).slice(0,200);if(!arr.length)return toast('No places found in that');
+  for(const x of arr)await write('saved',uid(),{name:String(x.name||'Pinned place').slice(0,120),lat:x.lat??null,lng:x.lng??null,note:String(x.note||'').slice(0,240),src});
+  const miss=arr.filter(x=>x.lat==null).length;toast(`⭐ Added ${arr.length} place${arr.length>1?'s':''}${miss?` · ${miss} need a location`:''}`);
+  if(miss)locateMissing()}
+function importLinks(){const t=$('#links').value;addSaved(parseLinks(t),'link');$('#links').value=''}
+function csv(t){const rows=[];let row=[],f='',q=false;for(let i=0;i<t.length;i++){const c=t[i];if(q){if(c==='"'){if(t[i+1]==='"'){f+='"';i++}else q=false}else f+=c}else if(c==='"')q=true;else if(c===','){row.push(f);f=''}else if(c==='\n'){row.push(f.replace(/\r$/,''));rows.push(row);row=[];f=''}else f+=c}if(f||row.length){row.push(f);rows.push(row)}return rows}
+async function importFile(f){try{const t=await f.text();let arr=[];
+  if(/\.kml$/i.test(f.name)){const d=new DOMParser().parseFromString(t,'text/xml');arr=[...d.getElementsByTagName('Placemark')].map(p=>{const c=(p.getElementsByTagName('coordinates')[0]?.textContent||'').trim().split(/\s+/)[0].split(',');return {name:p.getElementsByTagName('name')[0]?.textContent?.trim(),lat:c.length>1?+c[1]:null,lng:c.length>1?+c[0]:null,note:(p.getElementsByTagName('description')[0]?.textContent||'').replace(/<[^>]+>/g,' ').trim()}})}
+  else if(/json$/i.test(f.name)){const j=JSON.parse(t);arr=(j.features||[]).map(ft=>{const pr=ft.properties||{},c=ft.geometry?.coordinates||[],ok=c.length>1&&(c[0]||c[1]);const l=parseLink(pr.google_maps_url||pr['Google Maps URL']||'');return {name:pr.Title||pr.name||pr.location?.name||pr.location?.address||l.name,lat:ok?+c[1]:l.lat,lng:ok?+c[0]:l.lng,note:pr.location?.address||pr.Note||''}})}
+  else{const rows=csv(t);const h=(rows.shift()||[]).map(x=>x.trim().toLowerCase());const ti=h.indexOf('title'),ui=h.indexOf('url'),ni=h.indexOf('note');
+    arr=rows.filter(r=>r[ti>=0?ti:0]).map(r=>{const l=parseLink((ui>=0&&ui===h.length-1?r.slice(ui).join(','):r[ui])||'');return {name:r[ti>=0?ti:0]||l.name,lat:l.lat,lng:l.lng,note:ni>=0?r[ni]:''}})}
+  addSaved(arr,'file')}catch(e){toast("Couldn't read that file")}}
+function savedToDay(id,d){const x=D.saved[id];editItem(null,{day:d,title:x.name,place:x.name,lat:x.lat,lng:x.lng,note:x.note||'',cat:'sight'})}
+function vMap(){const sv=list('saved').sort((a,b)=>(a.at||0)-(b.at||0)),miss=sv.filter(x=>x.lat==null).length;
+  return `<div class="card"><div class="row"><h2>Our ${esc(T().dest)} map</h2><span class="sp"></span>
+   <div class="chips"><button class="chip ${mapDay<0?'on':''}" style="padding:6px 12px" onclick="mapDay=-1;render()">Everything</button>${[...Array(nDays()).keys()].map(d=>`<button class="chip ${mapDay===d?'on':''}" style="padding:6px 12px" onclick="mapDay=${d};render()"><span style="width:10px;height:10px;border-radius:50%;background:${DAYC[d%DAYC.length]}"></span>Day ${d+1}</button>`).join('')}</div></div>
+   <div class="lmap" id="allmap" style="height:460px;margin-top:14px"></div>
+   <p class="note">🏨 hotel · numbered pins = plan stops, one colour per day · ★ saved places${readOnly?'':' · drag any pin to fix its spot'}</p></div>
+  <div class="card ro"><h2>📥 Bring in places from Google Maps & Apple Maps</h2><p class="note">Google and Apple don't let other websites read your saved lists directly, so use one of these quick ways.</p>
+   <div class="grid" style="margin-top:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+    <div class="how"><h3>🔗 Share a place</h3><ol><li>In Google Maps or Apple Maps, open a place</li><li>Tap <b>Share</b> → <b>Copy</b></li><li>Paste here. You can paste many at once</li></ol>
+     <textarea id="links" rows="4" placeholder="Paste links or place names, one per line"></textarea><button class="btn" style="margin-top:8px" onclick="importLinks()">Add to saved places</button></div>
+    <div class="how"><h3>📁 Import a whole list</h3><ol><li>Open <a href="https://takeout.google.com" target="_blank" rel="noopener">Google Takeout</a>, choose <b>Saved</b> (your Google Maps lists) and <b>Maps (your places)</b></li><li>Unzip, then upload the <b>.csv</b> or <b>.json</b> files here</li><li>Google My Maps: <b>Export to KML</b> works too</li></ol>
+     <input type="file" accept=".csv,.json,.geojson,.kml" multiple onchange="[...this.files].forEach(importFile);this.value=''"></div>
+    <div class="how"><h3>✍️ Type names</h3><ol><li>Type a place, e.g. "Churaumi Aquarium"</li><li>We find it on the map (OpenStreetMap)</li></ol>
+     <div class="row"><input id="nm" placeholder="Place name" onkeydown="if(event.key==='Enter'){addSaved([{name:this.value}],'typed');this.value=''}"><button class="btn" onclick="addSaved([{name:$('#nm').value}],'typed');$('#nm').value=''">Add</button></div></div></div></div>
+  <div class="card"><div class="row"><h2>⭐ Saved places (${sv.length})</h2><span class="sp"></span>${miss?`<button class="btn alt sm ro" onclick="locateMissing()" ${aiBusy?'disabled':''}>📍 Put ${miss} on the map</button>`:''}</div>
+   ${aiBusy?`<p class="note">🔎 ${esc(aiBusy)}</p>`:''}
+   ${sv.map(x=>`<div class="chk"><span style="font-size:20px">${x.lat!=null?'⭐':'❔'}</span><span class="sp"><b>${esc(x.name)}</b>${x.note?`<br><span class="note">${esc(x.note)}</span>`:''}${x.lat==null?'<br><span class="note">Not on the map yet</span>':x.approx?'<br><span class="note">Approximate spot: drag the pin to fine-tune</span>':''}</span>
+    <button class="mlink" onclick="togglePrev('s${x.id}')">👀</button><a class="mlink g" target="_blank" rel="noopener" href="${x.lat!=null?`https://www.google.com/maps/search/?api=1&query=${x.lat},${x.lng}`:LK.gplace(x.name)}">Google ↗</a><a class="mlink a" target="_blank" rel="noopener" href="https://maps.apple.com/?q=${enc(x.name)}${x.lat!=null?`&ll=${x.lat},${x.lng}`:''}">Apple ↗</a>
+    <select class="ro" style="width:auto" onchange="if(this.value!=='')savedToDay('${x.id}',+this.value);this.value=''"><option value="">＋ Add to day</option>${[...Array(nDays()).keys()].map(i=>`<option value="${i}">Day ${i+1} · ${dayLabel(i)}</option>`).join('')}</select><button class="ib ro" onclick="remove('saved','${x.id}')">×</button></div>${previews.has('s'+x.id)?`<iframe class="gprev" loading="lazy" src="${gEmbed(x)}"></iframe>`:''}`).join('')||'<div class="empty"><div class="big">⭐</div><h3>No saved places yet</h3><p class="note">Share places from Google Maps or Apple Maps and they appear here and on the map.</p></div>'}</div>`}
+// ================= STAYS =================
+function vStays(){
+  const hs=list('hotels').sort((a,b)=>(a.at||0)-(b.at||0));
+  return `<div class="card"><h2>Compare hotels</h2><p class="note">Search both sites (dates and guests filled in), then add each hotel's nightly price. We highlight the cheapest.</p>
+   <div class="row" style="margin-top:14px"><a class="btn" style="background:#c8174f" target="_blank" rel="noopener" href="${LK.agoda()}">Search Agoda ↗</a><a class="btn" style="background:#1e63d6" target="_blank" rel="noopener" href="${LK.trip()}">Search Trip.com ↗</a><span class="sp"></span><button class="btn gold ro" onclick="editHotel()">＋ Add hotel</button></div></div>
+  ${hs.length?nightPlanner():''}
+  ${hs.length?hs.map(hotelCard).join(''):`<div class="card empty"><div class="big">🏨</div><h3>No hotels yet</h3><p class="note">Add two or three you like and compare prices side by side.</p></div>`}`}
+function nightPlanner(){const hs=list('hotels'),opts=sel=>hs.map(h=>`<option value="${h.id}" ${h.id===sel?'selected':''}>${esc(h.name)}</option>`).join('');
+  return `<div class="card"><div class="row"><h2>🌙 Where we sleep each night</h2><span class="sp"></span><span class="note">Total ${money(hotelCost())}</span></div>
+  <p class="note">Pick the main hotel for each night and add backup hotels (後備) in case it's full or plans change.</p>
+  ${[...Array(nights()).keys()].map(n=>{const x=nightHotel(n),p=x?best(x):[],bk=nightBackups(n),bkIds=bk.map(b=>b.id);
+   return `<div class="night"><div class="nl"><b>Night ${n+1}</b><span class="note">${dayLabel(n)} → ${dayLabel(n+1,{weekday:'short'})}</span></div>
+    <div class="sp"><select onchange="setStay(${n},this.value)" ${readOnly?'disabled':''}><option value="">— Choose main hotel —</option>${opts(x?.id)}</select>
+    ${p.length?`<div class="note" style="margin-top:4px">💴 ${p[0][0]} ${money(p[0][1])}</div>`:''}
+    <div class="row" style="margin-top:6px">${bk.map(b=>`<span class="tag">🔁 Backup: ${esc(b.name)}${readOnly?'':` <button class="ib" style="font-size:13px;padding:0 2px" onclick="delBackup(${n},'${b.id}')">×</button>`}</span>`).join('')}
+     ${readOnly?'':`<select style="width:auto;padding:6px 10px;font-size:13px" onchange="if(this.value)addBackup(${n},this.value);this.value=''"><option value="">＋ Add backup</option>${hs.filter(h=>h.id!==x?.id&&!bkIds.includes(h.id)).map(h=>`<option value="${h.id}">${esc(h.name)}</option>`).join('')}</select>`}</div></div></div>`}).join('')}
+  ${nights()>1&&!readOnly?`<div class="row" style="margin-top:12px"><span class="sp"></span><button class="btn sm alt" onclick="copyNight1()">Use Night 1's choices for every night</button></div>`:''}</div>`}
+function setStay(n,id){const st={...stays()};st[n]={...(st[n]||{}),main:id||null,backups:(st[n]?.backups||[]).filter(b=>b!==id)};saveStays(st)}
+function addBackup(n,id){const st={...stays()};const c=st[n]||{main:nightHotel(n)?.id||null,backups:[]};st[n]={...c,backups:[...(c.backups||[]).filter(b=>b!==id),id]};saveStays(st);toast('🔁 Backup hotel added')}
+function delBackup(n,id){const st={...stays()};if(st[n])st[n]={...st[n],backups:(st[n].backups||[]).filter(b=>b!==id)};saveStays(st)}
+function copyNight1(){const f=stays()[0]||{main:nightHotel(0)?.id||null,backups:[]};const st={};for(let n=0;n<nights();n++)st[n]={main:f.main||null,backups:[...(f.backups||[])]};saveStays(st);toast('Copied to all nights ✓')}
+function hotelCard(h){
+  const sites=[['agoda','Agoda','#c8174f'],['trip','Trip.com','#1e63d6'],['other','Direct / other','#6b7488']];
+  const vals=sites.map(s=>+h[s[0]]).filter(v=>v>0),min=Math.min(...vals),max=Math.max(...vals,1);
+  return `<div class="hotel ${h.chosen?'chosen':''}"><div class="row"><div class="sp"><div class="row"><h3 style="font-size:23px">${esc(h.name)}</h3>${(()=>{const z=hNights(h.id);return (z.m.length?`<span class="tag y">🌙 ${nightsTxt(z.m)}</span>`:'')+(z.b.length?`<span class="tag">🔁 Backup ${nightsTxt(z.b).replace('Night','night')}</span>`:'')})()}</div>
+   <div class="note">${'★'.repeat(+h.stars||0)} ${esc(h.area||'')} ${h.family?'· 👨‍👩‍👧 family room':''} ${h.breakfast?'· 🍳 breakfast':''}</div></div>
+   <button class="btn sm alt ro" onclick="chooseHotel('${h.id}')">Use for all nights</button><button class="ib ro" onclick="editHotel('${h.id}')">✏️</button></div>
+   <div class="cmp">${sites.map(([k,n,c])=>{const v=+h[k];return `<div class="cmpr"><span class="logo" style="color:${c}">${n}</span><div class="bar">${v?`<span style="width:${Math.max(18,v/max*100)}%;background:${v===min&&vals.length>1?'var(--good)':c}">${v===min&&vals.length>1?'Best price':''}</span>`:''}</div>
+    <input type="number" min="0" placeholder="${esc(T().cur)} / night" value="${v||''}" ${readOnly?'disabled':''} onchange="write('hotels','${h.id}',{...D.hotels['${h.id}'],${k}:+this.value||0})"></div>`}).join('')}</div>
+   <div class="row" style="margin-top:12px">${vals.length?`<span class="tag g">💴 ${money(min*nights())} for ${nights()} nights</span>`:''}${vals.length>1&&max>min?`<span class="tag y">Save ${money((max-min)*nights())} with the cheapest</span>`:''}
+   <button class="mlink" onclick="togglePrev('h${h.id}')">👀 Google preview</button><a class="mlink g" target="_blank" rel="noopener" href="${h.lat!=null?`https://www.google.com/maps/search/?api=1&query=${h.lat},${h.lng}`:LK.gplace(h.name)}">📍 Google Maps</a>${h.lat==null?'<span class="tag" title="Edit the hotel to set its location">not on map yet</span>':''}<span class="sp"></span>${who(h)}</div>${h.note?`<p class="note" style="white-space:pre-line">${esc(h.note)}</p>`:''}${previews.has('h'+h.id)?`<iframe class="gprev" loading="lazy" src="${gEmbed({...h,place:h.name})}"></iframe>`:''}</div>`}
+function editHotel(id){const h=id?D.hotels[id]:{stars:4};window._loc=h.lat!=null?{lat:h.lat,lng:h.lng}:null;
+  modal(`<h2>${id?'Edit hotel':'Add a hotel'}</h2><div class="grid" style="margin-top:14px"><div style="grid-column:1/-1"><label>Hotel name</label><input id="h_name" value="${esc(h.name||'')}"></div>
+  <div><label>Area</label><input id="h_area" value="${esc(h.area||'')}" placeholder="Shinjuku"></div><div><label>Stars</label><select id="h_stars">${[1,2,3,4,5].map(s=>`<option ${+h.stars===s?'selected':''}>${s}</option>`).join('')}</select></div>
+  <div><label>Agoda / night</label><input type="number" id="h_agoda" value="${h.agoda||''}"></div><div><label>Trip.com / night</label><input type="number" id="h_trip" value="${h.trip||''}"></div><div><label>Direct / night</label><input type="number" id="h_other" value="${h.other||''}"></div></div>
+  <div class="row" style="margin-top:14px"><label style="display:flex;gap:8px;align-items:center;margin:0"><input type="checkbox" id="h_family" style="width:20px" ${h.family?'checked':''}> Family room</label><label style="display:flex;gap:8px;align-items:center;margin:0"><input type="checkbox" id="h_breakfast" style="width:20px" ${h.breakfast?'checked':''}> Breakfast</label></div>
+  ${locBlock()}<div style="margin-top:14px"><label>Notes</label><textarea id="h_note" rows="2" placeholder="Near station? Pool? Cancellation policy?">${esc(h.note||'')}</textarea></div>
+  <div class="row" style="margin-top:20px">${id?`<button class="btn alt" style="color:var(--bad)" onclick="ask('Delete this hotel?',()=>remove('hotels','${id}'))">Delete</button>`:''}<span class="sp"></span><button class="btn alt" onclick="modal()">Cancel</button><button class="btn" onclick="saveHotel('${id||''}')">Save</button></div>`)}
+function saveHotel(id){const v=k=>$('#h_'+k).value.trim();if(!v('name'))return toast('Add the hotel name');
+  write('hotels',id||uid(),{...(id?D.hotels[id]:{}),name:v('name'),area:v('area'),stars:+v('stars'),agoda:+v('agoda')||0,trip:+v('trip')||0,other:+v('other')||0,family:$('#h_family').checked,breakfast:$('#h_breakfast').checked,note:v('note'),lat:window._loc?.lat??null,lng:window._loc?.lng??null});modal();toast('Saved ✓')}
+async function chooseHotel(id){const st={};for(let n=0;n<nights();n++)st[n]={main:id,backups:(stays()[n]?.backups||[]).filter(b=>b!==id)};saveStays(st);toast('🏨 Set for every night');return;const was=D.hotels[id].chosen;for(const h of list('hotels'))if(h.chosen&&h.id!==id)await write('hotels',h.id,{...D.hotels[h.id],chosen:false});await write('hotels',id,{...D.hotels[id],chosen:!was});if(!was)toast('🏨 Set as your hotel')}
+
+// ================= EATS =================
+const lvl=s=>s>=4?['Legendary','#9b2c2c']:s>=3.75?['Top-tier','#c0473a']:s>=3.5?['Excellent','#d4793a']:s>=3?['Good','#c09553']:s>0?['Casual','#9c9283']:['Not rated','#c8bfae'];
+let minScore=0,kidsOnly=false;
+function vEats(){
+  const all=list('food').sort((a,b)=>(+b.score||0)-(+a.score||0)),fl=all.filter(p=>(+p.score||0)>=minScore&&(!kidsOnly||p.kids));
+  return `<div class="card"><h2>Restaurants by Tabelog score</h2><p class="note">Tabelog is strict: 3.0 is good, 3.5+ excellent, 3.75+ top-tier, 4.0+ legendary.</p>
+   <div class="row" style="margin-top:14px"><input id="tq" placeholder="sushi, ramen, tempura…" style="flex:1;min-width:160px" onkeydown="if(event.key==='Enter')$('#tqb').click()"><a id="tqb" class="btn gold" target="_blank" rel="noopener" href="${LK.tabelog('')}" onclick="this.href=LK.tabelog($('#tq').value)">Search Tabelog ↗</a><button class="btn ro" onclick="editFood()">＋ Add restaurant</button></div></div>
+  <div class="card"><div class="row"><h2>Our shortlist</h2><span class="sp"></span>
+   <div class="chips">${[[0,'All'],[3.5,'3.5+'],[3.75,'3.75+'],[4,'4.0+']].map(([v,n])=>`<button class="chip ${minScore===v?'on':''}" style="padding:6px 12px" onclick="minScore=${v};render()">${n}</button>`).join('')}<button class="chip ${kidsOnly?'on':''}" style="padding:6px 12px" onclick="kidsOnly=!kidsOnly;render()">👶 Kid-friendly</button></div></div>
+   ${fl.length?fl.map(foodRow).join(''):`<div class="empty"><div class="big">🍣</div><h3>${all.length?'Nothing matches the filter':'No restaurants yet'}</h3><p class="note">Find favourites on Tabelog, then add them with their score.</p></div>`}</div>`}
+function foodRow(p){const s=+p.score||0,[n,c]=lvl(s),pct=Math.max(0,Math.min(1,(s-2.8)/1.7));const C=2*Math.PI*30;
+  return `<div class="fd"><svg class="ring" viewBox="0 0 72 72"><circle cx="36" cy="36" r="30" fill="none" stroke="#f1ebdf" stroke-width="7"/><circle cx="36" cy="36" r="30" fill="none" stroke="${c}" stroke-width="7" stroke-linecap="round" stroke-dasharray="${pct*C} ${C}" transform="rotate(-90 36 36)"/>
+  <text x="36" y="41" text-anchor="middle" font-family="Fraunces,serif" font-weight="700" font-size="17" fill="${c}">${s?s.toFixed(2):'–'}</text></svg>
+  <div><div class="row"><h3>${esc(p.name)}</h3><span class="tag" style="background:${c}1f;color:${c}">${n}</span>${p.kids?'<span class="tag g">👶 Kids OK</span>':''}</div>
+  <div class="note">${esc(p.cuisine||'')}${p.area?' · '+esc(p.area):''}${p.cost?' · '+money(p.cost)+' per person':''}</div>${p.note?`<div class="note">${esc(p.note)}</div>`:''}
+  <div class="row" style="margin-top:6px"><a class="mlink" target="_blank" rel="noopener" href="${LK.tabelog(p.name)}">Tabelog ↗</a><a class="mlink g" target="_blank" rel="noopener" href="${LK.gplace(p.name)}">📍 Map</a>${who(p)}</div></div>
+  <div class="row ro"><select style="width:auto" onchange="if(this.value!=='')foodToDay('${p.id}',+this.value);this.value=''"><option value="">＋ Add to day</option>${[...Array(nDays()).keys()].map(i=>`<option value="${i}">Day ${i+1} · ${dayLabel(i)}</option>`).join('')}</select><button class="ib" onclick="editFood('${p.id}')">✏️</button></div></div>`}
+function editFood(id){const p=id?D.food[id]:{};modal(`<h2>${id?'Edit':'Add a'} restaurant</h2><div class="grid" style="margin-top:14px"><div style="grid-column:1/-1"><label>Name</label><input id="f_name" value="${esc(p.name||'')}"></div>
+  <div><label>Cuisine</label><input id="f_cuisine" value="${esc(p.cuisine||'')}" placeholder="Sushi"></div><div><label>Area</label><input id="f_area" value="${esc(p.area||'')}"></div>
+  <div><label>Tabelog score</label><input type="number" step="0.01" min="0" max="5" id="f_score" value="${p.score||''}" placeholder="3.62"></div><div><label>Cost / person</label><input type="number" min="0" id="f_cost" value="${p.cost||''}"></div></div>
+  <label style="display:flex;gap:8px;align-items:center;margin-top:14px"><input type="checkbox" id="f_kids" style="width:20px" ${p.kids?'checked':''}> Kid-friendly (high chairs, kids menu, relaxed)</label>
+  <div style="margin-top:14px"><label>Notes</label><input id="f_note" value="${esc(p.note||'')}" placeholder="Reservation needed? Must-order dish?"></div>
+  <div class="row" style="margin-top:20px">${id?`<button class="btn alt" style="color:var(--bad)" onclick="ask('Delete this restaurant?',()=>remove('food','${id}'))">Delete</button>`:''}<span class="sp"></span><button class="btn alt" onclick="modal()">Cancel</button><button class="btn" onclick="saveFood('${id||''}')">Save</button></div>`)}
+function saveFood(id){const v=k=>$('#f_'+k).value.trim();if(!v('name'))return toast('Add the restaurant name');
+  write('food',id||uid(),{...(id?D.food[id]:{}),name:v('name'),cuisine:v('cuisine'),area:v('area'),score:+v('score')||0,cost:+v('cost')||0,kids:$('#f_kids').checked,note:v('note')});modal();toast('Saved ✓')}
+function foodToDay(id,d){const p=D.food[id];editItem(null,{day:d,title:p.name,place:p.name,cat:'food',time:'18:00',dur:1.5,cost:(+p.cost||0)*people(),note:[p.score?`Tabelog ${(+p.score).toFixed(2)}`:'',p.note].filter(Boolean).join(' · ')})}
+
+// ================= PACK =================
+const PACK_SUGG=['Passports','Travel insurance','Phone chargers','Power adapter','Kids medicine','Snacks for the plane','Stroller','Tablet + headphones','Wet wipes','Rain jackets','Driving licence + International Driving Permit','Child car seats booked','Sunscreen','Swimwear & reef shoes','Cash'];
+function vPack(){const pk=list('packing').sort((a,b)=>(a.done?1:0)-(b.done?1:0)||(a.at||0)-(b.at||0)),d=pk.filter(x=>x.done).length;
+  const have=new Set(pk.map(x=>x.text.toLowerCase()));
+  return `<div class="card"><div class="row"><h2>Packing list</h2><span class="sp"></span><b style="font:600 22px var(--serif)">${pk.length?Math.round(d/pk.length*100):0}%</b></div>
+   <div class="prog" style="margin:10px 0 16px"><span style="width:${pk.length?d/pk.length*100:0}%"></span></div>
+   <div class="row ro"><input id="pk" placeholder="Add an item and press Enter" onkeydown="if(event.key==='Enter')addPack(this.value)"><button class="btn" onclick="addPack($('#pk').value)">Add</button></div>
+   <div class="chips ro" style="margin-top:12px">${PACK_SUGG.filter(s=>!have.has(s.toLowerCase())).map(s=>`<button class="chip" style="padding:6px 12px;font-size:13px" onclick="addPack('${s}')">＋ ${s}</button>`).join('')}</div>
+   <div style="margin-top:12px">${pk.map(x=>`<div class="chk ${x.done?'done':''}"><input type="checkbox" ${x.done?'checked':''} ${readOnly?'disabled':''} onchange="write('packing','${x.id}',{...D.packing['${x.id}'],done:this.checked})"><span class="sp">${esc(x.text)}</span>${who(x)}<button class="ib ro" onclick="remove('packing','${x.id}')">×</button></div>`).join('')||'<p class="note">Nothing yet: tap a suggestion above.</p>'}</div></div>`}
+function addPack(t){t=(t||'').trim();if(!t)return;write('packing',uid(),{text:t,done:false});setTimeout(()=>{const i=$('#pk');if(i){i.value='';i.focus()}},30)}
+
+// ================= SUMMARY =================
+function vSummary(){
+  const h=chosenHotel(),hp=h?best(h):[],it=realItems();
+  const hotel=hotelCost(),act=it.filter(x=>x.cat!=='food').reduce((a,x)=>a+(+x.cost||0),0),food=it.filter(x=>x.cat==='food').reduce((a,x)=>a+(+x.cost||0),0),total=hotel+act+food;
+  const top=list('food').sort((a,b)=>(+b.score||0)-(+a.score||0)).slice(0,5);
+  return `<div class="card"><div class="row"><div><h2>${esc(T().dest)} family trip</h2><p class="note">${dayLabel(0)} – ${dayLabel(nights())} · ${nights()} nights · ${T().adults} adults, ${kidsTxt()}</p></div><span class="sp"></span><button class="btn alt" onclick="print()">🖨 Print / PDF</button><button class="btn" onclick="copySummary()">📋 Copy to share</button></div>
+   <div class="stats" style="margin-top:14px">${stat('📍','Stops',it.length,'')}${stat('🍣','Restaurants',list('food').length,'')}${stat('💴','Total',money(total),'')}${stat('👤','Per person',money(total/Math.max(1,people())),'')}</div></div>
+  <div class="card"><h2>🏨 Where we stay</h2>${[...Array(nights()).keys()].map(n=>{const x=nightHotel(n),p=x?best(x):[],bk=nightBackups(n);
+   return `<div class="chk"><b style="min-width:86px">🌙 Night ${n+1}</b><span class="note" style="min-width:90px">${dayLabel(n)}</span><span class="sp">${x?`<b>${esc(x.name)}</b>${p.length?` <span class="note">· ${p[0][0]} ${money(p[0][1])}</span>`:''}`:'<span class="note">not chosen</span>'}${bk.length?`<br><span class="note">🔁 Backup: ${bk.map(b=>esc(b.name)).join(', ')}</span>`:''}</span></div>`}).join('')}
+   <p style="margin-top:12px">Hotels total: <b>${money(hotel)}</b> for ${nights()} nights (cheapest site for each).</p></div>
+  <div class="card"><h2>🗓 Day by day</h2>${[...Array(nDays()).keys()].map(i=>{const d=dayItems(i);const tm=legTimes(i);const tr=dayTravel(i);
+   return `<div style="margin-top:16px"><div class="row"><b style="font:600 18px var(--serif)">Day ${i+1} · ${dayLabel(i,{weekday:'long',month:'short',day:'numeric'})}</b>${dayNote(i)?` <span class="tag p">${esc(dayNote(i))}</span>`:''}<span class="sp"></span>${tr?`<span class="tag">${MODES[T().mode][0]} ${fmtDur(tr)} travel</span>`:''}</div>
+   ${d.length?d.map(x=>`<div class="chk"><b style="min-width:48px">${esc(x.time)}</b><span style="font-size:20px">${(CATS[x.cat]||CATS.other)[0]}</span><span class="sp">${esc(x.title)}${tm[x.id]?` <span class="note">· ${fmtDur(tm[x.id])} to get there</span>`:''}</span>${x.cost?`<span class="note">${money(x.cost)}</span>`:''}</div>`).join(''):'<p class="note">Free day</p>'}${maybeItems(i).length?`<p class="note">🤔 Considering: ${maybeItems(i).map(x=>esc(x.title)).join(', ')}</p>`:''}</div>`}).join('')}</div>
+  ${top.length?`<div class="card"><h2>🍣 Top restaurants</h2>${top.map(foodRow).join('')}</div>`:''}
+  <div class="card"><h2>💴 Budget</h2>${donut([['Hotel',hotel,'#1f3a34'],['Activities',act,'#c09553'],['Food',food,'#c8553d']])}<p class="note">Flights and local transport fares not included.</p></div>`}
+async function copySummary(){
+  const h=chosenHotel(),hp=h?best(h):[];
+  let t=`🧳 ${T().dest} family trip\n${dayLabel(0)} – ${dayLabel(nights())} · ${T().adults} adults, ${kidsTxt()}\n`;
+  t+='\n';for(let n=0;n<nights();n++){const x=nightHotel(n),bk=nightBackups(n);if(x)t+=`🌙 Night ${n+1}: ${x.name}${bk.length?` (backup: ${bk.map(b=>b.name).join(', ')})`:''}\n`}
+  for(let i=0;i<nDays();i++){const d=dayItems(i);t+=`\nDay ${i+1} · ${dayLabel(i)}${dayNote(i)?' · '+dayNote(i):''}\n`+(d.map(x=>`  ${x.time} ${(CATS[x.cat]||CATS.other)[0]} ${x.title}${legTimes(i)[x.id]?` (${fmtDur(legTimes(i)[x.id])} travel)`:''}`).join('\n')||'  Free day')+'\n'}
+  t=trLines(t);try{await navigator.clipboard.writeText(t);toast('Copied: paste it into WhatsApp or LINE')}catch(e){modal(`<h2>Copy this text</h2><textarea rows="14" onfocus="this.select()">${esc(t)}</textarea><div class="row" style="margin-top:14px"><span class="sp"></span><button class="btn" onclick="modal()">Done</button></div>`)}
+}
+
+langUI();if(new URLSearchParams(location.search).has('demo'))startDemo();else render();
+</script>
+<script type="module">
+if(!new URLSearchParams(location.search).has('demo')){
+  const V='https://www.gstatic.com/firebasejs/10.12.2/';
+  const {initializeApp}=await import(V+'firebase-app.js');
+  const {getAuth,GoogleAuthProvider,signInWithPopup,signInWithRedirect,getRedirectResult,onAuthStateChanged,signOut}=await import(V+'firebase-auth.js');
+  const {initializeFirestore,persistentLocalCache,persistentMultipleTabManager,doc,collection,onSnapshot,setDoc,deleteDoc,getDoc}=await import(V+'firebase-firestore.js');
+  const app=initializeApp({apiKey:"AIzaSyCFK5vwYieYklCMJcuYJQDe1fyqgkPE6oM",authDomain:"trip-planner-73c19.firebaseapp.com",projectId:"trip-planner-73c19",storageBucket:"trip-planner-73c19.firebasestorage.app",messagingSenderId:"76147780271",appId:"1:76147780271:web:002e767ab052d9ecae425a"});
+  const auth=getAuth(app);
+  let db;try{db=initializeFirestore(app,{localCache:persistentLocalCache({tabManager:persistentMultipleTabManager()})})}catch(e){db=initializeFirestore(app,{})}
+  window.FB={auth,db,doc,collection,onSnapshot,setDoc,deleteDoc,getDoc,
+    signIn:async()=>{const p=new GoogleAuthProvider();p.setCustomParameters({prompt:'select_account'});try{await signInWithPopup(auth,p)}catch(e){if(/popup|cancelled-popup|operation-not-supported/.test(e.code||''))await signInWithRedirect(auth,p);else throw e}},
+    signOut:()=>signOut(auth)};
+  getRedirectResult(auth).catch(()=>{});
+  onAuthStateChanged(auth,u=>window.onAuth(u));
+}
+</script>
+</body>
+</html>
