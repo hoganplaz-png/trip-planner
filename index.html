@@ -815,6 +815,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .bub.sm{width:36px;height:36px;font-size:18px;border-radius:12px;box-shadow:none}
 .night{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
 .nl{min-width:130px;display:flex;flex-direction:column}
+.langbtn{display:inline-flex;gap:2px;border:1px solid #ffffff33;background:#ffffff14;border-radius:999px;padding:3px;margin-right:8px;color:#fbf6ec;font:600 12px var(--sans)}
+.langbtn span,.sync,.usr,.brand{white-space:nowrap}
+@media(max-width:480px){.top{gap:6px}.brand{font-size:11px;letter-spacing:.12em}.langbtn{margin-right:0}.langbtn span{padding:3px 7px}.sync{font-size:11px;padding:4px 8px;max-width:118px;overflow:hidden;text-overflow:ellipsis}}
+.langbtn span{padding:3px 9px;border-radius:999px;opacity:.75}.langbtn span.on{background:#fbf6ec;color:#1f3a34;opacity:1}
 </style>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
@@ -840,7 +844,7 @@ a.opt{text-decoration:none}
     <path d="M0 135 L160 95 L300 125 L450 85 L620 130 L780 92 L930 128 L1080 98 L1200 120 L1200 150 L0 150Z" fill="#ffffff14"/>
     <g fill="#ffffff22"><rect x="250" y="88" width="8" height="40"/><path d="M236 92h36l-18-14z"/><path d="M240 104h28l-14-10z"/><rect x="820" y="80" width="10" height="48"/><path d="M804 84h42l-21-16z"/><path d="M808 98h34l-17-12z"/></g>
   </svg>
-  <div class="top"><span class="brand">✦ Family Journeys</span><span class="sp"></span><span class="sync" id="sync"><span class="dot off"></span>Connecting…</span><span id="usr"></span></div>
+  <div class="top"><span class="brand">✦ Family Journeys</span><span class="sp"></span><button class="langbtn notr" id="langbtn" onclick="setLang(LANG==='zh'?'en':'zh')" aria-label="Language / 語言"></button><span class="sync" id="sync"><span class="dot off"></span>Connecting…</span><span id="usr"></span></div>
   <div class="herobody" id="herobody"></div>
 </div>
 <main>
@@ -877,7 +881,7 @@ const nDays=()=>nights()+1;
 const people=()=>(+T().adults||0)+(+T().kids||0);
 const money=n=>T().cur+Math.round(+n||0).toLocaleString();
 const dayD=i=>{const d=new Date(T().start+'T00:00');d.setDate(d.getDate()+i);return d};
-const dayLabel=(i,o={weekday:'short',month:'short',day:'numeric'})=>dayD(i).toLocaleDateString(undefined,o);
+const dayLabel=(i,o={weekday:'short',month:'short',day:'numeric'})=>dayD(i).toLocaleDateString(LANG==='zh'?'zh-TW':'en',o);
 const list=c=>Object.entries(D[c]).map(([id,v])=>({id,...v}));
 const allDay=i=>list('items').filter(x=>+x.day===i).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
 const dayItems=i=>allDay(i).filter(x=>!x.maybe);
@@ -895,7 +899,137 @@ function saveStays(st){write('trip','main',{...D.trip,stays:st})}
 const best=h=>{const p=[['Agoda',+h.agoda],['Trip.com',+h.trip],['Direct',+h.other]].filter(x=>x[1]>0).sort((a,b)=>a[1]-b[1]);return p};
 const toMin=t=>{const[h,m]=(t||'0:0').split(':').map(Number);return h*60+(m||0)};
 const fromMin=m=>`${String(Math.floor(m/60)%24).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`;
-const fmtDur=m=>m>=60?`${Math.floor(m/60)}h${m%60?' '+m%60+'m':''}`:`${m} min`;
+const fmtDur=m=>LANG==='zh'?(m>=60?`${Math.floor(m/60)}小時${m%60?m%60+'分':''}`:`${m}分鐘`):(m>=60?`${Math.floor(m/60)}h${m%60?' '+m%60+'m':''}`:`${m} min`);
+// ================= i18n =================
+let LANG=(()=>{try{const v=localStorage.getItem('ftp.lang');if(v==='zh'||v==='en')return v}catch(e){}return /^zh/i.test(navigator.language||'')?'zh':'en'})();
+const I18N={en:{},zh:{
+"(your Google Maps lists) and":"（你的 Google 地圖清單）和",", choose":"，選擇",
+". Ask the trip owner to add this email under 👨‍👩‍👧 Family, then reload this page.":"。請行程擁有者在「👨‍👩‍👧 家人」加入這個 email，然後重新整理這個頁面。",
+"Add":"新增","Add an item and press Enter":"輸入物品後按 Enter","Add something":"新增項目","Booking number, what to bring, stroller OK?":"預約編號、要帶什麼、可以推嬰兒車嗎？",
+"Edit the hotel to set its location":"編輯酒店以設定位置","Name used for Google & Apple Maps":"在 Google／Apple 地圖使用的名稱","Near station? Pool? Cancellation policy?":"近車站嗎？有泳池嗎？取消政策？",
+"Or type your own":"或自行輸入","Paste a Google Maps or Apple Maps link":"貼上 Google 地圖或 Apple 地圖連結","Paste links or place names, one per line":"貼上連結或地點名稱，每行一個","Place name":"地點名稱",
+"Remove":"移除","Reservation needed? Must-order dish?":"需要訂位嗎？必點菜式？","Save for later":"收藏起來","Search any place, e.g. Churaumi, Kouri Island, Naha airport":"搜尋任何地點，例如：美麗海、古宇利島、那霸機場",
+"Shinjuku":"例如：北谷","Type your own travel time":"自行輸入交通時間","Zoom in":"放大","Zoom out":"縮小","e.g. Route 58 north, parking at the beach":"例如：58號公路北上，海灘旁停車",
+"e.g. Tokyo DisneySea":"例如：美麗海水族館","family member's Google email":"家人的 Google email","sushi, ramen, tempura…":"壽司、拉麵、天婦羅…",
+"Activities":"活動","Add a hotel":"新增酒店","Add a place or activity":"新增地點或活動","Add a restaurant":"新增餐廳","Add to plan":"加入行程","Add to saved places":"加入收藏地點","Adults":"大人",
+"Agoda / night":"Agoda／每晚","Agoda and Trip.com need these for correct prices":"Agoda 和 Trip.com 需要年齡才能顯示正確價錢","All":"全部","Almost there":"差一點就好","Area":"地區",
+"Best price":"最便宜","Breakfast":"含早餐","Cancel":"取消",
+"Car, taxi and walking times marked ✓ are real road routes (openrouteservice, no live traffic). Bus times are rough estimates: tap Google Maps for live traffic and exact bus routes.":"標示 ✓ 的開車、計程車和步行時間是真實道路路線（openrouteservice，不含即時路況）。公車時間只是粗略估計：按 Google Maps 查看即時路況和公車路線。",
+"Change":"更改","Check-in":"入住","Check-out":"退房","Checked it in Google or Apple Maps? Type the time here. Leave empty to use the calculated route.":"在 Google 或 Apple 地圖查過了嗎？在這裡輸入時間。留空就使用計算出的路線。",
+"Close":"關閉","Compare hotels":"比較酒店","Copied: paste it into WhatsApp or LINE":"已複製：可以貼到 WhatsApp 或 LINE","Copy":"複製","Cost / person":"每人費用","Cuisine":"菜式","Currency":"貨幣",
+"Create our family trip":"建立我們的家庭行程","Day":"日期","Delete":"刪除","Delete this stop?":"刪除這個景點？","Delete this hotel?":"刪除這間酒店？","Delete this restaurant?":"刪除這間餐廳？",
+"Demo mode":"示範模式","Demo user":"示範用戶","Destination":"目的地","Direct / night":"官網／每晚","Direct / other":"官網／其他","Direct":"官網","Eats":"美食",
+"Edit hotel":"編輯酒店","Edit restaurant":"編輯餐廳","Edit stop":"編輯景點","End":"終點","Estimated cost":"預計費用","Everyone on the trip sees it right away.":"所有一起規劃的家人會立即看到。","Everything":"全部",
+"Excellent":"優秀","Explore":"探索","Export to KML":"匯出 KML","Family":"家人","Family room":"家庭房","Family trip":"家庭旅行","Find places":"搜尋地點","Flights and local transport fares not included.":"不包括機票和當地交通費。",
+"Food":"餐飲","Free day":"自由日","Getting around":"交通方式","Getting there":"交通","Good":"不錯","Google and Apple don't let other websites read your saved lists directly, so use one of these quick ways.":"Google 和 Apple 不允許其他網站直接讀取你的收藏清單，所以請用以下其中一個快速方法。",
+"Home":"首頁","Hotel":"酒店","Hotel name":"酒店名稱","Hotel option":"酒店選擇","Hotels":"酒店","Hotels total:":"酒店合計：","How long (hours)":"停留多久（小時）","Import from Google Maps":"從 Google 地圖匯入",
+"In Google Maps or Apple Maps, open a place":"在 Google 地圖或 Apple 地圖打開一個地點","Kid-friendly (high chairs, kids menu, relaxed)":"適合小朋友（有兒童椅、兒童餐、氣氛輕鬆）","Kids":"小朋友","Kids' ages":"小朋友年齡",
+"Latest from the family":"家人最新動態","Location on the map":"地圖上的位置","Look it up on the big sites":"到大型網站查詢","Map":"地圖","Map name (optional)":"地圖名稱（選填）","Maps (your places)":"地圖（你的地點）",
+"Meal":"用餐","Minutes":"分鐘","Museum":"博物館","Name":"名稱","No trip has been created yet. Create it and you become the owner: you choose which family members can join.":"還沒有建立行程。建立後你就是擁有者，可以決定哪些家人加入。",
+"Not on the map yet":"還沒放上地圖","Notes":"備註","Notes, tickets, tips":"備註、門票、小貼士","Open":"打開","Opening your trip…":"正在打開你的行程…","Opens each site with your trip already filled in.":"打開各網站時，會自動填好你的行程資料。",
+"Or pick one of your saved places":"或從收藏地點選擇","Other":"其他","Our shortlist":"我們的清單","Owner":"擁有者","Pack":"行李","Packed":"已收拾","Packing item":"行李物品","Packing list":"行李清單","Park & nature":"公園與自然",
+"Passports":"護照","Paste here. You can paste many at once":"貼到這裡，可以一次貼很多個","Per person":"每人","Pick a category or search any place. Results come from OpenStreetMap; tap ＋ Add to put one in your plan.":"選擇分類或搜尋任何地點。結果來自 OpenStreetMap，按「＋ 新增」加入行程。",
+"Pick the main hotel for each night and add backup hotels (後備) in case it's full or plans change.":"為每晚選擇主要酒店，並加入後備酒店，以防客滿或計劃改變。","Place or activity":"地點或活動","Plan":"行程",
+"Plan our family trip together":"一起規劃我們的家庭旅行","Plan together":"一起規劃","Relax":"放鬆","Reload":"重新載入","Restaurant":"餐廳","Restaurants":"餐廳","Restaurants by Tabelog score":"按 Tabelog 評分排列的餐廳",
+"Rooms":"房間","Route note":"路線備註","Save":"儲存","Saved":"收藏","Search Agoda ↗":"搜尋 Agoda ↗","Search Tabelog ↗":"搜尋 Tabelog ↗","Search Trip.com ↗":"搜尋 Trip.com ↗",
+"Search both sites (dates and guests filled in), then add each hotel's nightly price. We highlight the cheapest.":"在兩個網站搜尋（已填好日期和人數），再輸入每間酒店的每晚價錢。我們會標示最便宜的。",
+"Search © OpenStreetMap contributors. Check opening hours and prices before you go.":"搜尋 © OpenStreetMap 貢獻者。出發前請確認營業時間和價錢。","Share":"分享","Shopping":"購物","Sightseeing":"觀光",
+"Sign in with Google":"使用 Google 登入","Sign in with your Google account to see and edit the trip live with your family.":"用 Google 帳號登入，就能和家人即時查看和編輯行程。","Sign out":"登出","Something went wrong":"出了點問題",
+"Stars":"星級","Start":"出發","Start time":"開始時間","Start your family trip":"開始你的家庭行程","Status":"狀態","Stays":"住宿","Stops":"景點","Stops planned":"已安排景點","Summary":"總結",
+"Tabelog is strict: 3.0 is good, 3.5+ excellent, 3.75+ top-tier, 4.0+ legendary.":"Tabelog 評分很嚴格：3.0 已經不錯，3.5+ 優秀，3.75+ 頂級，4.0+ 傳奇。","Tabelog score":"Tabelog 評分",
+"Tap":"按","Tap a day to open it":"按一下打開那一天","Tap the map to drop a pin, paste a link, or find by name.":"按地圖放置標記、貼上連結，或用名稱搜尋。","Theme park":"主題樂園",
+"They open this website, tap \"Sign in with Google\" with that email, and see the same trip live.":"他們打開這個網站，用那個 email 按「使用 Google 登入」，就能即時看到同一個行程。",
+"This removes it for the whole family.":"這會為全家人刪除。","Time travelling":"交通時間","Total":"合計","Travel time":"交通時間","Trip at a glance":"行程總覽","Trip details":"行程資料",
+"Trip.com / night":"Trip.com／每晚","Try again":"再試一次","Type":"類型","Type a place, e.g. \"Churaumi Aquarium\"":"輸入地點，例如「美麗海水族館」","Unzip, then upload the":"解壓縮後上傳",
+"Use Night 1's choices for every night":"每晚都使用第1晚的選擇","Use another account":"使用其他帳號","Use for all nights":"所有晚上都住這間","We find it on the map (OpenStreetMap)":"我們會在地圖上找到它（OpenStreetMap）",
+"What":"名稱","What would you like to add?":"你想新增什麼？","Where the money goes":"費用分布","Whole day in Google Maps ↗":"在 Google Maps 看全日路線 ↗","You":"你","You're signed in as":"你目前登入的帳號是",
+"Your days":"每日行程","Zoo & aquarium":"動物園與水族館","between stops":"景點之間","days to go":"天後出發","drag any pin to fix its spot":"拖曳標記即可修正位置","files here":"檔案到這裡","free":"自由",
+"just now":"剛剛","live for the whole family":"全家即時同步","not on map yet":"還沒放上地圖","not signed in yet":"還沒登入","numbered pins = plan stops, one colour per day":"數字標記 = 行程景點，每天一種顏色",
+"or":"或","total":"合計","works too":"也可以","— Choose main hotel —":"— 選擇主要酒店 —","★ saved places":"★ 收藏地點","☔ Rainy-day plan":"☔ 雨天方案","♨️ Onsen & spa":"♨️ 溫泉與水療",
+"✅ Confirmed":"✅ 已確定","✈️ Travel day":"✈️ 交通日","✍️ Type names":"✍️ 輸入名稱","✏️ Edit trip":"✏️ 編輯行程","✦ Family Journeys":"✦ 家庭旅程","⭐ Saved places…":"⭐ 收藏地點…",
+"🌅 Viewpoints":"🌅 觀景點","🌙 Tonight:":"🌙 今晚：","🌙 Where we sleep each night":"🌙 每晚住宿","🌳 Parks":"🌳 公園","🍣 Tabelog top-rated":"🍣 Tabelog 高分餐廳","🍣 Top restaurants":"🍣 精選餐廳",
+"🍱 Restaurants":"🍱 餐廳","🍳 breakfast":"🍳 含早餐","🎢 Theme parks":"🎢 主題樂園","🏖 Beach day":"🏖 海灘日","🏖 Beaches":"🏖 海灘","🏨 Where we stay":"🏨 住宿","🏨 hotel":"🏨 酒店","🏯 Castles":"🏯 城跡",
+"🏷 Add a label for this day":"🏷 為這天加標籤","🐠 Diving & snorkel":"🐠 潛水與浮潛","🐬 Aquarium day":"🐬 水族館日","🐬 Aquariums":"🐬 水族館","👀 Google preview":"👀 Google 預覽","👀 Hide preview":"👀 隱藏預覽",
+"👨‍👩‍👧 Family":"👨‍👩‍👧 家人","👨‍👩‍👧 family room":"👨‍👩‍👧 家庭房","👶 Kid-friendly":"👶 適合小朋友","👶 Kids OK":"👶 適合小朋友","💴 Budget":"💴 預算","📁 Import a whole list":"📁 匯入整個清單",
+"📋 Copy to share":"📋 複製分享","📋 Full summary":"📋 完整總結","📍 Google Maps":"📍 Google Maps","📍 Location set. Tap the map or drag the pin to change it.":"📍 已設定位置。按地圖或拖曳標記可以更改。","📍 Map":"📍 地圖",
+"📍 add locations to see travel times":"📍 加入位置即可看到交通時間","📥 Bring in places from Google Maps & Apple Maps":"📥 從 Google 地圖和 Apple 地圖匯入地點","🔎 Find by name":"🔎 用名稱搜尋","🔎 Search":"🔎 搜尋",
+"🔗 Share a place":"🔗 分享一個地點","🖨 Print / PDF":"🖨 列印／PDF","🗓 Day by day":"🗓 每日行程","🗺 Google Maps: kids activities":"🗺 Google Maps：親子活動","😴 Rest day":"😴 休息日","🚌 Bus & monorail":"🚌 公車與單軌電車",
+"🚗 Rental car":"🚗 租車","🚗 Road trip north":"🚗 北部自駕","🚶 Walk":"🚶 步行","🛍 Shopping":"🛍 購物","🛍 Shopping day":"🛍 購物日","🤔 Still considering":"🤔 考慮中","🤔 Still deciding":"🤔 仍在決定",
+"🦁 Zoos":"🦁 動物園","🧪 Museums":"🧪 博物館","＋ Add":"＋ 新增","＋ Add backup":"＋ 新增後備","＋ Add hotel":"＋ 新增酒店","＋ Add restaurant":"＋ 新增餐廳","＋ Add stop":"＋ 新增景點","＋ Add to day":"＋ 加到某天",
+"Cash":"現金","Child car seats booked":"已預約兒童安全座椅","Driving licence + International Driving Permit":"駕駛執照＋國際駕駛許可證","Kids medicine":"小朋友藥物","Phone chargers":"手機充電器","Power adapter":"轉換插頭",
+"Rain jackets":"雨衣","Snacks for the plane":"飛機上的零食","Stroller":"嬰兒車","Sunscreen":"防曬","Swimwear & reef shoes":"泳衣和溯溪鞋","Tablet + headphones":"平板＋耳機","Travel insurance":"旅遊保險","Wet wipes":"濕紙巾",
+"Add the hotel name":"請輸入酒店名稱","Add the restaurant name":"請輸入餐廳名稱","Already added":"已經加入了","Check-out must be after check-in":"退房日期必須在入住之後","Copied to all nights ✓":"已套用到每晚 ✓",
+"Could not add: only the owner can add family":"無法加入：只有擁有者可以加入家人","Could not create the trip: someone may have created it already":"無法建立行程：可能已經有人建立了","Could not delete":"無法刪除","Could not remove":"無法移除",
+"Enter a valid email":"請輸入有效的 email","Give it a name":"請輸入名稱","No places found in that":"找不到任何地點","Nothing found, try another word":"找不到，試試其他字詞","Please fill destination and dates":"請填寫目的地和日期",
+"Saved ✓":"已儲存 ✓","Search is busy, try again in a moment":"搜尋繁忙，請稍後再試","Trip updated ✓":"行程已更新 ✓","Type the place name first":"請先輸入地點名稱","✅ Confirmed":"✅ 已確定","🎉 Your family trip is ready":"🎉 你的家庭行程已建立",
+"🏨 Set as your hotel":"🏨 已設為你的酒店","🏨 Set for every night":"🏨 已設為每晚的酒店","📍 Location found from the link":"📍 已從連結找到位置","📍 Location updated":"📍 位置已更新","🔁 Backup hotel added":"🔁 已新增後備酒店",
+"Connecting…":"連線中…","Live · shared with family":"即時同步 · 與家人共享","Offline":"離線","Not signed in":"未登入","Signed in":"已登入","Family member":"家人","Me":"我","Demo":"示範",
+"No hotels yet":"還沒有酒店","Add two or three you like and compare prices side by side.":"加入兩三間喜歡的酒店，並排比較價錢。","No restaurants yet":"還沒有餐廳","Nothing matches the filter":"沒有符合篩選條件的項目",
+"Find favourites on Tabelog, then add them with their score.":"在 Tabelog 找到喜歡的餐廳，再連同評分加入。","A free day":"自由的一天","Add a stop, or pick from Explore or your saved places.":"新增景點，或從「探索」或收藏地點選擇。",
+"No saved places yet":"還沒有收藏地點","Share places from Google Maps or Apple Maps and they appear here and on the map.":"從 Google 地圖或 Apple 地圖分享地點，就會出現在這裡和地圖上。","Nothing yet: tap a suggestion above.":"還沒有物品：按上面的建議加入。",
+"Add hotel prices and costs to see the budget.":"加入酒店價錢和費用就能看到預算。","No hotel chosen yet.":"還沒選擇酒店。","not chosen":"未選擇","no hotel yet":"還沒有酒店","Not chosen":"未選擇","Compare in Stays":"到「住宿」比較",
+"Add locations in Plan":"在「行程」加入位置","Searching…":"搜尋中…","Approximate spot: drag the pin to fine-tune":"大約位置：拖曳標記微調","Not counted in routes or budget yet":"尚未計入路線和預算","✅ Confirm":"✅ 確定",
+"Everyone sees this label.":"全家都會看到這個標籤。","Shopping day":"購物日","Kid":"小朋友","under 1":"未滿1歲","enjoy the trip!":"旅途愉快！","trip complete":"旅程完成","Family Journeys":"家庭旅程",
+"🏖 Beach day":"🏖 海灘日","🐬 Aquarium day":"🐬 水族館日","Choose your hotel in":"在","🏨 Choose your hotel in":"🏨 在","Start a list in Pack":"到「行李」開始清單","and each day starts and ends there, with travel times.":"選擇酒店，每天就會以那裡為起點和終點，並計算交通時間。",
+"🚸 Kids under 6 must ride in a child seat in Japan. Book seats with your rental car.":"🚸 在日本，6歲以下小朋友必須坐兒童安全座椅。租車時請一併預約。",
+"Considering":"考慮中","Confirmed":"已確定","Backup":"後備","Backup:":"後備：","Backups:":"後備：","Tonight:":"今晚：","Edit":"編輯","Done":"完成","Copy this text":"複製以下文字","Delete":"刪除",
+"Rental car":"租車","Taxi":"計程車","Bus / monorail":"公車／單軌電車","Walk":"步行","real route":"真實路線","estimate":"估計","Google":"Google","Apple":"Apple",
+"Casual":"普通","Top-tier":"頂級","Legendary":"傳奇","Not rated":"未評分","Family room ":"家庭房",
+"Couldn't read that file":"無法讀取這個檔案","That doesn't look like a map link":"這看起來不像地圖連結","You don't have permission to change this":"你沒有權限更改這項內容","Could not save, please try again":"無法儲存，請再試一次",
+"Short links hide the location: find by name or tap the map":"短連結不包含位置：請用名稱搜尋或按地圖","No location in that link: tap the map":"連結裡沒有位置：請按地圖","🤔 Saved as considering":"🤔 已存為考慮中",
+"Finding your places on the map…":"正在把你的地點放上地圖…","Putting your stops on the map…":"正在把景點放上地圖…","Not found. Try a shorter name, or tap the map to place it.":"找不到。試試較短的名稱，或按地圖放置。",
+"Pick the right place below.":"在下面選擇正確的地點。","Search is busy. Try again or tap the map.":"搜尋繁忙。請再試一次或按地圖。",
+}};
+const RULES=[
+[/^· (.+)$/,m=>'· '+trText(m[1])],
+[/^Day (\d+)$/,m=>`第${m[1]}天`],[/^Night (\d+)$/,m=>`第${m[1]}晚`],[/^🌙 Night (\d+)$/,m=>`🌙 第${m[1]}晚`],
+[/^🌙 Night (\d+): (.+?)(?: \(backup: (.+)\))?$/,m=>`🌙 第${m[1]}晚：${m[2]}${m[3]?`（後備：${m[3]}）`:''}`],
+[/^(🌙 |🔁 Backup )?[Nn]ights? ([\d,–\s]+)$/,m=>`${m[1]?(m[1].startsWith('🔁')?'🔁 後備 ':'🌙 '):''}第${m[2].replace(/\s/g,'')}晚`],
+[/^(\d+) stops?$/,m=>`${m[1]}個景點`],[/^(.+) planned$/,m=>`已安排 ${trText(m[1])}`],[/^(.+) on the road$/,m=>`路上 ${m[1]}`],
+[/^(\d+) planning together$/,m=>`${m[1]}人一起規劃`],[/^(\d+) adults?, (.+)$/,m=>`${m[1]}位大人、${trText(m[2])}`],[/^(?:👨‍👩‍👧 )?(\d+) adults?$/,m=>(m[0].startsWith('👨')?'👨‍👩‍👧 ':'')+`${m[1]}位大人`],
+[/^(\d+) kids? \(ages? (.+)\)$/,m=>`${m[1]}位小朋友（${m[2].replace(/, /g,'、')}歲）`],[/^(\d+) kids?$/,m=>`${m[1]}位小朋友`],
+[/^(\d+) hotels$/,m=>`${m[1]}間酒店`],[/^(\d+) people can plan this trip$/,m=>`${m[1]}人可以一起規劃`],[/^(\d+)% ready$/,m=>`已完成 ${m[1]}%`],
+[/^(🌙 )?(\d+) nights?$/,m=>`${m[1]||''}${m[2]}晚`],[/^Kid (\d+): (\d+) yrs$/,m=>`小朋友${m[1]}：${m[2]}歲`],[/^Kid (\d+): under 1$/,m=>`小朋友${m[1]}：未滿1歲`],
+[/^(.+)\. Everyone sees this label\.$/,m=>`${m[1]}。全家都會看到這個標籤。`],[/^Back to (.+)$/,m=>`返回 ${m[1]}`],[/^Check in: (.+)$/,m=>`入住：${m[1]}`],
+[/^Save (.+) with the cheapest$/,m=>`選最便宜可省 ${m[1]}`],[/^Label for Day (\d+)$/,m=>`第${m[1]}天的標籤`],[/^across (\d+) days$/,m=>`共 ${m[1]} 天`],
+[/^(.+) total$/,m=>`合計 ${m[1]}`],[/^Total (.+)$/,m=>`合計 ${m[1]}`],[/^(.+) per person$/,m=>`每人 ${m[1]}`],[/^💴 (.+) for (\d+) nights$/,m=>`💴 ${m[2]}晚共 ${m[1]}`],
+[/^for (\d+) nights \(cheapest site for each\)\.$/,m=>`，共 ${m[1]} 晚（每晚以最便宜的網站計算）。`],[/^(.+) to get there$/,m=>`前往需 ${m[1]}`],
+[/^(🚗|🚌|🚶) (.+) travel$/,m=>`${m[1]} 交通 ${m[2]}`],[/^(.*) \((.+) travel\)$/,m=>`${m[1]}（交通 ${m[2]}）`],
+[/^🧳 (.+) family trip$/,m=>`🧳 ${m[1]} 家庭旅行`],[/^(.+) family trip$/,m=>`${m[1]} 家庭旅行`],[/^Our (.+) map$/,m=>`我們的 ${m[1]} 地圖`],[/^Find places in (.+)$/,m=>`搜尋 ${m[1]} 的地點`],[/^＋ (.+)$/,m=>'＋ '+trText(m[1])],[/^Cost for the family \((.+)\)$/,m=>`全家費用（${m[1]}）`],[/^(.+) \/ night$/,m=>`${m[1]}／每晚`],
+[/^🤔 (\d+) considering$/,m=>`🤔 ${m[1]} 個考慮中`],[/^🤔 Considering: (.+)$/,m=>`🤔 考慮中：${m[1]}`],[/^🤔 Still considering \((\d+)\)$/,m=>`🤔 考慮中（${m[1]}）`],
+[/^📍 Put (\d+) (?:stops? )?on the map$/,m=>`📍 把 ${m[1]} 個地點放上地圖`],[/^⭐ Saved places \((\d+)\)$/,m=>`⭐ 收藏地點（${m[1]}）`],
+[/^🔁 Backup: (.+)$/,m=>`🔁 後備：${m[1]}`],[/^updated (\S+) (.+)$/,m=>`更新了 ${m[1]} ${m[2]}`],
+[/^(\d+)m ago$/,m=>`${m[1]}分鐘前`],[/^(\d+)h ago$/,m=>`${m[1]}小時前`],[/^(\d+)d ago$/,m=>`${m[1]}天前`],
+[/^Could not open the trip \((.*)\)\. Check your connection and try again\.$/,m=>`無法開啟行程（${m[1]}）。請檢查網路後再試一次。`],
+[/^Added to Day (\d+) ✓$/,m=>`已加入第${m[1]}天 ✓`],[/^👋 Added (.+)$/,m=>`👋 已加入 ${m[1]}`],[/^Tonight: (.+)$/,m=>`今晚：${m[1]}`],
+[/^(.+) ▾$/,m=>`${trText(m[1])} ▾`],[/^Sign-in did not finish: (.*)$/,m=>`登入未完成：${m[1]}`],
+[/^⭐ Added (\d+) places?$/,m=>`⭐ 已加入 ${m[1]} 個地點`],[/^(\d+) need a location$/,m=>`${m[1]} 個需要設定位置`],
+[/^📍 (\d+) of (\d+) placed(\. Edit the others to set them by hand)?$/,m=>`📍 已放置 ${m[1]}／${m[2]} 個${m[3]?'。其餘請手動設定':''}`],
+[/^📍 Found (\d+) of (\d+)(\. Add the rest to a day and set them by hand)?$/,m=>`📍 找到 ${m[1]}／${m[2]} 個${m[3]?'。其餘請加到某天後手動設定':''}`],
+[/^🔎 Looking for (.+)…$/,m=>`🔎 正在搜尋 ${m[1]}…`],
+];
+function t(k,v={}){const s=(LANG==='zh'&&I18N.zh[k])||k;return s.replace(/\{(\w+)\}/g,(_,n)=>v[n]??'')}
+function trSeg(s){const lead=s.match(/^\s*/)[0],trail=s.match(/\s*$/)[0],x=s.trim();if(!x)return null;
+  if(I18N.zh[x]!=null)return lead+I18N.zh[x]+trail;
+  for(const [re,f] of RULES){const m=x.match(re);if(m)return lead+f(m)+trail}return null}
+function trText(s){if(LANG!=='zh'||!s||!/[A-Za-z]/.test(s))return s;const x=s.trim();
+  if(I18N.zh[x]!=null)return s.replace(x,I18N.zh[x]);
+  if(x.includes(' · ')){let ch=false;const o=s.split(' · ').map(p=>{const r=trSeg(p);if(r!=null){ch=true;return r}return p});return ch?o.join(' · '):s}
+  const w=trSeg(s);return w!=null?w:s}
+const trLines=s=>LANG==='zh'?String(s).split('\n').map(trText).join('\n'):s;
+const ORIG=new WeakMap(),SKIP='.leaflet-control-attribution,script,style,textarea,.notr',TA=['placeholder','title','aria-label'];
+function trNode(root){if(LANG!=='zh'||!root)return;
+  if(root.nodeType===3){root=root.parentNode;if(!root)return}
+  const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),l=[];let n;while(n=w.nextNode())l.push(n);
+  for(const n of l){const p=n.parentElement;if(!p||p.closest(SKIP))continue;const o=ORIG.has(n)?ORIG.get(n):n.data;const r=trText(o);if(r!==n.data){ORIG.set(n,o);n.data=r}}
+  const els=root.querySelectorAll?[root,...root.querySelectorAll('[placeholder],[title],[aria-label]')]:[];
+  for(const el of els){if(!el.getAttribute||el.closest?.(SKIP))continue;for(const a of TA){const v=el.getAttribute(a);if(!v)continue;const k='i18n'+a.replace('-','');const o=el.dataset[k]??v;const r=trText(o);if(r!==v){el.dataset[k]=o;el.setAttribute(a,r)}}}}
+function restoreAll(){const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode())if(ORIG.has(n)){n.data=ORIG.get(n);ORIG.delete(n)}
+  document.querySelectorAll('[data-i18nplaceholder],[data-i18ntitle],[data-i18narialabel]').forEach(el=>{for(const a of TA){const k='i18n'+a.replace('-','');if(el.dataset[k]!=null){el.setAttribute(a,el.dataset[k]);delete el.dataset[k]}}})}
+new MutationObserver(ms=>{if(LANG!=='zh')return;for(const m of ms)for(const n of m.addedNodes)trNode(n)}).observe(document.body,{childList:true,subtree:true});
+function langUI(){document.documentElement.lang=LANG==='zh'?'zh-Hant':'en';document.title=LANG==='zh'?'家庭旅行規劃':'Family Trip Planner';
+  const b=$('#langbtn');if(b)b.innerHTML=`<span class="${LANG==='zh'?'on':''}">中文</span><span class="${LANG==='en'?'on':''}">EN</span>`}
+function setLang(l){if(l===LANG)return;LANG=l;try{localStorage.setItem('ftp.lang',l)}catch(e){}if($('#modal').innerHTML)modal();if(l==='en')restoreAll();else trNode(document.body);langUI();render()}
 function toast(t){$('#toast').innerHTML=`<div class="toast">${esc(t)}</div>`;clearTimeout(toast.t);toast.t=setTimeout(()=>$('#toast').innerHTML='',2600)}
 
 // ================= data layer (Firebase) =================
@@ -1214,12 +1348,12 @@ const OKI=()=>/okinawa|沖繩|沖縄|naha|ishigaki|miyako|kerama|那霸|石垣|�
 let nomLast=0;
 async function nom(q,limit=8){const w=Math.max(0,nomLast+1100-Date.now());nomLast=Date.now()+w;if(w)await new Promise(r=>setTimeout(r,w));
   const box=OKI()?'&viewbox=122.8,27.3,131.4,23.9&bounded=1':'';const qq=OKI()?q:q+', '+T().dest;
-  const r=await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=${limit}&accept-language=en${box}&q=${enc(qq)}`);if(!r.ok)throw new Error('search '+r.status);
+  const r=await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=${limit}&accept-language=${LANG==='zh'?'zh-TW,zh,en':'en'}${box}&q=${enc(qq)}`);if(!r.ok)throw new Error('search '+r.status);
   return (await r.json()).filter(p=>isFinite(+p.lat)).map(p=>({name:String(p.name||String(p.display_name||'').split(',')[0]||'Place').slice(0,120),addr:String(p.display_name||'').split(',').slice(1,4).join(',').trim(),lat:+(+p.lat).toFixed(6),lng:+(+p.lon).toFixed(6),type:String(p.type||'').replace(/_/g,' ')}))}
 function baseMap(el){const m=L.map(el,{zoomSnap:.5}).setView([26.45,127.85],9);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors · routes © openrouteservice'}).addTo(m);return m}
 const pinIcon=(t,c,cls='')=>L.divIcon({className:'',html:`<div class="pin ${cls}" style="background:${c}">${t}</div>`,iconSize:[28,28],iconAnchor:[14,14]});
-function fit(m,pts){if(pts.length>1)m.fitBounds(pts,{padding:[40,40],maxZoom:15});else if(pts.length)m.setView(pts[0],14)}
+function fit(m,pts){if(pts.length>1)m.fitBounds(pts,{padding:[40,40],maxZoom:15,animate:false});else if(pts.length)m.setView(pts[0],14,{animate:false})}
 function drawLeg(m,a,b,x,f,color){const o=legOpts(a,b,x,f);if(!o)return;const g=o.geom?unpackGeom(o.geom):null;
   if(g&&g.length>1)L.polyline(g,{color,weight:5,opacity:.85}).addTo(m);else L.polyline([[a.lat,a.lng],[b.lat,b.lng]],{color,weight:3,dashArray:'6 8',opacity:.7}).addTo(m)}
 function drawMaps(){if(!window.L)return;while(MAPS.length)MAPS.pop().remove();
@@ -1414,10 +1548,10 @@ async function copySummary(){
   let t=`🧳 ${T().dest} family trip\n${dayLabel(0)} – ${dayLabel(nights())} · ${T().adults} adults, ${kidsTxt()}\n`;
   t+='\n';for(let n=0;n<nights();n++){const x=nightHotel(n),bk=nightBackups(n);if(x)t+=`🌙 Night ${n+1}: ${x.name}${bk.length?` (backup: ${bk.map(b=>b.name).join(', ')})`:''}\n`}
   for(let i=0;i<nDays();i++){const d=dayItems(i);t+=`\nDay ${i+1} · ${dayLabel(i)}${dayNote(i)?' · '+dayNote(i):''}\n`+(d.map(x=>`  ${x.time} ${(CATS[x.cat]||CATS.other)[0]} ${x.title}${legTimes(i)[x.id]?` (${fmtDur(legTimes(i)[x.id])} travel)`:''}`).join('\n')||'  Free day')+'\n'}
-  try{await navigator.clipboard.writeText(t);toast('Copied: paste it into WhatsApp or LINE')}catch(e){modal(`<h2>Copy this text</h2><textarea rows="14" onfocus="this.select()">${esc(t)}</textarea><div class="row" style="margin-top:14px"><span class="sp"></span><button class="btn" onclick="modal()">Done</button></div>`)}
+  t=trLines(t);try{await navigator.clipboard.writeText(t);toast('Copied: paste it into WhatsApp or LINE')}catch(e){modal(`<h2>Copy this text</h2><textarea rows="14" onfocus="this.select()">${esc(t)}</textarea><div class="row" style="margin-top:14px"><span class="sp"></span><button class="btn" onclick="modal()">Done</button></div>`)}
 }
 
-if(new URLSearchParams(location.search).has('demo'))startDemo();else render();
+langUI();if(new URLSearchParams(location.search).has('demo'))startDemo();else render();
 </script>
 <script type="module">
 if(!new URLSearchParams(location.search).has('demo')){
