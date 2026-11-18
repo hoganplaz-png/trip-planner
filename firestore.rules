@@ -1,0 +1,43 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{db}/documents {
+    function signedIn() { return request.auth != null; }
+    function myEmail() { return request.auth.token.email.lower(); }
+    function hasOwner() { return exists(/databases/$(db)/documents/config/owner); }
+    function isOwner() {
+      return signedIn() && hasOwner()
+        && get(/databases/$(db)/documents/config/owner).data.uid == request.auth.uid;
+    }
+    function isMember() {
+      return signedIn() && request.auth.token.email_verified == true
+        && exists(/databases/$(db)/documents/members/$(myEmail()));
+    }
+    function family() { return isOwner() || isMember(); }
+
+    // The first person to sign in creates the trip and becomes its owner.
+    match /config/owner {
+      allow read: if signedIn();
+      allow create: if signedIn() && !hasOwner()
+        && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // Family list: only the owner adds or removes people.
+    match /members/{email} {
+      allow read: if family() || (signedIn() && email == myEmail());
+      allow write: if isOwner();
+    }
+
+    // Each person keeps their own name and photo.
+    match /profiles/{uid} {
+      allow read: if family();
+      allow write: if signedIn() && uid == request.auth.uid;
+    }
+
+    // Trip data: everyone in the family can read and edit.
+    match /{coll}/{id} {
+      allow read, write: if family()
+        && coll in ['trip', 'hotels', 'food', 'items', 'packing', 'saved'];
+    }
+  }
+}
