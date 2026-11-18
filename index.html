@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Family Trip Planner</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -819,6 +819,49 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .langbtn span,.sync,.usr,.brand{white-space:nowrap}
 @media(max-width:480px){.top{gap:6px}.brand{font-size:11px;letter-spacing:.12em}.langbtn{margin-right:0}.langbtn span{padding:3px 7px}.sync{font-size:11px;padding:4px 8px;max-width:118px;overflow:hidden;text-overflow:ellipsis}}
 .langbtn span{padding:3px 9px;border-radius:999px;opacity:.75}.langbtn span.on{background:#fbf6ec;color:#1f3a34;opacity:1}
+
+.seg{display:flex;gap:4px;background:#efe8da;border-radius:16px;padding:4px;margin:16px 0 4px;overflow-x:auto;scrollbar-width:none}
+.seg button{flex:1;border:0;background:none;border-radius:12px;padding:11px 12px;font-weight:700;font-size:14px;color:var(--mute);white-space:nowrap;min-height:44px;display:flex;gap:6px;align-items:center;justify-content:center}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:0 2px 8px #0000001a}
+.seg .cnt{background:#e2d8c4;color:var(--ink);border-radius:999px;padding:0 7px;font-size:12px}
+.todo{display:flex;gap:12px;align-items:center;width:100%;text-align:left;border:0;background:#faf6ee;border-radius:14px;padding:14px;margin-top:8px;font-size:15px;font-weight:600;color:var(--ink);min-height:52px}
+.todo:hover{background:#f3ece0}.todo .te{font-size:22px}.chev{color:var(--mute);font-size:20px;margin-left:6px}
+.nx{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);cursor:pointer}.nx:last-child{border-bottom:0}
+.nx .nt{font-size:17px;min-width:52px}.nx .nn{font:600 19px var(--serif)}
+.kv{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-size:16px}
+.legbtn{display:inline-flex;gap:6px;align-items:center;border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:7px 14px;font-size:14px;color:var(--ink);min-height:40px}
+.legbtn.on{border-color:var(--gold)}.legbtn .chev{font-size:13px}
+.legx .info{padding-top:0}
+.srow{margin-top:8px;gap:6px}.srow .mlink{font-size:11px;padding:3px 9px}
+.snote{white-space:pre-line;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.note.tiny{font-size:12px;margin-top:12px;opacity:.8}
+.daycard{padding:10px 12px!important}
+.daytabs{-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent);padding-right:30px}
+.allmap{height:420px}
+.chips.hs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;width:100%;padding-bottom:2px}.chips.hs .chip{flex-shrink:0}
+@media(max-width:700px){
+ body{font-size:16px}
+ .hero{padding:10px 16px 54px}.hero svg.bgart{display:none}
+ .herobody .btn{display:none}
+ .bt,.hide-phone{display:none!important}
+ .herobody{margin-top:10px;flex-wrap:nowrap;align-items:center;gap:12px}
+ .herobody h1{font-size:32px}.herobody .meta{font-size:13px;gap:4px 10px;margin-top:6px}
+ .count{margin-left:auto;padding:8px 12px;border-radius:16px;flex-shrink:0}.count b{font-size:26px}.count span{font-size:10px;letter-spacing:.06em}
+ main{margin-top:-40px;padding-bottom:calc(150px + env(safe-area-inset-bottom))}
+ nav{position:fixed;top:auto;bottom:0;left:0;right:0;border-radius:22px 22px 0 0;padding:6px 6px calc(6px + env(safe-area-inset-bottom));z-index:40;gap:2px;overflow:visible;box-shadow:0 -6px 24px -10px #0003}
+ nav button{min-width:0;padding:7px 2px;min-height:56px;border-radius:16px;font-size:12px}
+ nav button i{font-size:23px}
+ .fab{bottom:calc(84px + env(safe-area-inset-bottom));right:16px;width:58px;height:58px}
+ .btn{min-height:44px}
+ .stats{grid-template-columns:1fr 1fr!important}.stat b{font-size:22px!important}
+ .allmap{height:300px}
+ .night{flex-direction:column;gap:6px}.night>.sp{width:100%}
+ .mrow>span.ro{display:none!important}.mrow .sp{min-width:55%}
+ .card{padding:16px}
+ #view>.card:first-child,#view>.seg:first-child{margin-top:14px}
+}
+.tbtn{border:0;background:none;padding:6px 4px;border-radius:10px;font:inherit;color:inherit;text-align:right;cursor:pointer;display:block;width:100%}
+.tbtn:hover{background:#f3ece0}.tbtn i{display:block;font-style:normal;font-size:11px;color:var(--gold)}
 </style>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
@@ -844,7 +887,7 @@ a.opt{text-decoration:none}
     <path d="M0 135 L160 95 L300 125 L450 85 L620 130 L780 92 L930 128 L1080 98 L1200 120 L1200 150 L0 150Z" fill="#ffffff14"/>
     <g fill="#ffffff22"><rect x="250" y="88" width="8" height="40"/><path d="M236 92h36l-18-14z"/><path d="M240 104h28l-14-10z"/><rect x="820" y="80" width="10" height="48"/><path d="M804 84h42l-21-16z"/><path d="M808 98h34l-17-12z"/></g>
   </svg>
-  <div class="top"><span class="brand">✦ Family Journeys</span><span class="sp"></span><button class="langbtn notr" id="langbtn" onclick="setLang(LANG==='zh'?'en':'zh')" aria-label="Language / 語言"></button><span class="sync" id="sync"><span class="dot off"></span>Connecting…</span><span id="usr"></span></div>
+  <div class="top"><span class="brand">✦ <span class="bt">Family Journeys</span></span><span class="sp"></span><button class="langbtn notr" id="langbtn" onclick="setLang(LANG==='zh'?'en':'zh')" aria-label="Language / 語言"></button><span class="sync" id="sync"><span class="dot off"></span>Connecting…</span><span id="usr"></span></div>
   <div class="herobody" id="herobody"></div>
 </div>
 <main>
@@ -903,6 +946,7 @@ const fmtDur=m=>LANG==='zh'?(m>=60?`${Math.floor(m/60)}小時${m%60?m%60+'分':'
 // ================= i18n =================
 let LANG=(()=>{try{const v=localStorage.getItem('ftp.lang');if(v==='zh'||v==='en')return v}catch(e){}return /^zh/i.test(navigator.language||'')?'zh':'en'})();
 const I18N={en:{},zh:{
+"Change time":"更改時間","End time":"結束時間","Also move the later stops that day":"當天之後的行程也一起移動","Please choose a start time":"請選擇開始時間","Time updated ✓":"時間已更新 ✓","Time updated ✓ Later stops moved too":"時間已更新 ✓ 之後的行程也已移動","−60 min":"−60分鐘","−30 min":"−30分鐘","−15 min":"−15分鐘","+15 min":"+15分鐘","+30 min":"+30分鐘","+60 min":"+60分鐘",
 "(your Google Maps lists) and":"（你的 Google 地圖清單）和",", choose":"，選擇",
 ". Ask the trip owner to add this email under 👨‍👩‍👧 Family, then reload this page.":"。請行程擁有者在「👨‍👩‍👧 家人」加入這個 email，然後重新整理這個頁面。",
 "Add":"新增","Add an item and press Enter":"輸入物品後按 Enter","Add something":"新增項目","Booking number, what to bring, stroller OK?":"預約編號、要帶什麼、可以推嬰兒車嗎？",
@@ -1008,6 +1052,13 @@ const RULES=[
 [/^📍 Found (\d+) of (\d+)(\. Add the rest to a day and set them by hand)?$/,m=>`📍 找到 ${m[1]}／${m[2]} 個${m[3]?'。其餘請加到某天後手動設定':''}`],
 [/^🔎 Looking for (.+)…$/,m=>`🔎 正在搜尋 ${m[1]}…`],
 ];
+Object.assign(I18N.zh,{"Itinerary":"行程","Places":"地點","More":"更多","To do":"待辦事項","All set! Nothing to do right now 🎉":"全部完成！目前沒有待辦事項 🎉",
+"Choose where you sleep each night":"選擇每晚住宿","needs a hotel":"需要選酒店","Add your first stop":"加入第一個景點","＋ Add your first stop":"＋ 加入第一個景點","Start the packing list":"開始列行李清單",
+"Invite your family":"邀請家人","Next up":"接下來","Today":"今天","First planned day":"第一個已安排的日子","Open day →":"查看當天 →","Nothing planned yet":"還沒有安排行程",
+"All done for today 🎉":"今天的行程都完成了 🎉","Hotels":"酒店","✨ Ideas":"✨ 靈感","⭐ Saved":"⭐ 收藏","🍣 Restaurants":"🍣 餐廳","🎒 Packing":"🎒 行李","📋 Summary":"📋 總結",
+"⚙️ Settings":"⚙️ 設定","Language":"語言","Account":"帳戶","👀 Preview":"👀 預覽","👀 Hide":"👀 隱藏","📍 Google":"📍 Google","ⓘ ✓ = real road route":"ⓘ ✓ = 實際道路路線","bus = estimate":"巴士為估算",
+"📍 Add locations to see travel time":"📍 加入位置即可看交通時間","✓ real route":"✓ 實際路線","estimate":"估算","finding route…":"尋找路線中…","Your days":"每日行程","Trip at a glance":"行程總覽","Stops planned":"已安排景點","Estimated cost":"預估費用","Time travelling":"交通時間"});
+RULES.push([/^(\d+) to decide$/,m=>`${m[1]}個待決定`],[/^(\d+) not on the map yet$/,m=>`${m[1]}個地點未放上地圖`],[/^(\d+) hotels not on the map yet$/,m=>`${m[1]}間酒店未放上地圖`],[/^Packing (\d+)% done$/,m=>`行李已收拾 ${m[1]}%`]);
 function t(k,v={}){const s=(LANG==='zh'&&I18N.zh[k])||k;return s.replace(/\{(\w+)\}/g,(_,n)=>v[n]??'')}
 function trSeg(s){const lead=s.match(/^\s*/)[0],trail=s.match(/\s*$/)[0],x=s.trim();if(!x)return null;
   if(I18N.zh[x]!=null)return lead+I18N.zh[x]+trail;
@@ -1124,21 +1175,26 @@ const locQ=p=>p.lat!=null?`${p.lat},${p.lng}`:placeOf(p)+', '+T().dest;
 const gm=m=>m==='taxi'?'driving':(m||T().mode);
 
 // ================= shell =================
-const TABS=[['home','🏡','Home'],['explore','✨','Explore'],['map','🗺','Map'],['plan','🗓','Plan'],['stays','🏨','Stays'],['eats','🍣','Eats'],['pack','🎒','Pack'],['summary','📋','Summary']];
-function go(t){tab=t;try{history.replaceState(null,'','#'+t)}catch(e){}render();scrollTo({top:0})}
-addEventListener('hashchange',()=>{const t=location.hash.slice(1);if(TABS.some(x=>x[0]===t)&&t!==tab){tab=t;render()}});
+const TABS=[['home','🏡','Home'],['itinerary','🗓','Itinerary'],['places','📍','Places'],['stays','🏨','Stays'],['more','☰','More']];
+const ALIAS={plan:['itinerary'],explore:['places','ideas'],map:['places','saved'],saved:['places','saved'],ideas:['places','ideas'],eats:['places','food'],food:['places','food'],pack:['more','pack'],summary:['more','summary'],family:['more','family'],settings:['more','settings']};
+const SUB={places:'ideas',more:'pack'};
+function resolveTab(t){const a=ALIAS[t];if(a){if(a[1])SUB[a[0]]=a[1];return a[0]}return t}
+function go(t){tab=resolveTab(t);try{history.replaceState(null,'','#'+tab)}catch(e){}render();scrollTo({top:0})}
+function goSub(t,s){SUB[t]=s;go(t)}
+addEventListener('hashchange',()=>{const h=location.hash.slice(1),t=resolveTab(h);if(TABS.some(x=>x[0]===t)&&(t!==tab||ALIAS[h])){tab=t;render()}});
 function render(){
   if(!demo&&gate!=='ok'){$('#nav').style.display='none';$('.fab').style.display='none';$('#usr').innerHTML=FBU?`<button class="usr" onclick="fb().signOut()">Sign out</button>`:'';
     $('#herobody').innerHTML='<div><h1>Family trip</h1><div class="meta"><span>Plan together · live for the whole family</span></div></div>';$('#view').innerHTML=vGate();return}
   $('#nav').style.display='';
-  if(!TABS.some(x=>x[0]===tab))tab='home';
+  tab=resolveTab(tab);if(!TABS.some(x=>x[0]===tab))tab='home';
   selDay=Math.min(selDay,nDays()-1);
   $('#nav').innerHTML=TABS.map(([k,e,n])=>`<button class="${k===tab?'on':''}" onclick="go('${k}')"><i>${e}</i>${n}</button>`).join('');
   hero();
-  $('#view').innerHTML=({home:vHome,explore:vExplore,map:vMap,plan:vPlan,stays:vStays,eats:vEats,pack:vPack,summary:vSummary})[tab]();
+  $('#view').innerHTML=({home:vHome,itinerary:vPlan,places:vPlaces,stays:vStays,more:vMore})[tab]();
   document.querySelectorAll('.ro').forEach(e=>{if(readOnly)e.style.display='none'});
   $('.fab').style.display=readOnly?'none':'';
   drawMaps();
+  const dt=document.querySelector('.daytabs'),on=dt&&dt.querySelector('.on');if(on)dt.scrollLeft=on.offsetLeft-dt.clientWidth/2+on.clientWidth/2;
 }
 function hero(){
   $('#usr').innerHTML=FBU||demo?`<button class="usr" onclick="userMenu()">${avatar(me,'sm')}${esc((profiles[me]?.name||'Me').split(' ')[0])} ▾</button>`:'';
@@ -1147,7 +1203,7 @@ function hero(){
   $('#herobody').innerHTML=`<div><h1>${esc(T().dest)}</h1>
    <div class="meta"><span>📅 ${dayLabel(0,{month:'short',day:'numeric'})} – ${dayLabel(nights(),{month:'short',day:'numeric',year:'numeric'})}</span><span>🌙 ${nights()} nights</span><span>👨‍👩‍👧 ${T().adults} adults · ${kidsTxt()}</span>
    <button class="btn sm alt ro" style="padding:4px 12px" onclick="editTrip()">✏️ Edit trip</button></div>
-   ${ppl.length?`<div class="avs">${ppl.slice(0,8).map(i=>avatar(i)).join('')}<span class="note" style="color:#fbf6ecbb">${ppl.length} planning together</span></div>`:''}</div>
+   ${ppl.length?`<div class="avs hide-phone">${ppl.slice(0,8).map(i=>avatar(i)).join('')}<span class="note" style="color:#fbf6ecbb">${ppl.length} planning together</span></div>`:''}</div>
    <div class="count">${days>0?`<b>${days}</b><span>days to go</span>`:days>-nights()-1?`<b>Day ${1-days}</b><span>enjoy the trip!</span>`:`<b>✓</b><span>trip complete</span>`}</div>`;
 }
 
@@ -1201,23 +1257,48 @@ function editDayNote(i){modal(`<h2>Label for Day ${i+1}</h2><p class="note">${da
 function saveDayNote(i,t){const d={...(D.trip.dayNotes||{})};if(t)d[i]=t;else delete d[i];write('trip','main',{...D.trip,dayNotes:d});modal()}
 
 // ================= HOME =================
+function todoList(){const L=[],N=nights();
+  const noH=[...Array(N).keys()].filter(n=>!nightHotel(n));
+  if(noH.length===N)L.push(['🏨','Choose where you sleep each night',"go('stays')"]);
+  else if(noH.length)L.push(['🏨',`${nightsTxt(noH.map(n=>n+1))} · needs a hotel`,"go('stays')"]);
+  for(let d=0;d<nDays();d++){const m=maybeItems(d).length;if(m)L.push(['🤔',`Day ${d+1} · ${m} to decide`,`selDay=${d};go('itinerary')`])}
+  const off=list('items').filter(x=>x.lat==null),offH=[...new Set([...Array(N).keys()].map(n=>nightHotel(n)).filter(h=>h&&h.lat==null).map(h=>h.id))];
+  if(off.length)L.push(['📍',`${off.length} not on the map yet`,`selDay=${+off[0].day||0};go('itinerary')`]);
+  if(offH.length)L.push(['📍',`${offH.length} hotels not on the map yet`,`editHotel('${offH[0]}')`]);
+  if(!realItems().length)L.push(['🗓','Add your first stop',`editItem(null,{day:0})`]);
+  const pk=list('packing'),pd=pk.filter(x=>x.done).length;
+  if(!pk.length)L.push(['🎒','Start the packing list',"go('pack')"]);else if(pd<pk.length)L.push(['🎒',`Packing ${Math.round(pd/pk.length*100)}% done`,"go('pack')"]);
+  if((isOwner||demo)&&!list('members').length)L.push(['👨‍👩‍👧','Invite your family',"go('family')"]);
+  return L}
+function nextUp(){const now=new Date(),today=Math.floor((new Date(now).setHours(0,0,0,0)-dayD(0))/864e5);
+  let d,lbl,it;
+  if(today>=0&&today<nDays()){d=today;lbl='Today';const nm=now.getHours()*60+now.getMinutes();it=dayItems(d).filter(x=>toMin(x.time)+Math.round((+x.dur||0)*60)>=nm)}
+  else{d=[...Array(nDays()).keys()].find(i=>dayItems(i).length);lbl='First planned day';it=d==null?[]:dayItems(d)}
+  if(d==null)return `<div class="card"><h2>Next up</h2><div class="empty"><div class="big">🗓</div><h3>Nothing planned yet</h3><button class="btn ro" style="margin-top:10px" onclick="editItem(null,{day:0})">＋ Add your first stop</button></div></div>`;
+  const tm=legTimes(d);
+  return `<div class="card"><div class="row"><h2>Next up</h2><span class="tag p">${lbl}</span><span class="sp"></span><button class="btn sm alt" onclick="selDay=${d};go('itinerary')">Open day →</button></div>
+   <p class="note" style="margin:4px 0 6px">Day ${d+1} · ${dayLabel(d,{weekday:'long',month:'long',day:'numeric'})}${dayNote(d)?' · '+esc(dayNote(d)):''}</p>
+   ${it.length?it.slice(0,5).map(x=>{const c=CATS[x.cat]||CATS.other;return `<div class="nx" onclick="selDay=${d};go('itinerary')"><b class="nt">${esc(x.time||'')}</b><span class="bub sm" style="background:${c[2]}">${c[0]}</span><span class="sp"><b class="nn">${esc(x.title)}</b>${tm[x.id]?`<br><span class="note">${MODES[T().mode]?.[0]||'🚗'} ${fmtDur(tm[x.id])} to get there</span>`:''}</span></div>`}).join(''):'<p class="note">All done for today 🎉</p>'}</div>`}
 function vHome(){
   const it=realItems(),h=chosenHotel(),hp=h?best(h):[];
   const hotel=hotelCost(),act=it.filter(x=>x.cat!=='food').reduce((a,x)=>a+(+x.cost||0),0),food=it.filter(x=>x.cat==='food').reduce((a,x)=>a+(+x.cost||0),0);
-  const total=hotel+act+food,pk=list('packing'),pd=pk.filter(x=>x.done).length;
+  const total=hotel+act+food;
   const travel=[...Array(nDays()).keys()].reduce((a,i)=>a+dayTravel(i),0);
-  return `<div class="card"><div class="row"><h2>Trip at a glance</h2><span class="sp"></span><button class="btn sm alt" onclick="go('summary')">📋 Full summary</button></div>
-   <div class="stats" style="margin-top:14px">
-    ${stat('🗓','Stops planned',it.length,`across ${nDays()} days`)}${(()=>{const u=new Set([...Array(nights()).keys()].map(n=>nightHotel(n)?.id).filter(Boolean));return u.size>1?stat('🏨','Hotels',u.size+' hotels',money(hotel)+' total'):stat('🏨','Hotel',h?esc(h.name):'Not chosen',h&&hp.length?`${hp[0][0]} · ${money(hp[0][1])}/night`:'Compare in Stays','',h?18:20)})()}
-    ${stat('💴','Estimated cost',money(total),`${money(total/Math.max(1,people()))} per person`)}${stat('🚇','Time travelling',travel?fmtDur(travel):'–',travel?'between stops':'Add locations in Plan')}
-    ${stat('🎒','Packed',pk.length?`${pd}/${pk.length}`:'–',pk.length?Math.round(pd/pk.length*100)+'% ready':'Start a list in Pack')}</div></div>
-  <div class="card"><div class="row"><h2>Your days</h2><span class="sp"></span><span class="note">Tap a day to open it</span></div>${week()}</div>
-  <div class="card"><h2>Where the money goes</h2>${total?donut([['Hotel',hotel,'#1f3a34'],['Activities',act,'#c09553'],['Food',food,'#c8553d']]):'<p class="note">Add hotel prices and costs to see the budget.</p>'}</div>
-  ${vFamily()}${recent()}`;
+  const td=todoList();
+  return `<div class="card"><div class="row"><h2>To do</h2>${td.length?`<span class="tag y">${td.length}</span>`:''}</div>
+   ${td.length?td.map(([e,txt,f])=>`<button class="todo" onclick="${f}"><span class="te">${e}</span><span class="sp">${esc(txt)}</span><span class="chev">›</span></button>`).join(''):'<p class="note" style="margin-top:6px">All set! Nothing to do right now 🎉</p>'}</div>
+  ${nextUp()}
+  <div class="card"><h2>Trip at a glance</h2>
+   <div class="stats" style="margin-top:12px">
+    ${stat('🗓','Stops planned',it.length,'')}${stat('🏨','Hotels',money(hotel),'')}
+    ${stat('💴','Estimated cost',money(total),`${money(total/Math.max(1,people()))} per person`)}${stat('🚗','Time travelling',travel?fmtDur(travel):'–','')}</div></div>
+  <div class="card"><h2>Your days</h2>${week()}</div>
+  ${total?`<div class="card"><h2>Where the money goes</h2>${donut([['Hotel',hotel,'#1f3a34'],['Activities',act,'#c09553'],['Food',food,'#c8553d']])}</div>`:''}
+  ${recent()}`;
 }
 const stat=(e,l,v,s,c='',fs=28)=>`<div class="stat"><span class="e">${e}</span><b style="font-size:${fs}px">${v}</b><div class="note">${l}${s?' · '+s:''}</div></div>`;
 function week(){return `<div class="week" style="margin-top:12px">${[...Array(nDays()).keys()].map(i=>{const it=dayItems(i);const used=it.reduce((a,x)=>a+(+x.dur||0)*60,0)+dayTravel(i);
-  return `<button class="wd ${tab==='plan'&&selDay===i?'on':''}" onclick="selDay=${i};go('plan')"><div class="d">${dayLabel(i,{weekday:'short'})}</div><div class="n">${dayD(i).getDate()}</div><div class="d">Day ${i+1}</div>${dayNote(i)?`<div class="wl">${esc(dayNote(i))}</div>`:''}
+  return `<button class="wd ${tab==='itinerary'&&selDay===i?'on':''}" onclick="selDay=${i};go('plan')"><div class="d">${dayLabel(i,{weekday:'short'})}</div><div class="n">${dayD(i).getDate()}</div><div class="d">Day ${i+1}</div>${dayNote(i)?`<div class="wl">${esc(dayNote(i))}</div>`:''}
   <div class="bars">${it.map(x=>`<span style="width:${(+x.dur||1)*60/Math.max(used,600)*100}%;background:${(CATS[x.cat]||CATS.other)[2]}"></span>`).join('')}</div><div class="emo">${it.map(x=>(CATS[x.cat]||CATS.other)[0]).join('')||'<span class="note">free</span>'}</div>${maybeItems(i).length?`<div class="note">🤔 ${maybeItems(i).length} considering</div>`:''}</button>`}).join('')}</div>`}
 function donut(parts){const tot=parts.reduce((a,p)=>a+p[1],0);let off=0;const C=2*Math.PI*52;
   return `<div class="donut" style="margin-top:12px"><svg width="170" height="170" viewBox="0 0 140 140"><circle cx="70" cy="70" r="52" fill="none" stroke="#f1ebdf" stroke-width="18"/>
@@ -1302,7 +1383,7 @@ function vPlan(){
   if(E&&it.length){const l=it[it.length-1];html+=legRow(l,E,l,'back')+stopRow({time:'End',title:(E.hid===H?.hid?'Back to ':'Check in: ')+E.title,cat:'relax',hotel:true})}
   const miss=all.filter(x=>x.lat==null).length,hasLoc=all.some(x=>x.lat!=null);
   const young=kidAges().some(a=>a<6)&&T().mode==='driving';
-  return `<div class="card" style="padding-bottom:12px"><div class="daytabs">${[...Array(nDays()).keys()].map(d=>`<button class="${d===i?'on':''}" onclick="selDay=${d};render()">Day ${d+1} · ${dayLabel(d,{weekday:'short',day:'numeric'})}</button>`).join('')}</div></div>
+  return `<div class="card daycard"><div class="daytabs">${[...Array(nDays()).keys()].map(d=>`<button class="${d===i?'on':''}" onclick="selDay=${d};render()">Day ${d+1} · ${dayLabel(d,{weekday:'short',day:'numeric'})}</button>`).join('')}</div></div>
   <div class="card"><div class="dayhead"><div><div class="note" style="color:#fff9">Day ${i+1}</div><div class="big">${dayLabel(i,{weekday:'long',month:'long',day:'numeric'})}</div>
    <button class="daylbl ro" onclick="editDayNote(${i})">${dayNote(i)?'🏷 '+esc(dayNote(i)):'🏷 Add a label for this day'}</button></div><span class="sp"></span>
    <div style="min-width:180px;flex:1;max-width:320px"><div class="note" style="color:#fffc;margin-bottom:6px">${it.length} stops · ${fmtDur(Math.round(used))} planned${tr?` · ${fmtDur(tr)} on the road`:''}</div>
@@ -1319,15 +1400,36 @@ function vPlan(){
    ${mb.length?`<div class="maybe"><div class="row"><h3>🤔 Still considering (${mb.length})</h3><span class="sp"></span><span class="note">Not counted in routes or budget yet</span></div>
      ${mb.map(x=>`<div class="mrow"><span class="bub sm" style="background:${(CATS[x.cat]||CATS.other)[2]}">${(CATS[x.cat]||CATS.other)[0]}</span><span class="sp"><b>${esc(x.title)}</b><br><span class="note">${esc(x.time||'')}${x.dur?' · '+fmtDur(Math.round(x.dur*60)):''}${x.cost?' · '+money(x.cost):''}${x.note?' · '+esc(x.note.split('\n')[0].slice(0,80)):''}</span></span>
      <span class="ro">${who(x)}</span><button class="btn sm ro" onclick="write('items','${x.id}',{...D.items['${x.id}'],maybe:false});toast('✅ Confirmed')">✅ Confirm</button><button class="ib ro" onclick="editItem('${x.id}')">✏️</button></div>`).join('')}</div>`:''}
-   ${it.length?`<p class="note" style="margin-top:12px">Car, taxi and walking times marked ✓ are real road routes (openrouteservice, no live traffic). Bus times are rough estimates: tap Google Maps for live traffic and exact bus routes.</p>`:''}</div>`;
+   ${it.length?`<p class="note tiny">ⓘ ✓ = real road route · bus = estimate</p>`:''}</div>`;
 }
+function editTime(id){const x=D.items[id];if(!x)return;const st=x.time||'10:00',en=fromMin(toMin(st)+Math.round((+x.dur||0)*60));
+  const later=allDay(+x.day).filter(y=>y.id!==id&&(y.time||'')>st).length;
+  modal(`<h2>Change time</h2><p class="note">${esc(x.title)}</p>
+  <div class="grid" style="margin-top:14px"><div><label>Start time</label><input type="time" id="te_s" value="${st}"></div><div><label>End time</label><input type="time" id="te_e" value="${en}"></div></div>
+  <div class="chips" style="margin-top:12px">${[-60,-30,-15,15,30,60].map(d=>`<button class="chip" onclick="shiftTE(${d})">${d>0?'+':'−'}${Math.abs(d)} min</button>`).join('')}</div>
+  ${later?`<label style="display:flex;gap:8px;align-items:center;margin-top:14px;text-transform:none;letter-spacing:0;font-size:14px;color:var(--ink)"><input type="checkbox" id="te_all" style="width:20px" checked> <span>Also move the later stops that day</span></label>`:''}
+  <div class="row" style="margin-top:20px"><span class="sp"></span><button class="btn alt" onclick="modal()">Cancel</button><button class="btn" onclick="saveTime('${id}')">Save</button></div>`)}
+function shiftTE(d){const a=$('#te_s'),b=$('#te_e');const len=Math.max(0,toMin(b.value)-toMin(a.value));const ns=Math.max(0,Math.min(23*60+59,toMin(a.value)+d));a.value=fromMin(ns);b.value=fromMin(Math.min(23*60+59,ns+len))}
+async function saveTime(id){const x=D.items[id],ns=$('#te_s').value,ne=$('#te_e').value;if(!ns)return toast('Please choose a start time');
+  const dur=Math.max(0,(toMin(ne)-toMin(ns))/60),delta=toMin(ns)-toMin(x.time||'10:00'),moveAll=$('#te_all')?.checked;
+  const later=moveAll&&delta?allDay(+x.day).filter(y=>y.id!==id&&(y.time||'')>(x.time||'')):[];
+  modal();await write('items',id,{...x,time:ns,dur:Math.round(dur*4)/4});
+  for(const y of later)await write('items',y.id,{...D.items[y.id],time:fromMin(Math.max(0,Math.min(23*60+59,toMin(y.time)+delta)))});
+  toast(later.length?'Time updated ✓ Later stops moved too':'Time updated ✓')}
 function stopRow(x){const c=CATS[x.cat]||CATS.other;const end=x.time&&x.dur&&!x.hotel?fromMin(toMin(x.time)+Math.round(x.dur*60)):'';
-  return `<div class="stop"><div class="time">${esc(x.time||'')}${end?`<small>→ ${end}</small>`:''}</div><div class="bub" style="background:${x.hotel?'#1f3a34':c[2]}">${x.hotel?'🏨':c[0]}</div>
+  return `<div class="stop"><div class="time">${x.id&&!readOnly?`<button class="tbtn" title="Change time" onclick="editTime('${x.id}')">${esc(x.time||'')}${end?`<small>→ ${end}</small>`:''}<i>✎</i></button>`:`${esc(x.time||'')}${end?`<small>→ ${end}</small>`:''}`}</div><div class="bub" style="background:${x.hotel?'#1f3a34':c[2]}">${x.hotel?'🏨':c[0]}</div>
   <div class="sbody" ${x.id&&!readOnly?`onclick="editItem('${x.id}')" style="cursor:pointer"`:''}><div class="row"><span class="t">${esc(x.title)}</span><span class="sp"></span>${x.cost?`<span class="tag y">${money(x.cost)}</span>`:''}${x.dur&&!x.hotel?`<span class="tag">⏱ ${fmtDur(Math.round(x.dur*60))}</span>`:''}</div>
-  ${x.note?`<div class="note" style="white-space:pre-line;margin-top:4px">${esc(x.note)}</div>`:''}
+  ${x.note?`<div class="note snote">${esc(x.note)}</div>`:''}
   ${x.id&&previews.has(x.id)?`<iframe class="gprev" loading="lazy" src="${gEmbed(x)}" onclick="event.stopPropagation()"></iframe>`:''}
-  ${x.id?`<div class="row" style="margin-top:6px"><button class="mlink" onclick="event.stopPropagation();togglePrev('${x.id}')">👀 ${previews.has(x.id)?'Hide':'Google'} preview</button><a class="mlink g" onclick="event.stopPropagation()" target="_blank" rel="noopener" href="${x.lat!=null?`https://www.google.com/maps/search/?api=1&query=${x.lat},${x.lng}`:LK.gplace(placeOf(x))}">📍 Google Maps</a><a class="mlink a" onclick="event.stopPropagation()" target="_blank" rel="noopener" href="https://maps.apple.com/?q=${enc(placeOf(x))}${x.lat!=null?`&ll=${x.lat},${x.lng}`:''}"> Apple</a>${x.cat==='food'?`<a class="mlink" onclick="event.stopPropagation()" target="_blank" rel="noopener" href="${LK.tabelog(x.title)}">Tabelog</a>`:''}<span class="sp"></span>${who(x)}</div>`:''}</div></div>`}
-function legRow(a,b,x,f){const o=legOpts(a,b,x,f),man=+x[f];
+  ${x.id?`<div class="row srow"><button class="mlink" onclick="event.stopPropagation();togglePrev('${x.id}')">${previews.has(x.id)?'👀 Hide':'👀 Preview'}</button><a class="mlink g" onclick="event.stopPropagation()" target="_blank" rel="noopener" href="${x.lat!=null?`https://www.google.com/maps/search/?api=1&query=${x.lat},${x.lng}`:LK.gplace(placeOf(x))}">📍 Google</a><a class="mlink a" onclick="event.stopPropagation()" target="_blank" rel="noopener" href="https://maps.apple.com/?q=${enc(placeOf(x))}${x.lat!=null?`&ll=${x.lat},${x.lng}`:''}"> Apple</a>${x.cat==='food'?`<a class="mlink" onclick="event.stopPropagation()" target="_blank" rel="noopener" href="${LK.tabelog(x.title)}">Tabelog</a>`:''}<span class="sp"></span>${who(x)}</div>`:''}</div></div>`}
+const openLegs=new Set();
+function tgLeg(k){openLegs.has(k)?openLegs.delete(k):openLegs.add(k);render()}
+function legRow(a,b,x,f){const o=legOpts(a,b,x,f),man=+x[f],k=(x.id||'h')+'_'+f,open=openLegs.has(k);
+  if(!o&&!man)return `<div class="leg"><div></div><div class="line"></div><div class="info"><span class="note">📍 Add locations to see travel time</span></div></div>`;
+  const main=man?`✏️ <b>${fmtDur(man)}</b>`:`${o.best.e} <b>${fmtDur(o.best.min)}</b>${o.km?` · ${o.km<10?o.km.toFixed(1):Math.round(o.km)} km`:''}${o.best.fare?` · ~${money(o.best.fare)}`:''}`;
+  return `<div class="leg"><div></div><div class="line"></div><div class="info"><button class="legbtn ${open?'on':''}" onclick="tgLeg('${k}')">${main}<span class="chev">${open?'▴':'▾'}</span></button></div></div>
+  ${open?legRowFull(a,b,x,f).replace('<div class="leg">','<div class="leg legx">'):''}`}
+function legRowFull(a,b,x,f){const o=legOpts(a,b,x,f),man=+x[f];
   const opts=o?o.list.map(v=>{const on=v.k===o.best.k&&!man,inner=`${v.e} <b>${fmtDur(v.min)}</b>${v.fare?` · ~${money(v.fare)}`:''}${v.real?' ✓':''}`;
     return v.bus?`<a class="opt est ${on?'best':''}" title="${v.n}: open Google Maps transit" target="_blank" rel="noopener" href="${LK.gleg(a,b,'transit')}">${inner}</a>`:`<span class="opt ${on?'best':''} ${v.real?'':'est'}" title="${v.n}${v.real?' · real road route':' · estimate'}">${inner}</span>`}).join('')
     +(o.real?'<span class="note">✓ real route</span>':`<span class="note">${rqKeys.size?'finding route…':'estimate'}</span>`)
@@ -1430,10 +1532,22 @@ async function importFile(f){try{const t=await f.text();let arr=[];
     arr=rows.filter(r=>r[ti>=0?ti:0]).map(r=>{const l=parseLink((ui>=0&&ui===h.length-1?r.slice(ui).join(','):r[ui])||'');return {name:r[ti>=0?ti:0]||l.name,lat:l.lat,lng:l.lng,note:ni>=0?r[ni]:''}})}
   addSaved(arr,'file')}catch(e){toast("Couldn't read that file")}}
 function savedToDay(id,d){const x=D.saved[id];editItem(null,{day:d,title:x.name,place:x.name,lat:x.lat,lng:x.lng,note:x.note||'',cat:'sight'})}
+function seg(t,items){return `<div class="seg">${items.map(([k,n,c])=>`<button class="${SUB[t]===k?'on':''}" onclick="goSub('${t}','${k}')">${n}${c?`<span class="cnt">${c}</span>`:''}</button>`).join('')}</div>`}
+function vPlaces(){const m=vMap(),i=m.indexOf('<div class="card ro"><h2>📥'),mapCard=m.slice(0,i),rest=m.slice(i);
+  return seg('places',[['ideas','✨ Ideas'],['saved','⭐ Saved',list('saved').length],['food','🍣 Restaurants',list('food').length]])+mapCard+
+   ({ideas:()=>vExplore(),saved:()=>rest,food:()=>vEats()})[SUB.places]?.()||''}
+function vMore(){return seg('more',[['pack','🎒 Packing'],['summary','📋 Summary'],['family','👨‍👩‍👧 Family'],['settings','⚙️ Settings']])+
+  ({pack:vPack,summary:vSummary,family:vFamily,settings:vSettings})[SUB.more]()}
+function vSettings(){const t=T();return `<div class="card"><h2>Trip details</h2>
+  <div class="kv"><span>📍</span><b>${esc(t.dest)}</b></div><div class="kv"><span>📅</span><b>${dayLabel(0)} – ${dayLabel(nights())}</b></div>
+  <div class="kv"><span>👨‍👩‍👧</span><b>${t.adults} adults · ${kidsTxt()}</b></div><div class="kv"><span>${(MODES[t.mode]||MODES.driving)[0]}</span><b>${(MODES[t.mode]||MODES.driving)[1]}</b></div>
+  <button class="btn ro" style="margin-top:14px" onclick="editTrip()">✏️ Edit trip</button></div>
+  <div class="card"><h2>Language</h2><div class="seg" style="margin-top:10px"><button class="notr ${LANG==='zh'?'on':''}" onclick="setLang('zh')">中文</button><button class="notr ${LANG==='en'?'on':''}" onclick="setLang('en')">English</button></div></div>
+  ${demo?'':`<div class="card"><h2>Account</h2><p class="note">${esc(FBU?.email||'')}</p><button class="btn alt" style="margin-top:10px" onclick="fb().signOut()">Sign out</button></div>`}`}
 function vMap(){const sv=list('saved').sort((a,b)=>(a.at||0)-(b.at||0)),miss=sv.filter(x=>x.lat==null).length;
   return `<div class="card"><div class="row"><h2>Our ${esc(T().dest)} map</h2><span class="sp"></span>
-   <div class="chips"><button class="chip ${mapDay<0?'on':''}" style="padding:6px 12px" onclick="mapDay=-1;render()">Everything</button>${[...Array(nDays()).keys()].map(d=>`<button class="chip ${mapDay===d?'on':''}" style="padding:6px 12px" onclick="mapDay=${d};render()"><span style="width:10px;height:10px;border-radius:50%;background:${DAYC[d%DAYC.length]}"></span>Day ${d+1}</button>`).join('')}</div></div>
-   <div class="lmap" id="allmap" style="height:460px;margin-top:14px"></div>
+   <div class="chips hs"><button class="chip ${mapDay<0?'on':''}" style="padding:6px 12px" onclick="mapDay=-1;render()">Everything</button>${[...Array(nDays()).keys()].map(d=>`<button class="chip ${mapDay===d?'on':''}" style="padding:6px 12px" onclick="mapDay=${d};render()"><span style="width:10px;height:10px;border-radius:50%;background:${DAYC[d%DAYC.length]}"></span>Day ${d+1}</button>`).join('')}</div></div>
+   <div class="lmap allmap" id="allmap" style="margin-top:14px"></div>
    <p class="note">🏨 hotel · numbered pins = plan stops, one colour per day · ★ saved places${readOnly?'':' · drag any pin to fix its spot'}</p></div>
   <div class="card ro"><h2>📥 Bring in places from Google Maps & Apple Maps</h2><p class="note">Google and Apple don't let other websites read your saved lists directly, so use one of these quick ways.</p>
    <div class="grid" style="margin-top:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
