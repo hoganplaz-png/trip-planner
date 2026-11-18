@@ -805,6 +805,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .how{border:1px solid var(--line);border-radius:18px;padding:16px;background:#fff}
 .how h3{font-size:18px;margin-bottom:6px}
 .how ol{margin:6px 0 10px;padding-left:18px;font-size:13px;color:var(--mute)}
+.daylbl{margin-top:8px;border:1px dashed #ffffff66;background:#ffffff14;color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;font-weight:600}
+.daylbl:hover{background:#ffffff26}
+.wl{font-size:11px;font-weight:700;color:#5b49b8;background:#ece8fb;border-radius:8px;padding:2px 6px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tonight{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#f6f0e4;border-radius:14px;padding:10px 14px;margin-top:12px;font-size:14px}
+.maybe{margin-top:18px;border:2px dashed #d9cdb6;border-radius:18px;padding:14px;background:#fffaf0}
+.mrow{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.mrow:last-child{border-bottom:0}
+.bub.sm{width:36px;height:36px;font-size:18px;border-radius:12px;box-shadow:none}
+.night{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.nl{min-width:130px;display:flex;flex-direction:column}
 </style>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
@@ -869,8 +879,19 @@ const money=n=>T().cur+Math.round(+n||0).toLocaleString();
 const dayD=i=>{const d=new Date(T().start+'T00:00');d.setDate(d.getDate()+i);return d};
 const dayLabel=(i,o={weekday:'short',month:'short',day:'numeric'})=>dayD(i).toLocaleDateString(undefined,o);
 const list=c=>Object.entries(D[c]).map(([id,v])=>({id,...v}));
-const dayItems=i=>list('items').filter(x=>+x.day===i).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
-const chosenHotel=()=>list('hotels').find(h=>h.chosen);
+const allDay=i=>list('items').filter(x=>+x.day===i).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+const dayItems=i=>allDay(i).filter(x=>!x.maybe);
+const maybeItems=i=>allDay(i).filter(x=>x.maybe);
+const realItems=()=>list('items').filter(x=>!x.maybe);
+const chosenHotel=()=>nightHotel(0)||list('hotels').find(h=>h.chosen);
+const stays=()=>D.trip.stays||{};
+const nightHotel=n=>{const id=stays()[n]?.main;return (id&&D.hotels[id])?{id,...D.hotels[id]}:(list('hotels').find(h=>h.chosen)||null)};
+const nightBackups=n=>(stays()[n]?.backups||[]).filter(id=>D.hotels[id]).map(id=>({id,...D.hotels[id]}));
+const hotelCost=()=>[...Array(nights()).keys()].reduce((a,n)=>{const h=nightHotel(n),p=h?best(h):[];return a+(p.length?p[0][1]:0)},0);
+const hNights=id=>{const m=[],b=[];for(let n=0;n<nights();n++){if(nightHotel(n)?.id===id)m.push(n+1);if((stays()[n]?.backups||[]).includes(id))b.push(n+1)}return {m,b}};
+const nightsTxt=a=>a.length===0?'':a.length===1?'Night '+a[0]:(a[a.length-1]-a[0]===a.length-1?`Nights ${a[0]}–${a[a.length-1]}`:'Nights '+a.join(', '));
+const dayNote=i=>(D.trip.dayNotes||{})[i]||'';
+function saveStays(st){write('trip','main',{...D.trip,stays:st})}
 const best=h=>{const p=[['Agoda',+h.agoda],['Trip.com',+h.trip],['Direct',+h.other]].filter(x=>x[1]>0).sort((a,b)=>a[1]-b[1]);return p};
 const toMin=t=>{const[h,m]=(t||'0:0').split(':').map(Number);return h*60+(m||0)};
 const fromMin=m=>`${String(Math.floor(m/60)%24).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`;
@@ -1018,7 +1039,7 @@ function saveTrip(){const v=k=>$('#m_'+k).value.trim();if(!v('dest')||!v('start'
  write('trip','main',{dest:v('dest'),start:v('start'),end:v('end'),adults:+v('adults')||1,kids:+v('kids')||0,rooms:+v('rooms')||1,cur:v('cur')||'$',mode:window._mode||'driving',ages:[...document.querySelectorAll('.age')].map(s=>s.value).join(',')});modal();toast('Trip updated ✓')}
 
 function editItem(id,pre={}){
-  const x=id?{...D.items[id]}:{day:selDay,time:nextTime(pre.day??selDay),cat:'sight',dur:2,cost:0,...pre};window._cat=x.cat||'other';window._loc=x.lat!=null?{lat:x.lat,lng:x.lng}:null;
+  const x=id?{...D.items[id]}:{day:selDay,time:nextTime(pre.day??selDay),cat:'sight',dur:2,cost:0,...pre};window._cat=x.cat||'other';window._maybe=!!x.maybe;window._loc=x.lat!=null?{lat:x.lat,lng:x.lng}:null;
   modal(`<h2>${id?'Edit':'Add a'} ${id?'stop':'place or activity'}</h2>
   <div style="margin-top:14px"><label>What</label><input id="i_title" value="${esc(x.title||'')}" placeholder="e.g. Tokyo DisneySea"></div>
   <div style="margin-top:14px"><label>Type</label><div class="cats" id="icats">${Object.entries(CATS).map(([k,[e,n]])=>`<button class="cat ${x.cat===k?'on':''}" onclick="window._cat='${k}';document.querySelectorAll('#icats .cat').forEach(c=>c.classList.remove('on'));this.classList.add('on')"><i>${e}</i>${n}</button>`).join('')}</div></div>
@@ -1028,25 +1049,32 @@ function editItem(id,pre={}){
   ${list('saved').length&&!id?`<div style="margin-top:14px"><label>Or pick one of your saved places</label><select onchange="pickSaved(this.value)"><option value="">⭐ Saved places…</option>${list('saved').map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select></div>`:''}
   <div style="margin-top:14px"><label>Map name (optional)</label><input id="i_place" value="${esc(x.place||'')}" placeholder="Name used for Google & Apple Maps"></div>
   ${locBlock()}
-  <div style="margin-top:14px"><label>Notes, tickets, tips</label><textarea id="i_note" rows="3" placeholder="Booking number, what to bring, stroller OK?">${esc(x.note||'')}</textarea></div>
+  <div style="margin-top:14px"><label>Status</label><div class="chips" id="istat"><button class="chip ${x.maybe?'':'on'}" onclick="window._maybe=false;document.querySelectorAll('#istat .chip').forEach(c=>c.classList.toggle('on',c===this))">✅ Confirmed</button><button class="chip ${x.maybe?'on':''}" onclick="window._maybe=true;document.querySelectorAll('#istat .chip').forEach(c=>c.classList.toggle('on',c===this))">🤔 Still considering</button></div></div>
+  <div style="margin-top:14px"><label>Notes, tickets, tips</label><textarea id="i_note\" rows="3" placeholder="Booking number, what to bring, stroller OK?">${esc(x.note||'')}</textarea></div>
   <div class="row" style="margin-top:20px">${id?`<button class="btn alt" style="color:var(--bad)" onclick="ask('Delete this stop?',()=>remove('items','${id}'))">Delete</button>`:''}<span class="sp"></span><button class="btn alt" onclick="modal()">Cancel</button><button class="btn" onclick="saveItem('${id||''}')">${id?'Save':'Add to plan'}</button></div>`);
   setTimeout(()=>$('#i_title')?.focus(),60);
 }
 function saveItem(id){const t=$('#i_title').value.trim();if(!t)return toast('Give it a name');
   const old=id?D.items[id]:{};const day=+$('#i_day').value;
-  write('items',id||uid(),{...old,title:t,cat:window._cat,day,time:$('#i_time').value||'10:00',dur:+$('#i_dur').value||0,cost:+$('#i_cost').value||0,place:$('#i_place').value.trim(),note:$('#i_note').value.trim(),lat:window._loc?.lat??null,lng:window._loc?.lng??null});
-  modal();selDay=day;toast(id?'Saved ✓':`Added to Day ${day+1} ✓`)}
-function nextTime(d){const it=dayItems(d);if(!it.length)return '09:30';const l=it[it.length-1];return fromMin(Math.min(toMin(l.time)+Math.round((+l.dur||1.5)*60)+30,21*60))}
+  write('items',id||uid(),{...old,title:t,cat:window._cat,day,time:$('#i_time').value||'10:00',dur:+$('#i_dur').value||0,cost:+$('#i_cost').value||0,place:$('#i_place').value.trim(),note:$('#i_note').value.trim(),lat:window._loc?.lat??null,lng:window._loc?.lng??null,maybe:!!window._maybe});
+  modal();selDay=day;toast(window._maybe?'🤔 Saved as considering':id?'Saved ✓':`Added to Day ${day+1} ✓`)}
+function nextTime(d){const it=allDay(d);if(!it.length)return '09:30';const l=it[it.length-1];return fromMin(Math.min(toMin(l.time)+Math.round((+l.dur||1.5)*60)+30,21*60))}
+
+function editDayNote(i){modal(`<h2>Label for Day ${i+1}</h2><p class="note">${dayLabel(i,{weekday:'long',month:'long',day:'numeric'})}. Everyone sees this label.</p>
+  <div class="chips" style="margin-top:14px">${['🏖 Beach day','🐬 Aquarium day','🛍 Shopping day','☔ Rainy-day plan','😴 Rest day','🚗 Road trip north','✈️ Travel day','🤔 Still deciding'].map(t=>`<button class="chip" onclick="$('#dn').value=this.textContent">${t}</button>`).join('')}</div>
+  <div style="margin-top:14px"><input id="dn" value="${esc(dayNote(i))}" placeholder="Or type your own" maxlength="60"></div>
+  <div class="row" style="margin-top:20px"><button class="btn alt" onclick="saveDayNote(${i},'')">Remove</button><span class="sp"></span><button class="btn alt" onclick="modal()">Cancel</button><button class="btn" onclick="saveDayNote(${i},$('#dn').value.trim())">Save</button></div>`)}
+function saveDayNote(i,t){const d={...(D.trip.dayNotes||{})};if(t)d[i]=t;else delete d[i];write('trip','main',{...D.trip,dayNotes:d});modal()}
 
 // ================= HOME =================
 function vHome(){
-  const it=list('items'),h=chosenHotel(),hp=h?best(h):[];
-  const hotel=hp.length?hp[0][1]*nights():0,act=it.filter(x=>x.cat!=='food').reduce((a,x)=>a+(+x.cost||0),0),food=it.filter(x=>x.cat==='food').reduce((a,x)=>a+(+x.cost||0),0);
+  const it=realItems(),h=chosenHotel(),hp=h?best(h):[];
+  const hotel=hotelCost(),act=it.filter(x=>x.cat!=='food').reduce((a,x)=>a+(+x.cost||0),0),food=it.filter(x=>x.cat==='food').reduce((a,x)=>a+(+x.cost||0),0);
   const total=hotel+act+food,pk=list('packing'),pd=pk.filter(x=>x.done).length;
   const travel=[...Array(nDays()).keys()].reduce((a,i)=>a+dayTravel(i),0);
   return `<div class="card"><div class="row"><h2>Trip at a glance</h2><span class="sp"></span><button class="btn sm alt" onclick="go('summary')">📋 Full summary</button></div>
    <div class="stats" style="margin-top:14px">
-    ${stat('🗓','Stops planned',it.length,`across ${nDays()} days`)}${stat('🏨','Hotel',h?esc(h.name):'Not chosen',h&&hp.length?`${hp[0][0]} · ${money(hp[0][1])}/night`:'Compare in Stays','',h?18:20)}
+    ${stat('🗓','Stops planned',it.length,`across ${nDays()} days`)}${(()=>{const u=new Set([...Array(nights()).keys()].map(n=>nightHotel(n)?.id).filter(Boolean));return u.size>1?stat('🏨','Hotels',u.size+' hotels',money(hotel)+' total'):stat('🏨','Hotel',h?esc(h.name):'Not chosen',h&&hp.length?`${hp[0][0]} · ${money(hp[0][1])}/night`:'Compare in Stays','',h?18:20)})()}
     ${stat('💴','Estimated cost',money(total),`${money(total/Math.max(1,people()))} per person`)}${stat('🚇','Time travelling',travel?fmtDur(travel):'–',travel?'between stops':'Add locations in Plan')}
     ${stat('🎒','Packed',pk.length?`${pd}/${pk.length}`:'–',pk.length?Math.round(pd/pk.length*100)+'% ready':'Start a list in Pack')}</div></div>
   <div class="card"><div class="row"><h2>Your days</h2><span class="sp"></span><span class="note">Tap a day to open it</span></div>${week()}</div>
@@ -1055,8 +1083,8 @@ function vHome(){
 }
 const stat=(e,l,v,s,c='',fs=28)=>`<div class="stat"><span class="e">${e}</span><b style="font-size:${fs}px">${v}</b><div class="note">${l}${s?' · '+s:''}</div></div>`;
 function week(){return `<div class="week" style="margin-top:12px">${[...Array(nDays()).keys()].map(i=>{const it=dayItems(i);const used=it.reduce((a,x)=>a+(+x.dur||0)*60,0)+dayTravel(i);
-  return `<button class="wd ${tab==='plan'&&selDay===i?'on':''}" onclick="selDay=${i};go('plan')"><div class="d">${dayLabel(i,{weekday:'short'})}</div><div class="n">${dayD(i).getDate()}</div><div class="d">Day ${i+1}</div>
-  <div class="bars">${it.map(x=>`<span style="width:${(+x.dur||1)*60/Math.max(used,600)*100}%;background:${(CATS[x.cat]||CATS.other)[2]}"></span>`).join('')}</div><div class="emo">${it.map(x=>(CATS[x.cat]||CATS.other)[0]).join('')||'<span class="note">free</span>'}</div></button>`}).join('')}</div>`}
+  return `<button class="wd ${tab==='plan'&&selDay===i?'on':''}" onclick="selDay=${i};go('plan')"><div class="d">${dayLabel(i,{weekday:'short'})}</div><div class="n">${dayD(i).getDate()}</div><div class="d">Day ${i+1}</div>${dayNote(i)?`<div class="wl">${esc(dayNote(i))}</div>`:''}
+  <div class="bars">${it.map(x=>`<span style="width:${(+x.dur||1)*60/Math.max(used,600)*100}%;background:${(CATS[x.cat]||CATS.other)[2]}"></span>`).join('')}</div><div class="emo">${it.map(x=>(CATS[x.cat]||CATS.other)[0]).join('')||'<span class="note">free</span>'}</div>${maybeItems(i).length?`<div class="note">🤔 ${maybeItems(i).length} considering</div>`:''}</button>`}).join('')}</div>`}
 function donut(parts){const tot=parts.reduce((a,p)=>a+p[1],0);let off=0;const C=2*Math.PI*52;
   return `<div class="donut" style="margin-top:12px"><svg width="170" height="170" viewBox="0 0 140 140"><circle cx="70" cy="70" r="52" fill="none" stroke="#f1ebdf" stroke-width="18"/>
   ${parts.filter(p=>p[1]>0).map(p=>{const l=p[1]/tot*C;const s=`<circle cx="70" cy="70" r="52" fill="none" stroke="${p[2]}" stroke-width="18" stroke-dasharray="${l} ${C-l}" stroke-dashoffset="${-off}" transform="rotate(-90 70 70)"/>`;off+=l;return s}).join('')}
@@ -1094,7 +1122,9 @@ function gEmbed(p){return esc(p.lat!=null?`https://maps.google.com/maps?q=${p.la
 function togglePrev(k){previews.has(k)?previews.delete(k):previews.add(k);render()}
 
 // ================= PLAN =================
-function stopsOf(i){const h=chosenHotel();return {H:h?{title:h.name,place:h.name,lat:h.lat,lng:h.lng,hotel:true,cat:'relax',id:null,hid:h.id}:null,it:dayItems(i)}}
+const hStop=h=>h?{title:h.name,place:h.name,lat:h.lat,lng:h.lng,hotel:true,cat:'relax',id:null,hid:h.id}:null;
+function stopsOf(i){const n=nights(),s=i===0?nightHotel(0):nightHotel(Math.min(i-1,n-1)),e=i<n?nightHotel(i):null;
+  return {H:hStop(s),E:hStop(e),it:dayItems(i)}}
 const ORS='eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6Ijg3ZmUyNWQwOWYzNDRmNGE5MzU2NDRjYTFmNjQwOGIwIiwiaCI6Im11cm11cjY0In0=';
 const rkey=(a,b)=>`${(+a.lat).toFixed(5)},${(+a.lng).toFixed(5)}>${(+b.lat).toFixed(5)},${(+b.lng).toFixed(5)}`;
 const rq=[],rqKeys=new Set(),rFail=new Set();let rBusy=false,lastReq=0;
@@ -1124,32 +1154,37 @@ function legOpts(a,b,x,f){if(a?.lat==null||b?.lat==null)return null;
   const w=list.find(v=>v.k==='walking');
   const best=w&&w.min<=15?w:list.find(v=>v.k===T().mode)||list.find(v=>v.k==='driving');
   return {list,best,km,real,geom:real?r.car.geom:null}}
-function legTimes(i){const {H,it}=stopsOf(i),t={};let prev=H;
+function legTimes(i){const {H,E,it}=stopsOf(i),t={};let prev=H;
   for(const x of it){t[x.id]=+x.travel||(prev?legOpts(prev,x,x,'travel')?.best.min:0)||0;prev=x}
-  if(H&&it.length){const l=it[it.length-1];t._back=+l.back||legOpts(l,H,l,'back')?.best.min||0}return t}
+  if(E&&it.length){const l=it[it.length-1];t._back=+l.back||legOpts(l,E,l,'back')?.best.min||0}return t}
 const dayTravel=i=>Object.values(legTimes(i)).reduce((a,b)=>a+b,0);
 function vPlan(){
-  const i=selDay,{H,it}=stopsOf(i),tr=dayTravel(i);
+  const i=selDay,{H,E,it}=stopsOf(i),tr=dayTravel(i),mb=maybeItems(i),tn=i<nights()?nightHotel(i):null,bk=i<nights()?nightBackups(i):[];
   const used=it.reduce((a,x)=>a+(+x.dur||0)*60,0)+tr;
   const all=[H,...it].filter(Boolean);
   let prev=H,html='';
   if(H)html+=stopRow({time:'Start',title:H.title,cat:'relax',hotel:true});
   it.forEach(x=>{if(prev)html+=legRow(prev,x,x,'travel');html+=stopRow(x);prev=x});
-  if(H&&it.length){const l=it[it.length-1];html+=legRow(l,H,l,'back')+stopRow({time:'End',title:'Back to '+H.title,cat:'relax',hotel:true})}
+  if(E&&it.length){const l=it[it.length-1];html+=legRow(l,E,l,'back')+stopRow({time:'End',title:(E.hid===H?.hid?'Back to ':'Check in: ')+E.title,cat:'relax',hotel:true})}
   const miss=all.filter(x=>x.lat==null).length,hasLoc=all.some(x=>x.lat!=null);
   const young=kidAges().some(a=>a<6)&&T().mode==='driving';
   return `<div class="card" style="padding-bottom:12px"><div class="daytabs">${[...Array(nDays()).keys()].map(d=>`<button class="${d===i?'on':''}" onclick="selDay=${d};render()">Day ${d+1} · ${dayLabel(d,{weekday:'short',day:'numeric'})}</button>`).join('')}</div></div>
-  <div class="card"><div class="dayhead"><div><div class="note" style="color:#fff9">Day ${i+1}</div><div class="big">${dayLabel(i,{weekday:'long',month:'long',day:'numeric'})}</div></div><span class="sp"></span>
+  <div class="card"><div class="dayhead"><div><div class="note" style="color:#fff9">Day ${i+1}</div><div class="big">${dayLabel(i,{weekday:'long',month:'long',day:'numeric'})}</div>
+   <button class="daylbl ro" onclick="editDayNote(${i})">${dayNote(i)?'🏷 '+esc(dayNote(i)):'🏷 Add a label for this day'}</button></div><span class="sp"></span>
    <div style="min-width:180px;flex:1;max-width:320px"><div class="note" style="color:#fffc;margin-bottom:6px">${it.length} stops · ${fmtDur(Math.round(used))} planned${tr?` · ${fmtDur(tr)} on the road`:''}</div>
    <div class="hours">${it.map(x=>`<span title="${esc(x.title)}" style="width:${(+x.dur||1)*60/Math.max(used,720)*100}%;background:${(CATS[x.cat]||CATS.other)[2]}"></span>`).join('')}</div></div></div>
    <div class="row" style="margin-top:14px"><button class="btn ro" onclick="editItem(null,{day:${i}})">＋ Add stop</button>
     ${miss&&it.length?`<button class="btn alt ro" onclick="locateDay(${i})" ${aiBusy?'disabled':''}>📍 Put ${miss} stop${miss>1?'s':''} on the map</button>`:''}
-    <span class="sp"></span>${all.length>1?`<a class="mlink g" target="_blank" rel="noopener" href="${LK.gday(H&&it.length?[...all,H]:all)}">Whole day in Google Maps ↗</a>`:''}</div>
+    <span class="sp"></span>${all.length>1?`<a class="mlink g" target="_blank" rel="noopener" href="${LK.gday(E&&it.length?[...all,E]:all)}">Whole day in Google Maps ↗</a>`:''}</div>
    ${aiBusy?`<p class="note">🔎 ${esc(aiBusy)}</p>`:''}
    ${hasLoc?`<div class="lmap" id="daymap" style="margin-top:14px"></div>`:''}
+   ${i<nights()?`<div class="tonight"><b>🌙 Tonight:</b> ${tn?`<span>${esc(tn.name)}</span>`:'<span class="note">no hotel yet</span>'}${bk.length?` <span class="note">· Backup${bk.length>1?'s':''}:</span> ${bk.map(h=>`<span class="tag">🔁 ${esc(h.name)}</span>`).join(' ')}`:''}<span class="sp"></span><a class="mlink" href="#stays" onclick="go('stays');return false">Change</a></div>`:''}
    ${!H?`<div class="banner">🏨 Choose your hotel in <a href="#stays" onclick="go('stays');return false">Stays</a> and each day starts and ends there, with travel times.</div>`:''}
    ${young?`<div class="banner">🚸 Kids under 6 must ride in a child seat in Japan. Book seats with your rental car.</div>`:''}
    ${it.length?`<div class="tl">${html}</div>`:`<div class="empty"><div class="big">🗺</div><h3>A free day</h3><p class="note">Add a stop, or pick from Explore or your saved places.</p></div>`}
+   ${mb.length?`<div class="maybe"><div class="row"><h3>🤔 Still considering (${mb.length})</h3><span class="sp"></span><span class="note">Not counted in routes or budget yet</span></div>
+     ${mb.map(x=>`<div class="mrow"><span class="bub sm" style="background:${(CATS[x.cat]||CATS.other)[2]}">${(CATS[x.cat]||CATS.other)[0]}</span><span class="sp"><b>${esc(x.title)}</b><br><span class="note">${esc(x.time||'')}${x.dur?' · '+fmtDur(Math.round(x.dur*60)):''}${x.cost?' · '+money(x.cost):''}${x.note?' · '+esc(x.note.split('\n')[0].slice(0,80)):''}</span></span>
+     <span class="ro">${who(x)}</span><button class="btn sm ro" onclick="write('items','${x.id}',{...D.items['${x.id}'],maybe:false});toast('✅ Confirmed')">✅ Confirm</button><button class="ib ro" onclick="editItem('${x.id}')">✏️</button></div>`).join('')}</div>`:''}
    ${it.length?`<p class="note" style="margin-top:12px">Car, taxi and walking times marked ✓ are real road routes (openrouteservice, no live traffic). Bus times are rough estimates: tap Google Maps for live traffic and exact bus routes.</p>`:''}</div>`;
 }
 function stopRow(x){const c=CATS[x.cat]||CATS.other;const end=x.time&&x.dur&&!x.hotel?fromMin(toMin(x.time)+Math.round(x.dur*60)):'';
@@ -1188,15 +1223,17 @@ function fit(m,pts){if(pts.length>1)m.fitBounds(pts,{padding:[40,40],maxZoom:15}
 function drawLeg(m,a,b,x,f,color){const o=legOpts(a,b,x,f);if(!o)return;const g=o.geom?unpackGeom(o.geom):null;
   if(g&&g.length>1)L.polyline(g,{color,weight:5,opacity:.85}).addTo(m);else L.polyline([[a.lat,a.lng],[b.lat,b.lng]],{color,weight:3,dashArray:'6 8',opacity:.7}).addTo(m)}
 function drawMaps(){if(!window.L)return;while(MAPS.length)MAPS.pop().remove();
-  const dm=$('#daymap');if(dm){const m=baseMap(dm);MAPS.push(m);const {H,it}=stopsOf(selDay),pts=[],c=DAYC[selDay%DAYC.length];
+  const dm=$('#daymap');if(dm){const m=baseMap(dm);MAPS.push(m);const {H,E,it}=stopsOf(selDay),pts=[],c=DAYC[selDay%DAYC.length];
+    if(E?.lat!=null&&E.hid!==H?.hid){L.marker([E.lat,E.lng],{icon:pinIcon('🛏','#8a6424')}).bindTooltip('Tonight: '+esc(E.title)).addTo(m);pts.push([E.lat,E.lng])}
     if(H?.lat!=null){L.marker([H.lat,H.lng],{icon:pinIcon('🏨','#1f3a34')}).bindTooltip(esc(H.title)).addTo(m);pts.push([H.lat,H.lng])}
     let prev=H?.lat!=null?H:null;
     it.forEach((x,k)=>{if(x.lat==null)return;if(prev)drawLeg(m,prev,x,x,'travel',c);L.marker([x.lat,x.lng],{icon:pinIcon(k+1,(CATS[x.cat]||CATS.other)[2])}).bindTooltip(`${k+1}. ${esc(x.title)}`).addTo(m);pts.push([x.lat,x.lng]);prev=x});
-    const l=it[it.length-1];if(H?.lat!=null&&l?.lat!=null)drawLeg(m,l,H,l,'back','#6b7488');fit(m,pts)}
+    const l=it[it.length-1];if(E?.lat!=null&&l?.lat!=null)drawLeg(m,l,E,l,'back','#6b7488');fit(m,pts)}
   const am=$('#allmap');if(am){const m=baseMap(am);MAPS.push(m);const pts=[],h=chosenHotel();
     const opt=()=>readOnly?{}:{draggable:true};
     const drop=(c,id)=>e=>{const p=e.target.getLatLng();write(c,id,{...D[c][id],lat:+p.lat.toFixed(6),lng:+p.lng.toFixed(6),approx:false});toast('📍 Location updated')};
-    if(h?.lat!=null){L.marker([h.lat,h.lng],{icon:pinIcon('🏨','#1f3a34'),...opt()}).bindTooltip(esc(h.name)).on('dragend',drop('hotels',h.id)).addTo(m);pts.push([h.lat,h.lng])}
+    const hs=new Map();for(let n=0;n<nights();n++){const x=nightHotel(n);if(x)hs.set(x.id,x)}if(!hs.size&&h)hs.set(h.id,h);
+    hs.forEach(h=>{if(h.lat==null)return;L.marker([h.lat,h.lng],{icon:pinIcon('🏨','#1f3a34'),...opt()}).bindTooltip(esc(h.name)+(nightsTxt(hNights(h.id).m)?' · '+nightsTxt(hNights(h.id).m):'')).on('dragend',drop('hotels',h.id)).addTo(m);pts.push([h.lat,h.lng])});
     for(let d=0;d<nDays();d++){if(mapDay>=0&&d!==mapDay)continue;const c=DAYC[d%DAYC.length];const {H,it}=stopsOf(d);let prev=H?.lat!=null?H:null;
       it.forEach((x,k)=>{if(x.lat==null)return;if(prev)drawLeg(m,prev,x,x,'travel',c);L.marker([x.lat,x.lng],{icon:pinIcon(k+1,c),...opt()}).bindTooltip(`Day ${d+1} · ${esc(x.title)}`).on('dragend',drop('items',x.id)).addTo(m);pts.push([x.lat,x.lng]);prev=x})}
     if(mapDay<0)list('saved').forEach(x=>{if(x.lat==null)return;L.marker([x.lat,x.lng],{icon:pinIcon('★','#c09553','s'),...opt()}).bindTooltip('⭐ '+esc(x.name)).on('dragend',drop('saved',x.id)).addTo(m);pts.push([x.lat,x.lng])});
@@ -1279,16 +1316,31 @@ function vMap(){const sv=list('saved').sort((a,b)=>(a.at||0)-(b.at||0)),miss=sv.
     <select class="ro" style="width:auto" onchange="if(this.value!=='')savedToDay('${x.id}',+this.value);this.value=''"><option value="">＋ Add to day</option>${[...Array(nDays()).keys()].map(i=>`<option value="${i}">Day ${i+1} · ${dayLabel(i)}</option>`).join('')}</select><button class="ib ro" onclick="remove('saved','${x.id}')">×</button></div>${previews.has('s'+x.id)?`<iframe class="gprev" loading="lazy" src="${gEmbed(x)}"></iframe>`:''}`).join('')||'<div class="empty"><div class="big">⭐</div><h3>No saved places yet</h3><p class="note">Share places from Google Maps or Apple Maps and they appear here and on the map.</p></div>'}</div>`}
 // ================= STAYS =================
 function vStays(){
-  const hs=list('hotels').sort((a,b)=>(b.chosen?1:0)-(a.chosen?1:0)||(a.at||0)-(b.at||0));
+  const hs=list('hotels').sort((a,b)=>(a.at||0)-(b.at||0));
   return `<div class="card"><h2>Compare hotels</h2><p class="note">Search both sites (dates and guests filled in), then add each hotel's nightly price. We highlight the cheapest.</p>
    <div class="row" style="margin-top:14px"><a class="btn" style="background:#c8174f" target="_blank" rel="noopener" href="${LK.agoda()}">Search Agoda ↗</a><a class="btn" style="background:#1e63d6" target="_blank" rel="noopener" href="${LK.trip()}">Search Trip.com ↗</a><span class="sp"></span><button class="btn gold ro" onclick="editHotel()">＋ Add hotel</button></div></div>
+  ${hs.length?nightPlanner():''}
   ${hs.length?hs.map(hotelCard).join(''):`<div class="card empty"><div class="big">🏨</div><h3>No hotels yet</h3><p class="note">Add two or three you like and compare prices side by side.</p></div>`}`}
+function nightPlanner(){const hs=list('hotels'),opts=sel=>hs.map(h=>`<option value="${h.id}" ${h.id===sel?'selected':''}>${esc(h.name)}</option>`).join('');
+  return `<div class="card"><div class="row"><h2>🌙 Where we sleep each night</h2><span class="sp"></span><span class="note">Total ${money(hotelCost())}</span></div>
+  <p class="note">Pick the main hotel for each night and add backup hotels (後備) in case it's full or plans change.</p>
+  ${[...Array(nights()).keys()].map(n=>{const x=nightHotel(n),p=x?best(x):[],bk=nightBackups(n),bkIds=bk.map(b=>b.id);
+   return `<div class="night"><div class="nl"><b>Night ${n+1}</b><span class="note">${dayLabel(n)} → ${dayLabel(n+1,{weekday:'short'})}</span></div>
+    <div class="sp"><select onchange="setStay(${n},this.value)" ${readOnly?'disabled':''}><option value="">— Choose main hotel —</option>${opts(x?.id)}</select>
+    ${p.length?`<div class="note" style="margin-top:4px">💴 ${p[0][0]} ${money(p[0][1])}</div>`:''}
+    <div class="row" style="margin-top:6px">${bk.map(b=>`<span class="tag">🔁 Backup: ${esc(b.name)}${readOnly?'':` <button class="ib" style="font-size:13px;padding:0 2px" onclick="delBackup(${n},'${b.id}')">×</button>`}</span>`).join('')}
+     ${readOnly?'':`<select style="width:auto;padding:6px 10px;font-size:13px" onchange="if(this.value)addBackup(${n},this.value);this.value=''"><option value="">＋ Add backup</option>${hs.filter(h=>h.id!==x?.id&&!bkIds.includes(h.id)).map(h=>`<option value="${h.id}">${esc(h.name)}</option>`).join('')}</select>`}</div></div></div>`}).join('')}
+  ${nights()>1&&!readOnly?`<div class="row" style="margin-top:12px"><span class="sp"></span><button class="btn sm alt" onclick="copyNight1()">Use Night 1's choices for every night</button></div>`:''}</div>`}
+function setStay(n,id){const st={...stays()};st[n]={...(st[n]||{}),main:id||null,backups:(st[n]?.backups||[]).filter(b=>b!==id)};saveStays(st)}
+function addBackup(n,id){const st={...stays()};const c=st[n]||{main:nightHotel(n)?.id||null,backups:[]};st[n]={...c,backups:[...(c.backups||[]).filter(b=>b!==id),id]};saveStays(st);toast('🔁 Backup hotel added')}
+function delBackup(n,id){const st={...stays()};if(st[n])st[n]={...st[n],backups:(st[n].backups||[]).filter(b=>b!==id)};saveStays(st)}
+function copyNight1(){const f=stays()[0]||{main:nightHotel(0)?.id||null,backups:[]};const st={};for(let n=0;n<nights();n++)st[n]={main:f.main||null,backups:[...(f.backups||[])]};saveStays(st);toast('Copied to all nights ✓')}
 function hotelCard(h){
   const sites=[['agoda','Agoda','#c8174f'],['trip','Trip.com','#1e63d6'],['other','Direct / other','#6b7488']];
   const vals=sites.map(s=>+h[s[0]]).filter(v=>v>0),min=Math.min(...vals),max=Math.max(...vals,1);
-  return `<div class="hotel ${h.chosen?'chosen':''}"><div class="row"><div class="sp"><div class="row"><h3 style="font-size:23px">${esc(h.name)}</h3>${h.chosen?'<span class="tag y">⭐ Our hotel</span>':''}</div>
+  return `<div class="hotel ${h.chosen?'chosen':''}"><div class="row"><div class="sp"><div class="row"><h3 style="font-size:23px">${esc(h.name)}</h3>${(()=>{const z=hNights(h.id);return (z.m.length?`<span class="tag y">🌙 ${nightsTxt(z.m)}</span>`:'')+(z.b.length?`<span class="tag">🔁 Backup ${nightsTxt(z.b).replace('Night','night')}</span>`:'')})()}</div>
    <div class="note">${'★'.repeat(+h.stars||0)} ${esc(h.area||'')} ${h.family?'· 👨‍👩‍👧 family room':''} ${h.breakfast?'· 🍳 breakfast':''}</div></div>
-   <button class="btn sm ${h.chosen?'gold':'alt'} ro" onclick="chooseHotel('${h.id}')">${h.chosen?'✓ Chosen':'Choose this'}</button><button class="ib ro" onclick="editHotel('${h.id}')">✏️</button></div>
+   <button class="btn sm alt ro" onclick="chooseHotel('${h.id}')">Use for all nights</button><button class="ib ro" onclick="editHotel('${h.id}')">✏️</button></div>
    <div class="cmp">${sites.map(([k,n,c])=>{const v=+h[k];return `<div class="cmpr"><span class="logo" style="color:${c}">${n}</span><div class="bar">${v?`<span style="width:${Math.max(18,v/max*100)}%;background:${v===min&&vals.length>1?'var(--good)':c}">${v===min&&vals.length>1?'Best price':''}</span>`:''}</div>
     <input type="number" min="0" placeholder="${esc(T().cur)} / night" value="${v||''}" ${readOnly?'disabled':''} onchange="write('hotels','${h.id}',{...D.hotels['${h.id}'],${k}:+this.value||0})"></div>`}).join('')}</div>
    <div class="row" style="margin-top:12px">${vals.length?`<span class="tag g">💴 ${money(min*nights())} for ${nights()} nights</span>`:''}${vals.length>1&&max>min?`<span class="tag y">Save ${money((max-min)*nights())} with the cheapest</span>`:''}
@@ -1302,7 +1354,7 @@ function editHotel(id){const h=id?D.hotels[id]:{stars:4};window._loc=h.lat!=null
   <div class="row" style="margin-top:20px">${id?`<button class="btn alt" style="color:var(--bad)" onclick="ask('Delete this hotel?',()=>remove('hotels','${id}'))">Delete</button>`:''}<span class="sp"></span><button class="btn alt" onclick="modal()">Cancel</button><button class="btn" onclick="saveHotel('${id||''}')">Save</button></div>`)}
 function saveHotel(id){const v=k=>$('#h_'+k).value.trim();if(!v('name'))return toast('Add the hotel name');
   write('hotels',id||uid(),{...(id?D.hotels[id]:{}),name:v('name'),area:v('area'),stars:+v('stars'),agoda:+v('agoda')||0,trip:+v('trip')||0,other:+v('other')||0,family:$('#h_family').checked,breakfast:$('#h_breakfast').checked,note:v('note'),lat:window._loc?.lat??null,lng:window._loc?.lng??null});modal();toast('Saved ✓')}
-async function chooseHotel(id){const was=D.hotels[id].chosen;for(const h of list('hotels'))if(h.chosen&&h.id!==id)await write('hotels',h.id,{...D.hotels[h.id],chosen:false});await write('hotels',id,{...D.hotels[id],chosen:!was});if(!was)toast('🏨 Set as your hotel')}
+async function chooseHotel(id){const st={};for(let n=0;n<nights();n++)st[n]={main:id,backups:(stays()[n]?.backups||[]).filter(b=>b!==id)};saveStays(st);toast('🏨 Set for every night');return;const was=D.hotels[id].chosen;for(const h of list('hotels'))if(h.chosen&&h.id!==id)await write('hotels',h.id,{...D.hotels[h.id],chosen:false});await write('hotels',id,{...D.hotels[id],chosen:!was});if(!was)toast('🏨 Set as your hotel')}
 
 // ================= EATS =================
 const lvl=s=>s>=4?['Legendary','#9b2c2c']:s>=3.75?['Top-tier','#c0473a']:s>=3.5?['Excellent','#d4793a']:s>=3?['Good','#c09553']:s>0?['Casual','#9c9283']:['Not rated','#c8bfae'];
@@ -1344,23 +1396,24 @@ function addPack(t){t=(t||'').trim();if(!t)return;write('packing',uid(),{text:t,
 
 // ================= SUMMARY =================
 function vSummary(){
-  const h=chosenHotel(),hp=h?best(h):[],it=list('items');
-  const hotel=hp.length?hp[0][1]*nights():0,act=it.filter(x=>x.cat!=='food').reduce((a,x)=>a+(+x.cost||0),0),food=it.filter(x=>x.cat==='food').reduce((a,x)=>a+(+x.cost||0),0),total=hotel+act+food;
+  const h=chosenHotel(),hp=h?best(h):[],it=realItems();
+  const hotel=hotelCost(),act=it.filter(x=>x.cat!=='food').reduce((a,x)=>a+(+x.cost||0),0),food=it.filter(x=>x.cat==='food').reduce((a,x)=>a+(+x.cost||0),0),total=hotel+act+food;
   const top=list('food').sort((a,b)=>(+b.score||0)-(+a.score||0)).slice(0,5);
   return `<div class="card"><div class="row"><div><h2>${esc(T().dest)} family trip</h2><p class="note">${dayLabel(0)} – ${dayLabel(nights())} · ${nights()} nights · ${T().adults} adults, ${kidsTxt()}</p></div><span class="sp"></span><button class="btn alt" onclick="print()">🖨 Print / PDF</button><button class="btn" onclick="copySummary()">📋 Copy to share</button></div>
    <div class="stats" style="margin-top:14px">${stat('📍','Stops',it.length,'')}${stat('🍣','Restaurants',list('food').length,'')}${stat('💴','Total',money(total),'')}${stat('👤','Per person',money(total/Math.max(1,people())),'')}</div></div>
-  <div class="card"><h2>🏨 Where we stay</h2>${h?`<div class="row" style="margin-top:8px"><h3 style="font-size:22px">${esc(h.name)}</h3><span class="note">${esc(h.area||'')}</span></div>
-   ${hp.length?`<p>Book on <b>${hp[0][0]}</b>: ${money(hp[0][1])}/night · <b>${money(hotel)}</b> total${hp.length>1&&hp[hp.length-1][1]>hp[0][1]?` <span class="tag g">saves ${money((hp[hp.length-1][1]-hp[0][1])*nights())} vs ${hp[hp.length-1][0]}</span>`:''}</p>`:''}`:'<p class="note">No hotel chosen yet.</p>'}</div>
+  <div class="card"><h2>🏨 Where we stay</h2>${[...Array(nights()).keys()].map(n=>{const x=nightHotel(n),p=x?best(x):[],bk=nightBackups(n);
+   return `<div class="chk"><b style="min-width:86px">🌙 Night ${n+1}</b><span class="note" style="min-width:90px">${dayLabel(n)}</span><span class="sp">${x?`<b>${esc(x.name)}</b>${p.length?` <span class="note">· ${p[0][0]} ${money(p[0][1])}</span>`:''}`:'<span class="note">not chosen</span>'}${bk.length?`<br><span class="note">🔁 Backup: ${bk.map(b=>esc(b.name)).join(', ')}</span>`:''}</span></div>`}).join('')}
+   <p style="margin-top:12px">Hotels total: <b>${money(hotel)}</b> for ${nights()} nights (cheapest site for each).</p></div>
   <div class="card"><h2>🗓 Day by day</h2>${[...Array(nDays()).keys()].map(i=>{const d=dayItems(i);const tm=legTimes(i);const tr=dayTravel(i);
-   return `<div style="margin-top:16px"><div class="row"><b style="font:600 18px var(--serif)">Day ${i+1} · ${dayLabel(i,{weekday:'long',month:'short',day:'numeric'})}</b><span class="sp"></span>${tr?`<span class="tag">${MODES[T().mode][0]} ${fmtDur(tr)} travel</span>`:''}</div>
-   ${d.length?d.map(x=>`<div class="chk"><b style="min-width:48px">${esc(x.time)}</b><span style="font-size:20px">${(CATS[x.cat]||CATS.other)[0]}</span><span class="sp">${esc(x.title)}${tm[x.id]?` <span class="note">· ${fmtDur(tm[x.id])} to get there</span>`:''}</span>${x.cost?`<span class="note">${money(x.cost)}</span>`:''}</div>`).join(''):'<p class="note">Free day</p>'}</div>`}).join('')}</div>
+   return `<div style="margin-top:16px"><div class="row"><b style="font:600 18px var(--serif)">Day ${i+1} · ${dayLabel(i,{weekday:'long',month:'short',day:'numeric'})}</b>${dayNote(i)?` <span class="tag p">${esc(dayNote(i))}</span>`:''}<span class="sp"></span>${tr?`<span class="tag">${MODES[T().mode][0]} ${fmtDur(tr)} travel</span>`:''}</div>
+   ${d.length?d.map(x=>`<div class="chk"><b style="min-width:48px">${esc(x.time)}</b><span style="font-size:20px">${(CATS[x.cat]||CATS.other)[0]}</span><span class="sp">${esc(x.title)}${tm[x.id]?` <span class="note">· ${fmtDur(tm[x.id])} to get there</span>`:''}</span>${x.cost?`<span class="note">${money(x.cost)}</span>`:''}</div>`).join(''):'<p class="note">Free day</p>'}${maybeItems(i).length?`<p class="note">🤔 Considering: ${maybeItems(i).map(x=>esc(x.title)).join(', ')}</p>`:''}</div>`}).join('')}</div>
   ${top.length?`<div class="card"><h2>🍣 Top restaurants</h2>${top.map(foodRow).join('')}</div>`:''}
   <div class="card"><h2>💴 Budget</h2>${donut([['Hotel',hotel,'#1f3a34'],['Activities',act,'#c09553'],['Food',food,'#c8553d']])}<p class="note">Flights and local transport fares not included.</p></div>`}
 async function copySummary(){
   const h=chosenHotel(),hp=h?best(h):[];
   let t=`🧳 ${T().dest} family trip\n${dayLabel(0)} – ${dayLabel(nights())} · ${T().adults} adults, ${kidsTxt()}\n`;
-  if(h)t+=`\n🏨 ${h.name}${hp.length?` (best on ${hp[0][0]}: ${money(hp[0][1])}/night)`:''}\n`;
-  for(let i=0;i<nDays();i++){const d=dayItems(i);t+=`\nDay ${i+1} · ${dayLabel(i)}\n`+(d.map(x=>`  ${x.time} ${(CATS[x.cat]||CATS.other)[0]} ${x.title}${legTimes(i)[x.id]?` (${fmtDur(legTimes(i)[x.id])} travel)`:''}`).join('\n')||'  Free day')+'\n'}
+  t+='\n';for(let n=0;n<nights();n++){const x=nightHotel(n),bk=nightBackups(n);if(x)t+=`🌙 Night ${n+1}: ${x.name}${bk.length?` (backup: ${bk.map(b=>b.name).join(', ')})`:''}\n`}
+  for(let i=0;i<nDays();i++){const d=dayItems(i);t+=`\nDay ${i+1} · ${dayLabel(i)}${dayNote(i)?' · '+dayNote(i):''}\n`+(d.map(x=>`  ${x.time} ${(CATS[x.cat]||CATS.other)[0]} ${x.title}${legTimes(i)[x.id]?` (${fmtDur(legTimes(i)[x.id])} travel)`:''}`).join('\n')||'  Free day')+'\n'}
   try{await navigator.clipboard.writeText(t);toast('Copied: paste it into WhatsApp or LINE')}catch(e){modal(`<h2>Copy this text</h2><textarea rows="14" onfocus="this.select()">${esc(t)}</textarea><div class="row" style="margin-top:14px"><span class="sp"></span><button class="btn" onclick="modal()">Done</button></div>`)}
 }
 
