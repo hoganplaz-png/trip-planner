@@ -860,6 +860,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
  .card{padding:16px}
  #view>.card:first-child,#view>.seg:first-child{margin-top:14px}
 }
+.tbtn{border:0;background:none;padding:6px 4px;border-radius:10px;font:inherit;color:inherit;text-align:right;cursor:pointer;display:block;width:100%}
+.tbtn:hover{background:#f3ece0}.tbtn i{display:block;font-style:normal;font-size:11px;color:var(--gold)}
 </style>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
@@ -944,6 +946,7 @@ const fmtDur=m=>LANG==='zh'?(m>=60?`${Math.floor(m/60)}小時${m%60?m%60+'分':'
 // ================= i18n =================
 let LANG=(()=>{try{const v=localStorage.getItem('ftp.lang');if(v==='zh'||v==='en')return v}catch(e){}return /^zh/i.test(navigator.language||'')?'zh':'en'})();
 const I18N={en:{},zh:{
+"Change time":"更改時間","End time":"結束時間","Also move the later stops that day":"當天之後的行程也一起移動","Please choose a start time":"請選擇開始時間","Time updated ✓":"時間已更新 ✓","Time updated ✓ Later stops moved too":"時間已更新 ✓ 之後的行程也已移動","−60 min":"−60分鐘","−30 min":"−30分鐘","−15 min":"−15分鐘","+15 min":"+15分鐘","+30 min":"+30分鐘","+60 min":"+60分鐘",
 "(your Google Maps lists) and":"（你的 Google 地圖清單）和",", choose":"，選擇",
 ". Ask the trip owner to add this email under 👨‍👩‍👧 Family, then reload this page.":"。請行程擁有者在「👨‍👩‍👧 家人」加入這個 email，然後重新整理這個頁面。",
 "Add":"新增","Add an item and press Enter":"輸入物品後按 Enter","Add something":"新增項目","Booking number, what to bring, stroller OK?":"預約編號、要帶什麼、可以推嬰兒車嗎？",
@@ -1399,8 +1402,22 @@ function vPlan(){
      <span class="ro">${who(x)}</span><button class="btn sm ro" onclick="write('items','${x.id}',{...D.items['${x.id}'],maybe:false});toast('✅ Confirmed')">✅ Confirm</button><button class="ib ro" onclick="editItem('${x.id}')">✏️</button></div>`).join('')}</div>`:''}
    ${it.length?`<p class="note tiny">ⓘ ✓ = real road route · bus = estimate</p>`:''}</div>`;
 }
+function editTime(id){const x=D.items[id];if(!x)return;const st=x.time||'10:00',en=fromMin(toMin(st)+Math.round((+x.dur||0)*60));
+  const later=allDay(+x.day).filter(y=>y.id!==id&&(y.time||'')>st).length;
+  modal(`<h2>Change time</h2><p class="note">${esc(x.title)}</p>
+  <div class="grid" style="margin-top:14px"><div><label>Start time</label><input type="time" id="te_s" value="${st}"></div><div><label>End time</label><input type="time" id="te_e" value="${en}"></div></div>
+  <div class="chips" style="margin-top:12px">${[-60,-30,-15,15,30,60].map(d=>`<button class="chip" onclick="shiftTE(${d})">${d>0?'+':'−'}${Math.abs(d)} min</button>`).join('')}</div>
+  ${later?`<label style="display:flex;gap:8px;align-items:center;margin-top:14px;text-transform:none;letter-spacing:0;font-size:14px;color:var(--ink)"><input type="checkbox" id="te_all" style="width:20px" checked> <span>Also move the later stops that day</span></label>`:''}
+  <div class="row" style="margin-top:20px"><span class="sp"></span><button class="btn alt" onclick="modal()">Cancel</button><button class="btn" onclick="saveTime('${id}')">Save</button></div>`)}
+function shiftTE(d){const a=$('#te_s'),b=$('#te_e');const len=Math.max(0,toMin(b.value)-toMin(a.value));const ns=Math.max(0,Math.min(23*60+59,toMin(a.value)+d));a.value=fromMin(ns);b.value=fromMin(Math.min(23*60+59,ns+len))}
+async function saveTime(id){const x=D.items[id],ns=$('#te_s').value,ne=$('#te_e').value;if(!ns)return toast('Please choose a start time');
+  const dur=Math.max(0,(toMin(ne)-toMin(ns))/60),delta=toMin(ns)-toMin(x.time||'10:00'),moveAll=$('#te_all')?.checked;
+  const later=moveAll&&delta?allDay(+x.day).filter(y=>y.id!==id&&(y.time||'')>(x.time||'')):[];
+  modal();await write('items',id,{...x,time:ns,dur:Math.round(dur*4)/4});
+  for(const y of later)await write('items',y.id,{...D.items[y.id],time:fromMin(Math.max(0,Math.min(23*60+59,toMin(y.time)+delta)))});
+  toast(later.length?'Time updated ✓ Later stops moved too':'Time updated ✓')}
 function stopRow(x){const c=CATS[x.cat]||CATS.other;const end=x.time&&x.dur&&!x.hotel?fromMin(toMin(x.time)+Math.round(x.dur*60)):'';
-  return `<div class="stop"><div class="time">${esc(x.time||'')}${end?`<small>→ ${end}</small>`:''}</div><div class="bub" style="background:${x.hotel?'#1f3a34':c[2]}">${x.hotel?'🏨':c[0]}</div>
+  return `<div class="stop"><div class="time">${x.id&&!readOnly?`<button class="tbtn" title="Change time" onclick="editTime('${x.id}')">${esc(x.time||'')}${end?`<small>→ ${end}</small>`:''}<i>✎</i></button>`:`${esc(x.time||'')}${end?`<small>→ ${end}</small>`:''}`}</div><div class="bub" style="background:${x.hotel?'#1f3a34':c[2]}">${x.hotel?'🏨':c[0]}</div>
   <div class="sbody" ${x.id&&!readOnly?`onclick="editItem('${x.id}')" style="cursor:pointer"`:''}><div class="row"><span class="t">${esc(x.title)}</span><span class="sp"></span>${x.cost?`<span class="tag y">${money(x.cost)}</span>`:''}${x.dur&&!x.hotel?`<span class="tag">⏱ ${fmtDur(Math.round(x.dur*60))}</span>`:''}</div>
   ${x.note?`<div class="note snote">${esc(x.note)}</div>`:''}
   ${x.id&&previews.has(x.id)?`<iframe class="gprev" loading="lazy" src="${gEmbed(x)}" onclick="event.stopPropagation()"></iframe>`:''}
